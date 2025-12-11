@@ -1,0 +1,29 @@
+site_name: MedAgg Docs
+nav:
+  - Overview:
+      - Product Overview: docs/product-overview.md
+      - System Modules: docs/modules.md
+      - Database Schema: docs/db-schema.md
+  - Guides (EN):
+      - User Guide: docs/user-guide.md
+      - Admin Guide: docs/admin-guide.md
+      - API Overview: docs/api-overview.md
+      - Deploy Guide: docs/deploy-guide.md
+  - Guides (RU):
+      - Общее описание продукта: docs/product-overview.ru.md
+      - Руководство пользователя: docs/user-guide.ru.md
+      - Руководство администратора: docs/admin-guide.ru.md
+      - Обзор API: docs/api-overview.ru.md
+      - Руководство по развёртыванию: docs/deploy-guide.ru.md
+  - Architecture:
+      - ADRs:
+          - ADR Template: docs/adr/0000-adr-template.md
+          - Initial FastAPI Choice: docs/adr/0001-initial-fastapi-choice.md
+          - Switch to Django + DRF: docs/adr/0002-switch-to-django-drf.md
+          - DB Schema & Relations: docs/adr/0003-database-schema-and-relations.md
+          - Search Integration: docs/adr/0004-search-engine-integration.md
+          - Single-node Docker Deploy: docs/adr/0005-single-node-docker.md
+      - Diagrams: docs/diagrams/README.md
+
+theme:
+  name: material
