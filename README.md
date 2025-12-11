@@ -55,3 +55,6 @@ The documentation is maintained in a **docs‑as‑code** style:
 
 See `docs/review-checklist.md` for which team role is expected to
 validate each document.
+=======
+# medagg-doc
+Product documentation for Medical Dataset Aggregator
