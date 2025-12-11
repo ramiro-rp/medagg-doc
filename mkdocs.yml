@@ -15,7 +15,8 @@ nav:
       - Руководство администратора: docs/admin-guide.ru.md
       - Обзор API: docs/api-overview.ru.md
       - Руководство по развёртыванию: docs/deploy-guide.ru.md
-  - Architecture:
+      - Схема базы данных: docs/db-schema.ru.md
+ - Architecture:
       - ADRs:
           - ADR Template: docs/adr/0000-adr-template.md
           - Initial FastAPI Choice: docs/adr/0001-initial-fastapi-choice.md
