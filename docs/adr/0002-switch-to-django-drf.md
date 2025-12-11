@@ -68,7 +68,6 @@ Positive:
 
 Negative / risks:
 
-- migration cost from the initial FastAPI prototype;
 - DRF is not async-first by default, but this is acceptable for the current
   MVP requirements.
 

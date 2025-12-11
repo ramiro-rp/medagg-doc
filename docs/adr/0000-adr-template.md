@@ -3,7 +3,7 @@
 - Status: draft
 - Date: 2025-10-01
 - Owners: Team Lead, Backend Dev
-- Related meetings: weekly Monday engineering meetings (see transcripts)
+- Related meetings: weekly Monday engineering meetings
 
 ## Context
 

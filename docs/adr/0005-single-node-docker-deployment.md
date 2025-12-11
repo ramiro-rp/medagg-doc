@@ -29,24 +29,25 @@ We decided to:
 - run all components on a single Linux host;
 - keep configuration in env files and compose file(s).
 
-A future move to Kubernetes or cloud-managed services is out of scope
-for the MVP, but not blocked by this decision.
+More advanced deployment options (multi-node clusters, managed PaaS, etc.)
+are explicitly **out of scope** for the current MVP.
 
 ## Alternatives considered
 
-- **Bare-metal / manual deployment** without containers
-  - Pros:
-    - fewer layers in theory;
-  - Cons:
-    - harder to reproduce environments;
-    - more manual setup for each machine.
+- **Bare-metal / manual deployment** without containers  
+  Pros:
+  - fewer layers in theory;  
+  Cons:
+  - harder to reproduce environments;
+  - more manual setup for each machine.
 
-- **Immediate Kubernetes deployment**
-  - Pros:
-    - closer to production-style cloud environments;
-  - Cons:
-    - too heavy for a student/demo project;
-    - higher learning and operational overhead.
+- **Immediately adopting a more complex orchestration platform**  
+  (for example a container cluster or cloud PaaS)  
+  Pros:
+  - closer to production-grade deployments;  
+  Cons:
+  - too heavy for a demo project;
+  - higher learning and operational overhead for the team.
 
 ## Consequences
 
@@ -58,9 +59,9 @@ Positive:
 
 Negative / risks:
 
-- scaling and high availability are not addressed;
+- scaling and high availability are not addressed in the MVP;
 - performance on very small hardware (e.g. Raspberry Pi) may be limited
-  and requires tuning (e.g. DB settings, swap, storage).
+  and requires tuning (DB settings, swap, storage).
 
 ## References
 

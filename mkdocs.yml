@@ -1,4 +1,5 @@
 site_name: MedAgg Docs
+
 nav:
   - Overview:
       - Product Overview: docs/product-overview.md
@@ -16,14 +17,15 @@ nav:
       - Обзор API: docs/api-overview.ru.md
       - Руководство по развёртыванию: docs/deploy-guide.ru.md
       - Схема базы данных: docs/db-schema.ru.md
- - Architecture:
+  - Architecture:
       - ADRs:
           - ADR Template: docs/adr/0000-adr-template.md
           - Initial FastAPI Choice: docs/adr/0001-initial-fastapi-choice.md
           - Switch to Django + DRF: docs/adr/0002-switch-to-django-drf.md
-          - DB Schema & Relations: docs/adr/0003-database-schema-and-relations.md
+          - DB Schema & Relations (MVP): docs/adr/0003-database-schema-and-relations.md
           - Search Integration: docs/adr/0004-search-engine-integration.md
-          - Single-node Docker Deploy: docs/adr/0005-single-node-docker.md
+          - Single-node Docker Deploy (MVP): docs/adr/0005-single-node-docker-deployment.md
+          - DB Engine Choice: docs/adr/0006-database-choice-postgresql.md
       - Diagrams: docs/diagrams/README.md
 
 theme:
