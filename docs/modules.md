@@ -44,7 +44,7 @@ instead it links to the module‑specific READMEs where appropriate.
 - Django models for datasets, images, vocabularies, collections, etc.;
 - DRF serializers and viewsets for API endpoints;
 - authentication and permission configuration;
-- settings for database, storage paths, CORS, etc.
+- settings for database (PostgreSQL), storage paths, CORS, etc.
 
 For **concrete endpoints, settings and docker-compose usage**, see:
 
@@ -53,8 +53,8 @@ For **concrete endpoints, settings and docker-compose usage**, see:
 Additional related docs in this repo:
 
 - `docs/api-overview.md`
-- `docs/db-schema.md`
-- ADRs related to backend technology choices (`docs/adr/0001*`, `0002*`, `0003*`).
+- `docs/db-schema.md` / `docs/db-schema.ru.md`
+- ADRs related to backend and database choices (`docs/adr/0001*`, `0002*`, `0003*`, `0006*`).
 
 ---
 
