@@ -2,30 +2,30 @@ site_name: MedAgg Docs
 
 nav:
   - Overview:
-      - Product Overview: docs/product-overview.md
-      - System Modules: docs/modules.md
-      - Database Schema: docs/db-schema.md
+      - Product Overview: product-overview.md
+      - System Modules: modules.md
+      - Database Schema: db-schema.md
   - Guides (EN):
-      - User Guide: docs/user-guide.md
-      - Admin Guide: docs/admin-guide.md
-      - API Overview: docs/api-overview.md
-      - Deploy Guide: docs/deploy-guide.md
+      - User Guide: user-guide.md
+      - Admin Guide: admin-guide.md
+      - API Overview: api-overview.md
+      - Deploy Guide: deploy-guide.md
   - Guides (RU):
-      - Общее описание продукта: docs/product-overview.ru.md
-      - Руководство пользователя: docs/user-guide.ru.md
-      - Руководство администратора: docs/admin-guide.ru.md
-      - Обзор API: docs/api-overview.ru.md
-      - Руководство по развёртыванию: docs/deploy-guide.ru.md
-      - Схема базы данных: docs/db-schema.ru.md
+      - Общее описание продукта: product-overview.ru.md
+      - Руководство пользователя: user-guide.ru.md
+      - Руководство администратора: admin-guide.ru.md
+      - Обзор API: api-overview.ru.md
+      - Руководство по развёртыванию: deploy-guide.ru.md
+      - Схема базы данных: db-schema.ru.md
   - Architecture:
       - ADRs:
-          - ADR Template: docs/adr/0000-adr-template.md
-          - Initial FastAPI Choice: docs/adr/0001-initial-fastapi-choice.md
-          - Switch to Django + DRF: docs/adr/0002-switch-to-django-drf.md
-          - DB Schema & Relations (MVP): docs/adr/0003-database-schema-and-relations.md
-          - Search Integration: docs/adr/0004-search-engine-integration.md
-          - Single-node Docker Deploy (MVP): docs/adr/0005-single-node-docker-deployment.md
-          - DB Engine Choice: docs/adr/0006-database-choice-postgresql.md
-      - Diagrams: docs/diagrams/README.md
+          - ADR Template: adr/0000-adr-template.md
+          - Initial FastAPI Choice: adr/0001-initial-fastapi-choice.md
+          - Switch to Django + DRF: adr/0002-switch-to-django-drf.md
+          - DB Schema & Relations (MVP): adr/0003-database-schema-and-relations.md
+          - Search Integration: adr/0004-search-engine-integration.md
+          - Single-node Docker Deploy (MVP): adr/0005-single-node-docker-deployment.md
+          - DB Engine Choice: adr/0006-database-choice-postgresql.md
+      - Diagrams: diagrams/README.md
 
-theme: readthedocs  # o 'material' if mkdocs-material is installed
+theme: readthedocs  #material
