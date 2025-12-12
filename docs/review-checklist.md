@@ -8,7 +8,7 @@ Roles in this project:
 - **Team Lead / DevOps**
 - **Backend Developer**
 - **Frontend Developer**
-- **DBA (Database Administrator)** – 2 people
+- **DBA (Database Administrator)**
 - **Documentation Owner**
 
 ---

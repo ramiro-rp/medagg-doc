@@ -28,5 +28,4 @@ nav:
           - DB Engine Choice: docs/adr/0006-database-choice-postgresql.md
       - Diagrams: docs/diagrams/README.md
 
-theme:
-  name: material
+theme: readthedocs  # o 'material' if mkdocs-material is installed
