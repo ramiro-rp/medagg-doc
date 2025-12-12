@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>DB Schema & Relations (MVP) - MedAgg Docs</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "DB Schema \u0026 Relations (MVP)";
+        var mkdocs_page_input_path = "adr\\0003-database-schema-and-relations.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> MedAgg Docs
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Overview</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../product-overview/">Product Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../modules/">System Modules</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../db-schema/">Database Schema</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Guides (EN)</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../user-guide/">User Guide</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../admin-guide/">Admin Guide</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../api-overview/">API Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../deploy-guide/">Deploy Guide</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Guides (RU)</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../product-overview.ru/">Общее описание продукта</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../user-guide.ru/">Руководство пользователя</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../admin-guide.ru/">Руководство администратора</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../api-overview.ru/">Обзор API</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../deploy-guide.ru/">Руководство по развёртыванию</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../db-schema.ru/">Схема базы данных</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Architecture</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" >ADRs</a>
+    <ul class="current">
+                <li class="toctree-l2"><a class="reference internal" href="../0000-adr-template/">ADR Template</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../0001-initial-fastapi-choice/">Initial FastAPI Choice</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../0002-switch-to-django-drf/">Switch to Django + DRF</a>
+                </li>
+                <li class="toctree-l2 current"><a class="reference internal current" href="#">DB Schema & Relations (MVP)</a>
+    <ul class="current">
+    <li class="toctree-l3"><a class="reference internal" href="#context">Context</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#decision">Decision</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#alternatives-considered">Alternatives considered</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#a-per-image-modeling-in-the-db">A. Per-image modeling in the DB</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#b-store-everything-as-json-blobs">B. Store everything as JSON blobs</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#consequences">Consequences</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#notes">Notes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#references">References</a>
+    </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../0004-search-engine-integration/">Search Integration</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../0005-single-node-docker-deployment/">Single-node Docker Deploy (MVP)</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../0006-database-choice-postgresql/">DB Engine Choice</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../diagrams/">Diagrams</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">MedAgg Docs</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Architecture</li>
+          <li class="breadcrumb-item">ADRs</li>
+      <li class="breadcrumb-item active">DB Schema & Relations (MVP)</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="adr-0003-database-schema-and-core-relations-mvp">ADR-0003 – Database Schema and Core Relations (MVP)</h1>
+<ul>
+<li>Status: accepted</li>
+<li>Date: 2025-11-17</li>
+<li>Owners: DBAs, Backend Dev</li>
+<li>Related docs:</li>
+<li><code>docs/db-schema.md</code></li>
+<li><code>docs/db-schema.ru.md</code></li>
+<li><code>docs/diagrams/er-medagg-core.png</code></li>
+<li>SQL script from DBAs: <code>БД.sql</code></li>
+</ul>
+<h2 id="context">Context</h2>
+<p>The system needs to represent:</p>
+<ul>
+<li><strong>source datasets</strong> (external collections of images);</li>
+<li><strong>reference dictionaries</strong> describing those datasets
+  (anatomical areas, modalities, ML task types, tags);</li>
+<li><strong>user activity</strong> related to search and downloaded collections.</li>
+</ul>
+<p>In the MVP, the team decided <strong>not</strong> to model individual images as rows in
+the database. Instead, the DB tracks datasets and user-formed collections
+of datasets, while image-level details stay in the original sources or the
+filesystem structure.</p>
+<p>The schema must:</p>
+<ul>
+<li>be simple enough for the MVP and demo;</li>
+<li>support efficient search / filtering in the catalog;</li>
+<li>allow building and expiring user collections.</li>
+</ul>
+<h2 id="decision">Decision</h2>
+<p>We chose a <strong>relational schema in PostgreSQL</strong> with the following core entities:</p>
+<ul>
+<li><code>roles</code>, <code>users</code> – user accounts and roles;</li>
+<li><code>anatomical_areas</code>, <code>modalities</code>, <code>ml_tasks</code>, <code>tags</code> – reference dictionaries;</li>
+<li><code>datasets</code> – source datasets with basic metadata and links to storage;</li>
+<li><code>dataset_modalities</code>, <code>dataset_ml_tasks</code>, <code>dataset_tags</code> – M:N links;</li>
+<li><code>user_search_queries</code> – history of search queries and filter snapshots;</li>
+<li><code>user_dataset_collections</code> – collections of datasets built for a user,
+  including storage path and TTL;</li>
+<li><code>collection_datasets</code> – link table between collections and datasets
+  with optional relevance scores.</li>
+</ul>
+<p>This model is documented in detail in <strong><code>docs/db-schema.md</code></strong> (and
+<code>docs/db-schema.ru.md</code>) and is visualized in <code>docs/diagrams/er-medagg-core.png</code>.</p>
+<h2 id="alternatives-considered">Alternatives considered</h2>
+<h3 id="a-per-image-modeling-in-the-db">A. Per-image modeling in the DB</h3>
+<p>Add tables like <code>images</code> and <code>image_labels</code> with one row per image.</p>
+<ul>
+<li>Pros:</li>
+<li>fine-grained tracking of every image included in a user collection;</li>
+<li>flexible analytics on labels and image usage.</li>
+<li>Cons:</li>
+<li>more complex schema and migrations;</li>
+<li>significantly larger tables;</li>
+<li>not strictly required for the current MVP goals.</li>
+</ul>
+<h3 id="b-store-everything-as-json-blobs">B. Store everything as JSON blobs</h3>
+<p>Keep most dataset metadata in JSON fields instead of normalized tables.</p>
+<ul>
+<li>Pros:</li>
+<li>very flexible schema, easier to evolve;</li>
+<li>Cons:</li>
+<li>harder to query efficiently;</li>
+<li>less transparent for DBAs and analytical queries;</li>
+<li>still need some structure for vocabularies and relations.</li>
+</ul>
+<h2 id="consequences">Consequences</h2>
+<p>Positive:</p>
+<ul>
+<li>clear, explicit data model for datasets and collections;</li>
+<li>DBAs can reason about indices, constraints and performance;</li>
+<li>user collections are reproducible via <code>user_dataset_collections</code>
+  and <code>collection_datasets</code>;</li>
+<li>the schema matches the SQL script maintained by the DBAs.</li>
+</ul>
+<p>Negative / risks:</p>
+<ul>
+<li>image-level statistics and analytics must be computed from external sources
+  or from filesystem-level metadata, not directly from the relational schema;</li>
+<li>if future versions require strict tracking of individual images, the schema
+  will need to be extended (e.g. adding <code>images</code> / <code>image_labels</code>).</li>
+</ul>
+<h2 id="notes">Notes</h2>
+<ul>
+<li>The field <code>storage_path_hdfs</code> in <code>user_dataset_collections</code> is generic in
+  meaning: it can point to local disk, a mounted volume, HDFS, object storage,
+  etc. The exact infrastructure is defined by DevOps / deployment decisions.</li>
+<li>An expiration trigger sets <code>expires_at = created_at + 1 day</code> for user
+  collections; background jobs or cron scripts are expected to remove
+  expired archives from storage.</li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li><code>docs/db-schema.md</code></li>
+<li><code>docs/db-schema.ru.md</code></li>
+<li>ER diagram: <code>docs/diagrams/er-medagg-core.png</code></li>
+<li>SQL script: <code>БД.sql</code></li>
+</ul>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../0002-switch-to-django-drf/" class="btn btn-neutral float-left" title="Switch to Django + DRF"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../0004-search-engine-integration/" class="btn btn-neutral float-right" title="Search Integration">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../0002-switch-to-django-drf/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../0004-search-engine-integration/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

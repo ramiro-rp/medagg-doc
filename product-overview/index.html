@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Product Overview - MedAgg Docs</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Product Overview";
+        var mkdocs_page_input_path = "product-overview.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> MedAgg Docs
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Overview</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Product Overview</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#1-purpose">1. Purpose</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#2-target-audience">2. Target audience</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#3-main-user-goals">3. Main user goals</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#4-key-functionality-mvp-scope">4. Key functionality (MVP scope)</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#41-dataset-catalog">4.1 Dataset catalog</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#42-search-and-filtering">4.2 Search and filtering</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#43-building-a-collection">4.3 Building a collection</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#44-account-and-history">4.4 Account and history</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#45-admin-functions-minimal-set">4.5 Admin functions (minimal set)</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#5-architecture-overview">5. Architecture overview</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#6-environment-and-deployment-mvp">6. Environment and deployment (MVP)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#7-outofscope-beyond-mvp">7. Out‑of‑scope (beyond MVP)</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../modules/">System Modules</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../db-schema/">Database Schema</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Guides (EN)</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../user-guide/">User Guide</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../admin-guide/">Admin Guide</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api-overview/">API Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../deploy-guide/">Deploy Guide</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Guides (RU)</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../product-overview.ru/">Общее описание продукта</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../user-guide.ru/">Руководство пользователя</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../admin-guide.ru/">Руководство администратора</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api-overview.ru/">Обзор API</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../deploy-guide.ru/">Руководство по развёртыванию</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../db-schema.ru/">Схема базы данных</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Architecture</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >ADRs</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0000-adr-template/">ADR Template</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0001-initial-fastapi-choice/">Initial FastAPI Choice</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0002-switch-to-django-drf/">Switch to Django + DRF</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0003-database-schema-and-relations/">DB Schema & Relations (MVP)</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0004-search-engine-integration/">Search Integration</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0005-single-node-docker-deployment/">Single-node Docker Deploy (MVP)</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0006-database-choice-postgresql/">DB Engine Choice</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../diagrams/">Diagrams</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">MedAgg Docs</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Overview</li>
+      <li class="breadcrumb-item active">Product Overview</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="product-overview-medical-imaging-dataset-aggregator">Product Overview – Medical Imaging Dataset Aggregator</h1>
+<h2 id="1-purpose">1. Purpose</h2>
+<p>Researchers and clinicians often need <strong>custom medical imaging datasets</strong>
+for training and evaluating machine learning models. Such data is scattered
+across different platforms (Kaggle, PhysioNet, open clinical repositories, etc.)
+and uses different formats and structures.</p>
+<p><strong>Medical Imaging Dataset Aggregator</strong> is a web application that:</p>
+<ul>
+<li>centralizes <strong>metadata</strong> about open datasets;</li>
+<li>provides a <strong>single search interface</strong>;</li>
+<li>allows the user to <strong>build and download a custom dataset</strong> according to
+  clinical and technical criteria.</li>
+</ul>
+<p>In the MVP, the system is focused on <strong>thoracic imaging</strong>
+(chest X‑ray and CT), but the architecture is extensible to other
+anatomical areas and modalities.</p>
+<hr />
+<h2 id="2-target-audience">2. Target audience</h2>
+<ul>
+<li>🧑‍⚕️ <strong>Clinicians</strong> (radiologists, pulmonologists) involved in research;</li>
+<li>🧪 <strong>ML engineers / data scientists</strong> working with medical images;</li>
+<li>🎓 <strong>Students</strong> studying ML and medical imaging.</li>
+</ul>
+<p>We assume basic technical literacy
+(working with ZIP archives and CSV files), but not necessarily programming skills.</p>
+<hr />
+<h2 id="3-main-user-goals">3. Main user goals</h2>
+<ol>
+<li><strong>Find datasets</strong> relevant to a clinical or research question.</li>
+<li><strong>Filter</strong> datasets by modality, anatomical area, ML task type and tags.</li>
+<li><strong>Merge data from several sources</strong> into a single consistent collection.</li>
+<li><strong>Download</strong> images and a <strong>metadata table</strong> ready for use
+   in ML workflows.</li>
+<li><strong>Reproduce</strong> previously built collections using the query history.</li>
+</ol>
+<hr />
+<h2 id="4-key-functionality-mvp-scope">4. Key functionality (MVP scope)</h2>
+<h3 id="41-dataset-catalog">4.1 Dataset catalog</h3>
+<p>The system maintains a centralized <strong>dataset catalog</strong> in PostgreSQL.</p>
+<p>For each dataset it stores at minimum:</p>
+<ul>
+<li>identifier, title and short description;</li>
+<li>link to the external source;</li>
+<li>anatomical area (e.g. chest);</li>
+<li>modality (X‑ray, CT, MRI, etc.);</li>
+<li>ML task type (classification, segmentation, detection, etc.);</li>
+<li>number of studies / images;</li>
+<li>approximate size;</li>
+<li>tags (e.g. “pneumonia”, “COVID‑19”, “fracture”);</li>
+<li>path to a local copy (if present);</li>
+<li>created / updated timestamps.</li>
+</ul>
+<h3 id="42-search-and-filtering">4.2 Search and filtering</h3>
+<p>Search over the catalog supports:</p>
+<ul>
+<li><strong>free‑text query</strong> (keywords in Russian or English);</li>
+<li><strong>structured filters</strong>:</li>
+<li>modality;</li>
+<li>anatomical area;</li>
+<li>ML task type;</li>
+<li>tags.</li>
+</ul>
+<p>In the result list, each dataset shows:</p>
+<ul>
+<li>short description and source;</li>
+<li>basic metrics (number of images, size);</li>
+<li>relevance score (if the search module is used);</li>
+<li>controls to select datasets for collection building.</li>
+</ul>
+<h3 id="43-building-a-collection">4.3 Building a collection</h3>
+<p>Based on search results, the user can request a <strong>custom collection</strong>:</p>
+<ol>
+<li>The system selects studies / images that match the query and filters.</li>
+<li>For supported sources, the system:</li>
+<li>downloads or accesses the required files;</li>
+<li>stores them in local file storage;</li>
+<li>creates a <strong>ZIP archive</strong> containing:<ul>
+<li>image files;</li>
+<li>a <strong>CSV file</strong> with metadata (ID, labels, modality, source dataset, etc.).</li>
+</ul>
+</li>
+<li>The system logs the <strong>user query</strong> and links it to the created collection.</li>
+</ol>
+<h3 id="44-account-and-history">4.4 Account and history</h3>
+<p>After authentication, the user has access to a personal area where they can:</p>
+<ul>
+<li>view <strong>history of their collections</strong>;</li>
+<li>see collection status (in progress / ready / expired);</li>
+<li>download ready archives;</li>
+<li>re‑build expired collections if implemented.</li>
+</ul>
+<h3 id="45-admin-functions-minimal-set">4.5 Admin functions (minimal set)</h3>
+<p>An administrator can:</p>
+<ul>
+<li>create / edit / deactivate dataset entries;</li>
+<li>manage vocabularies (modalities, anatomical areas, task types, tags);</li>
+<li>view logs and user requests.</li>
+</ul>
+<hr />
+<h2 id="5-architecture-overview">5. Architecture overview</h2>
+<p>MVP architecture consists of:</p>
+<ul>
+<li>
+<p><strong>Backend</strong> – Django + Django REST Framework<br />
+  REST API for authentication, catalog, search, collections and admin operations,
+  with PostgreSQL as the main database.</p>
+</li>
+<li>
+<p><strong>Search module</strong> – separate Python module <code>medagg-search</code><br />
+  Parses free‑text queries (RU/EN) using a YAML taxonomy, can compute relevance
+  and extract structured slots (modality, area, pathology, task type).</p>
+</li>
+<li>
+<p><strong>Frontend</strong> – Vite + React + Ant Design<br />
+  Single Page Application (SPA) that communicates with the backend via REST API.</p>
+</li>
+</ul>
+<hr />
+<h2 id="6-environment-and-deployment-mvp">6. Environment and deployment (MVP)</h2>
+<p>The MVP is designed to run on <strong>a single Linux host</strong> using Docker:</p>
+<ul>
+<li>backend container (Django + DRF);</li>
+<li>PostgreSQL container;</li>
+<li>optionally a container or service to serve the built frontend;</li>
+<li>local file storage for ZIP archives.</li>
+</ul>
+<p>The host may be:</p>
+<ul>
+<li>a developer’s laptop;</li>
+<li>a simple server or VPS;</li>
+<li>a compact device (e.g. Raspberry Pi 4 with SSD) for demo purposes.</li>
+</ul>
+<p>Details are described in <code>deploy-guide.md</code>.</p>
+<hr />
+<h2 id="7-outofscope-beyond-mvp">7. Out‑of‑scope (beyond MVP)</h2>
+<p>Possible future directions (not in MVP scope):</p>
+<ul>
+<li>rich “dataset profiles” with extended metadata;</li>
+<li>user‑submitted datasets and moderation;</li>
+<li>recommendation engine based on query and download history;</li>
+<li>integration with external annotation tools;</li>
+<li>distributed / cloud deployment with scaling and full monitoring.</li>
+</ul>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../modules/" class="btn btn-neutral float-right" title="System Modules">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+      <span><a href="../modules/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

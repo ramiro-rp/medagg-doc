@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Руководство по развёртыванию - MedAgg Docs</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "\u0420\u0443\u043a\u043e\u0432\u043e\u0434\u0441\u0442\u0432\u043e \u043f\u043e \u0440\u0430\u0437\u0432\u0451\u0440\u0442\u044b\u0432\u0430\u043d\u0438\u044e";
+        var mkdocs_page_input_path = "deploy-guide.ru.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> MedAgg Docs
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Overview</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../product-overview/">Product Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../modules/">System Modules</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../db-schema/">Database Schema</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Guides (EN)</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../user-guide/">User Guide</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../admin-guide/">Admin Guide</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api-overview/">API Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../deploy-guide/">Deploy Guide</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Guides (RU)</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../product-overview.ru/">Общее описание продукта</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../user-guide.ru/">Руководство пользователя</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../admin-guide.ru/">Руководство администратора</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api-overview.ru/">Обзор API</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Руководство по развёртыванию</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#1">1. Обзор архитектуры</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#2">2. Требования</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#3-backend-">3. Развёртывание backend-а (кратко)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#4-frontend-">4. Развёртывание frontend-а (кратко)</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#_2">Режим разработки</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#production">Простой вариант для production</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#5">5. Конфигурация</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#6">6. Резервное копирование и восстановление</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#61-postgresql">6.1 PostgreSQL</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#62">6.2 Сформированные архивы</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#7">7. Мониторинг и логи</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#8-mvp">8. Ограничения развёртывания MVP</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../db-schema.ru/">Схема базы данных</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Architecture</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >ADRs</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0000-adr-template/">ADR Template</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0001-initial-fastapi-choice/">Initial FastAPI Choice</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0002-switch-to-django-drf/">Switch to Django + DRF</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0003-database-schema-and-relations/">DB Schema & Relations (MVP)</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0004-search-engine-integration/">Search Integration</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0005-single-node-docker-deployment/">Single-node Docker Deploy (MVP)</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0006-database-choice-postgresql/">DB Engine Choice</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../diagrams/">Diagrams</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">MedAgg Docs</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Guides (RU)</li>
+      <li class="breadcrumb-item active">Руководство по развёртыванию</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="_1">Руководство по развёртыванию</h1>
+<p>В этом документе описано, как развернуть систему
+<strong>Medical Imaging Dataset Aggregator</strong> в простом одноузловом окружении.</p>
+<hr />
+<h2 id="1">1. Обзор архитектуры</h2>
+<p>Компоненты системы:</p>
+<ul>
+<li><strong>Backend</strong> – Django + Django REST Framework;</li>
+<li><strong>База данных</strong> – PostgreSQL;</li>
+<li><strong>Frontend</strong> – Vite + React + Ant Design (SPA);</li>
+<li><strong>Файловое хранилище</strong> – локальная файловая система для ZIP-архивов.</li>
+</ul>
+<p>В рамках MVP все компоненты запускаются на <strong>одном Linux-хосте</strong>, обычно
+с использованием Docker / docker-compose.</p>
+<hr />
+<h2 id="2">2. Требования</h2>
+<ul>
+<li>Linux-сервер или рабочая станция (для разработки возможны WSL2 / macOS);</li>
+<li>Docker и docker-compose (или Docker + плагин compose);</li>
+<li>Git;</li>
+<li>опционально для демо: Raspberry Pi 4 или аналог + SSD.</li>
+</ul>
+<hr />
+<h2 id="3-backend-">3. Развёртывание backend-а (кратко)</h2>
+<p>Типичный сценарий:</p>
+<pre><code class="language-bash">git clone https://github.com/b-barsky/medagg-backend.git
+cd medagg-backend
+
+# Скопировать пример env-файла (если есть)
+cp .env.example .env
+
+# Настроить .env (подключение к БД, секретный ключ и т.п.)
+
+# Запустить сервисы
+docker compose up -d  # или: docker-compose up -d
+</code></pre>
+<p>После запуска:</p>
+<ul>
+<li>API backend-а доступно по адресу вида <code>http://&lt;server-host&gt;:8000/api/v1/</code>;</li>
+<li>browsable API / схема могут быть доступны по путям <code>/api/</code>, <code>/api/schema/</code>
+  (в зависимости от конфигурации).</li>
+</ul>
+<p>Применение миграций (если не выполняется автоматически):</p>
+<pre><code class="language-bash">docker compose exec backend python manage.py migrate
+</code></pre>
+<hr />
+<h2 id="4-frontend-">4. Развёртывание frontend-а (кратко)</h2>
+<h3 id="_2">Режим разработки</h3>
+<pre><code class="language-bash">git clone https://github.com/solиноid/medagg-frontend.git
+cd medagg-frontend
+
+npm install
+npm run dev
+</code></pre>
+<p>По умолчанию dev-сервер Vite доступен по адресу <code>http://localhost:5173/</code>
+и обращается к API backend-а.</p>
+<h3 id="production">Простой вариант для production</h3>
+<ol>
+<li>Собрать фронтенд:</li>
+</ol>
+<p><code>bash
+   npm run build</code></p>
+<ol>
+<li>Отдавать содержимое каталога <code>dist/</code> через <code>nginx</code>, <code>caddy</code> или другой HTTP-сервер.</li>
+</ol>
+<p>Важно:</p>
+<ul>
+<li>указать корректный базовый URL API backend-а для фронтенда;</li>
+<li>настроить CORS на стороне backend-а, чтобы разрешить запросы с origin фронтенда.</li>
+</ul>
+<hr />
+<h2 id="5">5. Конфигурация</h2>
+<p>Основные параметры (обычно через <code>.env</code>):</p>
+<ul>
+<li><strong>Backend</strong></li>
+<li>хост, порт, имя БД, пользователь, пароль;</li>
+<li>секретный ключ Django;</li>
+<li>список допустимых хостов;</li>
+<li>настройки CORS;</li>
+<li>путь к каталогу с ZIP-архивами (сформированными коллекциями).</li>
+<li><strong>PostgreSQL</strong></li>
+<li>том / директория для данных БД.</li>
+<li><strong>Frontend</strong></li>
+<li>базовый URL API (например, <code>VITE_API_BASE_URL</code>).</li>
+</ul>
+<p>Точные имена переменных смотрите в README соответствующих репозиториев.</p>
+<hr />
+<h2 id="6">6. Резервное копирование и восстановление</h2>
+<h3 id="61-postgresql">6.1 PostgreSQL</h3>
+<p>Пример резервного копирования:</p>
+<pre><code class="language-bash">pg_dump -U &lt;db_user&gt; &lt;db_name&gt; &gt; backup.sql
+</code></pre>
+<p>Пример восстановления:</p>
+<pre><code class="language-bash">psql -U &lt;db_user&gt; &lt;db_name&gt; &lt; backup.sql
+</code></pre>
+<p>В Docker-окружении команды выполняются через <code>docker compose exec db ...</code>
+по инструкциям из README backend-а.</p>
+<h3 id="62">6.2 Сформированные архивы</h3>
+<p>Сформированные коллекции сохраняются в виде ZIP-файлов в каталоге на хосте
+или в примонтированном Docker-томе. Для их резервного копирования можно:</p>
+<ul>
+<li>периодически архивировать или копировать этот каталог;</li>
+<li>использовать внешнюю систему backup-ов.</li>
+</ul>
+<p>Если включена автоматическая политика хранения (удаление архивов старше N дней),
+нужно заранее решить, требуется ли долгосрочное хранение таких файлов.</p>
+<hr />
+<h2 id="7">7. Мониторинг и логи</h2>
+<p>Базовый мониторинг можно выполнять по логам:</p>
+<pre><code class="language-bash">docker compose logs -f backend
+docker compose logs -f db
+</code></pre>
+<p>Для более серьёзной эксплуатации можно:</p>
+<ul>
+<li>настроить HTTPS через reverse-proxy (nginx, caddy);</li>
+<li>добавить сбор метрик и дашборды (Prometheus, Grafana и т.п.).</li>
+</ul>
+<hr />
+<h2 id="8-mvp">8. Ограничения развёртывания MVP</h2>
+<ul>
+<li>одноузловое развёртывание (без кластеризации и горизонтального масштабирования);</li>
+<li>только локальное файловое хранилище для сформированных архивов;</li>
+<li>минимальный мониторинг и алертинг «из коробки».</li>
+</ul>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../api-overview.ru/" class="btn btn-neutral float-left" title="Обзор API"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../db-schema.ru/" class="btn btn-neutral float-right" title="Схема базы данных">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../api-overview.ru/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../db-schema.ru/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

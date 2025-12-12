@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Deploy Guide - MedAgg Docs</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Deploy Guide";
+        var mkdocs_page_input_path = "deploy-guide.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> MedAgg Docs
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Overview</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../product-overview/">Product Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../modules/">System Modules</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../db-schema/">Database Schema</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Guides (EN)</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../user-guide/">User Guide</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../admin-guide/">Admin Guide</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api-overview/">API Overview</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Deploy Guide</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#1-architecture-overview">1. Architecture overview</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#2-requirements">2. Requirements</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#3-backend-deployment-short-version">3. Backend deployment (short version)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#4-frontend-deployment-short-version">4. Frontend deployment (short version)</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#development-mode">Development mode</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#simple-production-setup">Simple production setup</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#5-configuration">5. Configuration</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#6-backup-and-restore">6. Backup and restore</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#61-postgresql">6.1 PostgreSQL</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#62-built-archives">6.2 Built archives</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#7-monitoring-and-logs">7. Monitoring and logs</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#8-mvp-deployment-limitations">8. MVP deployment limitations</a>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Guides (RU)</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../product-overview.ru/">Общее описание продукта</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../user-guide.ru/">Руководство пользователя</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../admin-guide.ru/">Руководство администратора</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api-overview.ru/">Обзор API</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../deploy-guide.ru/">Руководство по развёртыванию</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../db-schema.ru/">Схема базы данных</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Architecture</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >ADRs</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0000-adr-template/">ADR Template</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0001-initial-fastapi-choice/">Initial FastAPI Choice</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0002-switch-to-django-drf/">Switch to Django + DRF</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0003-database-schema-and-relations/">DB Schema & Relations (MVP)</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0004-search-engine-integration/">Search Integration</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0005-single-node-docker-deployment/">Single-node Docker Deploy (MVP)</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0006-database-choice-postgresql/">DB Engine Choice</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../diagrams/">Diagrams</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">MedAgg Docs</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Guides (EN)</li>
+      <li class="breadcrumb-item active">Deploy Guide</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="deploy-guide">Deploy Guide</h1>
+<p>This document describes how to deploy
+<strong>Medical Imaging Dataset Aggregator</strong> in a simple single‑node environment.</p>
+<hr />
+<h2 id="1-architecture-overview">1. Architecture overview</h2>
+<p>System components:</p>
+<ul>
+<li><strong>Backend</strong> – Django + Django REST Framework;</li>
+<li><strong>Database</strong> – PostgreSQL;</li>
+<li><strong>Frontend</strong> – Vite + React + Ant Design (SPA);</li>
+<li><strong>File storage</strong> – local filesystem for ZIP archives.</li>
+</ul>
+<p>In the MVP, all components are deployed on <strong>a single Linux host</strong>, typically
+using Docker / docker-compose.</p>
+<hr />
+<h2 id="2-requirements">2. Requirements</h2>
+<ul>
+<li>Linux server or workstation (WSL2 / macOS can be used for development);</li>
+<li>Docker and docker-compose (or Docker + compose plugin);</li>
+<li>Git;</li>
+<li>optional for demo: Raspberry Pi 4 or similar + SSD.</li>
+</ul>
+<hr />
+<h2 id="3-backend-deployment-short-version">3. Backend deployment (short version)</h2>
+<p>Typical workflow:</p>
+<pre><code class="language-bash">git clone https://github.com/b-barsky/medagg-backend.git
+cd medagg-backend
+
+# Copy example env file if present
+cp .env.example .env
+
+# Configure .env (DB connection, secret key, etc.)
+
+# Start services
+docker compose up -d  # or: docker-compose up -d
+</code></pre>
+<p>After startup:</p>
+<ul>
+<li>backend API is available at <code>http://&lt;server-host&gt;:8000/api/v1/</code>;</li>
+<li>browsable API / schema may be available at <code>/api/</code>, <code>/api/schema/</code>
+  (depending on configuration).</li>
+</ul>
+<p>Run migrations (if not applied automatically):</p>
+<pre><code class="language-bash">docker compose exec backend python manage.py migrate
+</code></pre>
+<hr />
+<h2 id="4-frontend-deployment-short-version">4. Frontend deployment (short version)</h2>
+<h3 id="development-mode">Development mode</h3>
+<pre><code class="language-bash">git clone https://github.com/solinoid/medagg-frontend.git
+cd medagg-frontend
+
+npm install
+npm run dev
+</code></pre>
+<p>By default the Vite dev server runs at <code>http://localhost:5173/</code>
+and talks to the backend API.</p>
+<h3 id="simple-production-setup">Simple production setup</h3>
+<ol>
+<li>Build the frontend:</li>
+</ol>
+<p><code>bash
+   npm run build</code></p>
+<ol>
+<li>Serve the <code>dist/</code> directory via <code>nginx</code>, <code>caddy</code> or another HTTP server.</li>
+</ol>
+<p>Important:</p>
+<ul>
+<li>configure the correct backend API base URL for the frontend;</li>
+<li>configure CORS on the backend to allow requests from the frontend origin.</li>
+</ul>
+<hr />
+<h2 id="5-configuration">5. Configuration</h2>
+<p>Key parameters (usually via <code>.env</code>):</p>
+<ul>
+<li><strong>Backend</strong></li>
+<li>DB host, port, name, user, password;</li>
+<li>Django secret key;</li>
+<li>allowed hosts list;</li>
+<li>CORS settings;</li>
+<li>path to the directory with ZIP archives (built collections).</li>
+<li><strong>PostgreSQL</strong></li>
+<li>volume / directory for DB data.</li>
+<li><strong>Frontend</strong></li>
+<li>API base URL (e.g. <code>VITE_API_BASE_URL</code>).</li>
+</ul>
+<p>See the READMEs in each repo for exact variable names.</p>
+<hr />
+<h2 id="6-backup-and-restore">6. Backup and restore</h2>
+<h3 id="61-postgresql">6.1 PostgreSQL</h3>
+<p>Backup example:</p>
+<pre><code class="language-bash">pg_dump -U &lt;db_user&gt; &lt;db_name&gt; &gt; backup.sql
+</code></pre>
+<p>Restore example:</p>
+<pre><code class="language-bash">psql -U &lt;db_user&gt; &lt;db_name&gt; &lt; backup.sql
+</code></pre>
+<p>In Docker environments, these commands are run via <code>docker compose exec db ...</code>
+as described in the backend README.</p>
+<h3 id="62-built-archives">6.2 Built archives</h3>
+<p>Built collections are stored as ZIP files on the host filesystem
+or in a mounted Docker volume. For backup you can:</p>
+<ul>
+<li>periodically archive or copy this directory;</li>
+<li>use an external backup system.</li>
+</ul>
+<p>If an automatic retention policy is enabled (deleting archives older than N days),
+decide in advance whether long‑term storage is required.</p>
+<hr />
+<h2 id="7-monitoring-and-logs">7. Monitoring and logs</h2>
+<p>Basic monitoring can be done via logs:</p>
+<pre><code class="language-bash">docker compose logs -f backend
+docker compose logs -f db
+</code></pre>
+<p>For more serious setups you can:</p>
+<ul>
+<li>configure HTTPS via a reverse proxy (nginx, caddy);</li>
+<li>add metrics and dashboards (Prometheus, Grafana, etc.).</li>
+</ul>
+<hr />
+<h2 id="8-mvp-deployment-limitations">8. MVP deployment limitations</h2>
+<ul>
+<li>single‑node environment (no clustering or horizontal scaling);</li>
+<li>only local file storage for built archives;</li>
+<li>minimal monitoring and alerting out of the box.</li>
+</ul>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../api-overview/" class="btn btn-neutral float-left" title="API Overview"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../product-overview.ru/" class="btn btn-neutral float-right" title="Общее описание продукта">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../api-overview/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../product-overview.ru/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

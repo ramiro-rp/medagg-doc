@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>API Overview - MedAgg Docs</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "API Overview";
+        var mkdocs_page_input_path = "api-overview.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> MedAgg Docs
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Overview</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../product-overview/">Product Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../modules/">System Modules</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../db-schema/">Database Schema</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Guides (EN)</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../user-guide/">User Guide</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../admin-guide/">Admin Guide</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">API Overview</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#1-authentication">1. Authentication</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#post-authlogin">POST /auth/login/</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#2-dataset-catalog">2. Dataset catalog</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#get-datasets">GET /datasets/</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#get-datasetsid">GET /datasets/{id}/</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#3-search">3. Search</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#post-searchdatasets">POST /search/datasets/</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#4-user-collections">4. User collections</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#post-collections">POST /collections/</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#get-collections">GET /collections/</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#get-collectionsid">GET /collections/{id}/</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#get-collectionsiddownload">GET /collections/{id}/download/</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#5-admin-endpoints-examples">5. Admin endpoints (examples)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#6-schema-and-interactive-docs">6. Schema and interactive docs</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../deploy-guide/">Deploy Guide</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Guides (RU)</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../product-overview.ru/">Общее описание продукта</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../user-guide.ru/">Руководство пользователя</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../admin-guide.ru/">Руководство администратора</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api-overview.ru/">Обзор API</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../deploy-guide.ru/">Руководство по развёртыванию</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../db-schema.ru/">Схема базы данных</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Architecture</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >ADRs</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0000-adr-template/">ADR Template</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0001-initial-fastapi-choice/">Initial FastAPI Choice</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0002-switch-to-django-drf/">Switch to Django + DRF</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0003-database-schema-and-relations/">DB Schema & Relations (MVP)</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0004-search-engine-integration/">Search Integration</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0005-single-node-docker-deployment/">Single-node Docker Deploy (MVP)</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0006-database-choice-postgresql/">DB Engine Choice</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../diagrams/">Diagrams</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">MedAgg Docs</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Guides (EN)</li>
+      <li class="breadcrumb-item active">API Overview</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="api-overview-mvp">API Overview (MVP)</h1>
+<blockquote>
+<p>This is a <strong>high‑level</strong> description. The source of truth is the schema
+and code in <code>medagg-backend</code> (Django + DRF).</p>
+</blockquote>
+<p>Base backend URL: <code>http://&lt;server-host&gt;/api/v1</code></p>
+<hr />
+<h2 id="1-authentication">1. Authentication</h2>
+<h3 id="post-authlogin">POST <code>/auth/login/</code></h3>
+<p>Authenticates a user and returns an access token (e.g. JWT) or sets
+a session cookie.</p>
+<p>Request example:</p>
+<pre><code class="language-json">{
+  &quot;username&quot;: &quot;user@example.com&quot;,
+  &quot;password&quot;: &quot;string&quot;
+}
+</code></pre>
+<p>Response example (JWT‑style):</p>
+<pre><code class="language-json">{
+  &quot;access_token&quot;: &quot;jwt-token-here&quot;,
+  &quot;token_type&quot;: &quot;bearer&quot;
+}
+</code></pre>
+<p>The token is then passed in the header:</p>
+<pre><code class="language-http">Authorization: Bearer &lt;token&gt;
+</code></pre>
+<hr />
+<h2 id="2-dataset-catalog">2. Dataset catalog</h2>
+<h3 id="get-datasets">GET <code>/datasets/</code></h3>
+<p>Returns a list of datasets with filtering options.</p>
+<p>Typical query parameters:</p>
+<ul>
+<li><code>q</code> – free‑text search string;</li>
+<li><code>modality</code> – modality code / ID;</li>
+<li><code>area</code> – anatomical area code / ID;</li>
+<li><code>task_type</code> – ML task type code / ID;</li>
+<li><code>tags</code> – list of tag IDs or names (comma‑separated).</li>
+</ul>
+<p>Response example (simplified):</p>
+<pre><code class="language-json">[
+  {
+    &quot;id&quot;: 1,
+    &quot;title&quot;: &quot;Chest X-ray Pneumonia Dataset&quot;,
+    &quot;source_url&quot;: &quot;https://example.com/datasets/pneumonia&quot;,
+    &quot;modality&quot;: [&quot;XR&quot;],
+    &quot;area&quot;: &quot;chest&quot;,
+    &quot;task_types&quot;: [&quot;classification&quot;],
+    &quot;num_images&quot;: 5863,
+    &quot;size_mb&quot;: 1200,
+    &quot;tags&quot;: [&quot;pneumonia&quot;, &quot;thorax&quot;]
+  }
+]
+</code></pre>
+<h3 id="get-datasetsid">GET <code>/datasets/{id}/</code></h3>
+<p>Returns detailed information about a single dataset.</p>
+<hr />
+<h2 id="3-search">3. Search</h2>
+<p>Search can be implemented:</p>
+<ul>
+<li>via extra parameters to <code>GET /datasets/</code>; or</li>
+<li>via a dedicated endpoint.</li>
+</ul>
+<p>Example dedicated endpoint:</p>
+<h3 id="post-searchdatasets">POST <code>/search/datasets/</code></h3>
+<p>Performs search using free text and structured filters.</p>
+<p>Request example:</p>
+<pre><code class="language-json">{
+  &quot;query_text&quot;: &quot;пневмония грудная клетка КТ&quot;,
+  &quot;filters&quot;: {
+    &quot;area&quot;: &quot;chest&quot;,
+    &quot;modality&quot;: [&quot;CT&quot;],
+    &quot;task_type&quot;: [&quot;classification&quot;]
+  }
+}
+</code></pre>
+<p>Response example (simplified):</p>
+<pre><code class="language-json">[
+  {
+    &quot;dataset&quot;: {
+      &quot;id&quot;: 1,
+      &quot;title&quot;: &quot;Chest CT Pneumonia&quot;,
+      &quot;modality&quot;: [&quot;CT&quot;],
+      &quot;area&quot;: &quot;chest&quot;
+    },
+    &quot;relevance_score&quot;: 0.93
+  }
+]
+</code></pre>
+<hr />
+<h2 id="4-user-collections">4. User collections</h2>
+<h3 id="post-collections">POST <code>/collections/</code></h3>
+<p>Creates a new <strong>collection</strong> – a request to build a custom dataset.</p>
+<p>Request example:</p>
+<pre><code class="language-json">{
+  &quot;query_text&quot;: &quot;pneumonia chest xray&quot;,
+  &quot;dataset_ids&quot;: [1, 3],
+  &quot;limit_per_dataset&quot;: 1000
+}
+</code></pre>
+<p>Response example:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: 42,
+  &quot;status&quot;: &quot;pending&quot;,
+  &quot;created_at&quot;: &quot;2025-01-01T12:00:00Z&quot;
+}
+</code></pre>
+<h3 id="get-collections">GET <code>/collections/</code></h3>
+<p>Returns the list of collections for the current user.</p>
+<h3 id="get-collectionsid">GET <code>/collections/{id}/</code></h3>
+<p>Returns collection details:</p>
+<ul>
+<li>identifier;</li>
+<li>query text / short description;</li>
+<li>creation time;</li>
+<li>status (<code>pending</code>, <code>ready</code>, <code>failed</code>, <code>expired</code>);</li>
+<li>archive size (if available);</li>
+<li>download link (if applicable).</li>
+</ul>
+<h3 id="get-collectionsiddownload">GET <code>/collections/{id}/download/</code></h3>
+<p>Downloads the ZIP archive if the collection is ready and not expired.</p>
+<hr />
+<h2 id="5-admin-endpoints-examples">5. Admin endpoints (examples)</h2>
+<p>Available only to admin users. Possible examples:</p>
+<ul>
+<li><code>POST /admin/datasets/</code> – create dataset entry;</li>
+<li><code>PUT /admin/datasets/{id}/</code> – update dataset;</li>
+<li><code>GET /admin/requests/</code> – view user requests and collections.</li>
+</ul>
+<p>The exact list depends on the actual implementation in <code>medagg-backend</code>.</p>
+<hr />
+<h2 id="6-schema-and-interactive-docs">6. Schema and interactive docs</h2>
+<p>Django REST Framework may provide:</p>
+<ul>
+<li>browsable API pages;</li>
+<li>OpenAPI schema (JSON/YAML) via <code>drf-spectacular</code>, <code>drf-yasg</code>, etc.</li>
+</ul>
+<p>For precise request / response formats, use the published backend schema
+or inspect viewsets and serializers in the source code.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../admin-guide/" class="btn btn-neutral float-left" title="Admin Guide"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../deploy-guide/" class="btn btn-neutral float-right" title="Deploy Guide">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../admin-guide/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../deploy-guide/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

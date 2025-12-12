@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Admin Guide - MedAgg Docs</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Admin Guide";
+        var mkdocs_page_input_path = "admin-guide.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> MedAgg Docs
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Overview</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../product-overview/">Product Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../modules/">System Modules</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../db-schema/">Database Schema</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Guides (EN)</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../user-guide/">User Guide</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Admin Guide</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#1-admin-responsibilities">1. Admin responsibilities</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#2-accessing-the-admin-area">2. Accessing the admin area</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#3-managing-datasets">3. Managing datasets</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#31-creating-a-dataset-entry">3.1 Creating a dataset entry</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#32-editing-and-deactivating">3.2 Editing and deactivating</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#4-managing-vocabularies">4. Managing vocabularies</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#5-monitoring-requests-and-collections">5. Monitoring requests and collections</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#6-storage-management">6. Storage management</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#7-security">7. Security</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api-overview/">API Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../deploy-guide/">Deploy Guide</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Guides (RU)</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../product-overview.ru/">Общее описание продукта</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../user-guide.ru/">Руководство пользователя</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../admin-guide.ru/">Руководство администратора</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api-overview.ru/">Обзор API</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../deploy-guide.ru/">Руководство по развёртыванию</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../db-schema.ru/">Схема базы данных</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Architecture</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >ADRs</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0000-adr-template/">ADR Template</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0001-initial-fastapi-choice/">Initial FastAPI Choice</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0002-switch-to-django-drf/">Switch to Django + DRF</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0003-database-schema-and-relations/">DB Schema & Relations (MVP)</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0004-search-engine-integration/">Search Integration</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0005-single-node-docker-deployment/">Single-node Docker Deploy (MVP)</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0006-database-choice-postgresql/">DB Engine Choice</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../diagrams/">Diagrams</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">MedAgg Docs</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Guides (EN)</li>
+      <li class="breadcrumb-item active">Admin Guide</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="admin-guide">Admin Guide</h1>
+<p>This guide is for users with the <strong>Admin</strong> role in
+Medical Imaging Dataset Aggregator.</p>
+<hr />
+<h2 id="1-admin-responsibilities">1. Admin responsibilities</h2>
+<ul>
+<li>keep the <strong>dataset catalog</strong> and vocabularies up to date;</li>
+<li>monitor <strong>user requests</strong> and collection statuses;</li>
+<li>manage <strong>disk space</strong> by removing stale ZIP archives;</li>
+<li>help diagnose problems with search and collection building.</li>
+</ul>
+<hr />
+<h2 id="2-accessing-the-admin-area">2. Accessing the admin area</h2>
+<ol>
+<li>Sign in with an account that has admin privileges.</li>
+<li>Open the <strong>Admin</strong> section in the main menu.</li>
+</ol>
+<p>If you do not see the admin section, your account does not have the
+required permissions.</p>
+<p><screenshot: admin-main-page></p>
+<hr />
+<h2 id="3-managing-datasets">3. Managing datasets</h2>
+<h3 id="31-creating-a-dataset-entry">3.1 Creating a dataset entry</h3>
+<ol>
+<li>Go to <strong>Admin → Datasets</strong>.</li>
+<li>Click <strong>“New dataset”</strong>.</li>
+<li>Fill in the form. Recommended minimum:</li>
+<li>title;</li>
+<li>external source URL;</li>
+<li>short description;</li>
+<li>anatomical area;</li>
+<li>modality (one or more);</li>
+<li>ML task type(s);</li>
+<li>estimated number of images;</li>
+<li>approximate size (MB);</li>
+<li>tags.</li>
+<li>Save changes.</li>
+</ol>
+<p>The dataset will become available in search results (if marked as active).</p>
+<p><screenshot: admin-dataset-create-form></p>
+<h3 id="32-editing-and-deactivating">3.2 Editing and deactivating</h3>
+<ol>
+<li>In <strong>Admin → Datasets</strong>, find the target dataset.</li>
+<li>Click <strong>Edit</strong> and adjust the fields you need.</li>
+<li>To temporarily hide the dataset from search without losing its history,
+   set it as <strong>inactive</strong> (e.g. <code>Active = false</code>).</li>
+</ol>
+<p><screenshot: admin-dataset-edit-form></p>
+<hr />
+<h2 id="4-managing-vocabularies">4. Managing vocabularies</h2>
+<p>The admin UI may include sections like:</p>
+<ul>
+<li><strong>Anatomical areas</strong>;</li>
+<li><strong>Modalities</strong>;</li>
+<li><strong>ML task types</strong>;</li>
+<li><strong>Tags</strong>.</li>
+</ul>
+<p>Through these sections an admin can:</p>
+<ul>
+<li>add new values (e.g. a new modality or tag);</li>
+<li>correct names and descriptions;</li>
+<li>deactivate obsolete entries.</li>
+</ul>
+<p>Consistent vocabularies are important for filters and the search module.</p>
+<hr />
+<h2 id="5-monitoring-requests-and-collections">5. Monitoring requests and collections</h2>
+<p>The <strong>Admin → Requests / Logs</strong> section shows user queries and collections.</p>
+<p>For each record you may see:</p>
+<ul>
+<li>user;</li>
+<li>query text or filter set;</li>
+<li>creation time;</li>
+<li>collection status (pending / ready / failed / expired);</li>
+<li>archive size (if available);</li>
+<li>error details (if any).</li>
+</ul>
+<p><screenshot: admin-requests-page></p>
+<p>This information helps to:</p>
+<ul>
+<li>understand which scenarios are most common;</li>
+<li>diagnose failures linked to particular queries or datasets;</li>
+<li>decide which old large collections to delete.</li>
+</ul>
+<hr />
+<h2 id="6-storage-management">6. Storage management</h2>
+<p>Built collections are stored as ZIP files in a directory accessible to the
+backend (local SSD or mounted volume). The system may implement an automatic
+<strong>retention policy</strong> (removing archives older than N days).</p>
+<p>Typical admin tasks:</p>
+<ul>
+<li>monitor disk usage;</li>
+<li>remove old or test collections (via UI or scripts, depending on implementation);</li>
+<li>ensure that retention policies behave as expected and do not delete
+  important data.</li>
+</ul>
+<hr />
+<h2 id="7-security">7. Security</h2>
+<ul>
+<li>never share admin credentials with third parties;</li>
+<li>restrict access to the admin UI from untrusted networks;</li>
+<li>keep OS and Docker images up to date with security patches;</li>
+<li>if you suspect a data leak or privilege misuse, inform the team lead / DevOps
+  and rotate secrets (DB passwords, tokens, etc.) if needed.</li>
+</ul>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../user-guide/" class="btn btn-neutral float-left" title="User Guide"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../api-overview/" class="btn btn-neutral float-right" title="API Overview">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../user-guide/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../api-overview/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

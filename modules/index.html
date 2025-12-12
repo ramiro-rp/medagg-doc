@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>System Modules - MedAgg Docs</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "System Modules";
+        var mkdocs_page_input_path = "modules.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> MedAgg Docs
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Overview</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../product-overview/">Product Overview</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">System Modules</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#0-repositories">0. Repositories</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#1-backend-medagg-backend">1. Backend (medagg-backend)</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#11-responsibilities">1.1 Responsibilities</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#12-main-components-conceptual">1.2 Main components (conceptual)</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#2-search-module-medagg-search">2. Search module (medagg-search)</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#21-responsibilities">2.1 Responsibilities</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#22-integration-contract">2.2 Integration contract</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#3-frontend-medagg-frontend">3. Frontend (medagg-frontend)</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#31-responsibilities">3.1 Responsibilities</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#32-stack">3.2 Stack</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#4-auxiliary-modules-services">4. Auxiliary modules / services</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../db-schema/">Database Schema</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Guides (EN)</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../user-guide/">User Guide</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../admin-guide/">Admin Guide</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api-overview/">API Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../deploy-guide/">Deploy Guide</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Guides (RU)</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../product-overview.ru/">Общее описание продукта</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../user-guide.ru/">Руководство пользователя</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../admin-guide.ru/">Руководство администратора</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api-overview.ru/">Обзор API</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../deploy-guide.ru/">Руководство по развёртыванию</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../db-schema.ru/">Схема базы данных</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Architecture</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >ADRs</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0000-adr-template/">ADR Template</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0001-initial-fastapi-choice/">Initial FastAPI Choice</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0002-switch-to-django-drf/">Switch to Django + DRF</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0003-database-schema-and-relations/">DB Schema & Relations (MVP)</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0004-search-engine-integration/">Search Integration</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0005-single-node-docker-deployment/">Single-node Docker Deploy (MVP)</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0006-database-choice-postgresql/">DB Engine Choice</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../diagrams/">Diagrams</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">MedAgg Docs</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Overview</li>
+      <li class="breadcrumb-item active">System Modules</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="system-modules">System Modules</h1>
+<p>This document gives a high‑level overview of the main modules in the system
+and how they relate to each other. The actual implementation is split across
+separate repositories; for <strong>low‑level technical details, installation and
+developer instructions</strong>, always refer to the README of the corresponding repo.</p>
+<hr />
+<h2 id="0-repositories">0. Repositories</h2>
+<ul>
+<li>
+<p><strong>Backend API</strong> – <code>medagg-backend</code><br />
+  GitHub: <a href="https://github.com/b-barsky/medagg-backend">https://github.com/b-barsky/medagg-backend</a><br />
+  Main docs: <code>README.md</code> in that repo (API endpoints, settings, docker-compose).</p>
+</li>
+<li>
+<p><strong>Search module</strong> – <code>medagg-search</code><br />
+  GitHub: <a href="https://github.com/ESBehtev/medagg-search">https://github.com/ESBehtev/medagg-search</a><br />
+  Main docs: <code>README.md</code> in that repo (taxonomy format, query parsing, examples).</p>
+</li>
+<li>
+<p><strong>Frontend</strong> – <code>medagg-frontend</code><br />
+  GitHub: <a href="https://github.com/solinoid/medagg-frontend">https://github.com/solinoid/medagg-frontend</a><br />
+  Main docs: <code>README.md</code> in that repo (Vite dev server, build, environment vars).</p>
+</li>
+</ul>
+<p>This <code>medagg-docs</code> repository does <strong>not</strong> duplicate all technical details –
+instead it links to the module‑specific READMEs where appropriate.</p>
+<hr />
+<h2 id="1-backend-medagg-backend">1. Backend (<code>medagg-backend</code>)</h2>
+<h3 id="11-responsibilities">1.1 Responsibilities</h3>
+<ul>
+<li>expose REST API for:</li>
+<li>authentication and user management;</li>
+<li>dataset catalog (list, filter, detail);</li>
+<li>search integration;</li>
+<li>collection management (create, list, download);</li>
+<li>admin operations;</li>
+<li>store and validate data in PostgreSQL;</li>
+<li>coordinate background work for building collections (if used).</li>
+</ul>
+<h3 id="12-main-components-conceptual">1.2 Main components (conceptual)</h3>
+<ul>
+<li>Django models for datasets, images, vocabularies, collections, etc.;</li>
+<li>DRF serializers and viewsets for API endpoints;</li>
+<li>authentication and permission configuration;</li>
+<li>settings for database (PostgreSQL), storage paths, CORS, etc.</li>
+</ul>
+<p>For <strong>concrete endpoints, settings and docker-compose usage</strong>, see:</p>
+<ul>
+<li><code>medagg-backend</code> → <a href="https://github.com/b-barsky/medagg-backend#readme"><code>README.md</code></a></li>
+</ul>
+<p>Additional related docs in this repo:</p>
+<ul>
+<li><code>docs/api-overview.md</code></li>
+<li><code>docs/db-schema.md</code> / <code>docs/db-schema.ru.md</code></li>
+<li>ADRs related to backend and database choices (<code>docs/adr/0001*</code>, <code>0002*</code>, <code>0003*</code>, <code>0006*</code>).</li>
+</ul>
+<hr />
+<h2 id="2-search-module-medagg-search">2. Search module (<code>medagg-search</code>)</h2>
+<h3 id="21-responsibilities">2.1 Responsibilities</h3>
+<ul>
+<li>parse free‑text user queries in Russian / English;</li>
+<li>map terms to elements of a <strong>taxonomy</strong> (stored in YAML or similar);</li>
+<li>extract structured slots:</li>
+<li>modality;</li>
+<li>anatomical area;</li>
+<li>pathology / keyword;</li>
+<li>task type;</li>
+<li>optionally compute relevance scores for datasets.</li>
+</ul>
+<h3 id="22-integration-contract">2.2 Integration contract</h3>
+<p>Input from backend:</p>
+<ul>
+<li>query text as entered by user;</li>
+<li>optional context (language, default area, etc.).</li>
+</ul>
+<p>Output to backend:</p>
+<ul>
+<li>normalized query representation;</li>
+<li>list of candidate datasets or filter suggestions;</li>
+<li>scores or ranking hints.</li>
+</ul>
+<p>For <strong>taxonomy structure, configuration and usage examples</strong>, see:</p>
+<ul>
+<li><code>medagg-search</code> → <a href="https://github.com/ESBehtev/medagg-search#readme"><code>README.md</code></a></li>
+</ul>
+<p>Related ADR:</p>
+<ul>
+<li><code>docs/adr/0004-search-engine-integration.md</code> – explains the integration strategy.</li>
+</ul>
+<hr />
+<h2 id="3-frontend-medagg-frontend">3. Frontend (<code>medagg-frontend</code>)</h2>
+<h3 id="31-responsibilities">3.1 Responsibilities</h3>
+<ul>
+<li>provide the main user interface for search, filtering and collection creation;</li>
+<li>authenticate users and store tokens / session state on the client;</li>
+<li>call backend API and display results;</li>
+<li>provide admin UI for dataset and vocabulary management (where applicable).</li>
+</ul>
+<h3 id="32-stack">3.2 Stack</h3>
+<ul>
+<li>Vite (build tooling, dev server);</li>
+<li>React (component model);</li>
+<li>Ant Design (UI components and layout).</li>
+</ul>
+<p>For <strong>dev commands, build &amp; deploy instructions and environment variables</strong>, see:</p>
+<ul>
+<li><code>medagg-frontend</code> → <a href="https://github.com/solinoid/medagg-frontend#readme"><code>README.md</code></a></li>
+</ul>
+<p>Screens and flows are described at a product level in:</p>
+<ul>
+<li><code>docs/user-guide.md</code> / <code>.ru.md</code></li>
+<li><code>docs/admin-guide.md</code> / <code>.ru.md</code></li>
+</ul>
+<p>Corresponding screenshots should be placed in <code>docs/screenshots/</code> and linked
+from those guides.</p>
+<hr />
+<h2 id="4-auxiliary-modules-services">4. Auxiliary modules / services</h2>
+<p>Depending on the final implementation, additional modules may include:</p>
+<ul>
+<li>background workers (Celery, RQ, Django Q, etc.) for long‑running tasks
+  such as building large collections;</li>
+<li>storage adapters:</li>
+<li>local filesystem for MVP;</li>
+<li>later – cloud storage (S3‑compatible, etc.);</li>
+<li>monitoring and logging integrations.</li>
+</ul>
+<p>These elements are not strictly required for the MVP, but should be kept in mind
+when evolving the architecture.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../product-overview/" class="btn btn-neutral float-left" title="Product Overview"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../db-schema/" class="btn btn-neutral float-right" title="Database Schema">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../product-overview/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../db-schema/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

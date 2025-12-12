@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>ADR-0004 – Поисковый модуль и интеграция medagg-search - MedAgg Docs</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "ADR-0004 \u2013 \u041f\u043e\u0438\u0441\u043a\u043e\u0432\u044b\u0439 \u043c\u043e\u0434\u0443\u043b\u044c \u0438 \u0438\u043d\u0442\u0435\u0433\u0440\u0430\u0446\u0438\u044f medagg-search";
+        var mkdocs_page_input_path = "adr\\0004-search-engine-integration.ru.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> MedAgg Docs
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Overview</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../product-overview/">Product Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../modules/">System Modules</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../db-schema/">Database Schema</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Guides (EN)</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../user-guide/">User Guide</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../admin-guide/">Admin Guide</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../api-overview/">API Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../deploy-guide/">Deploy Guide</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Guides (RU)</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../product-overview.ru/">Общее описание продукта</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../user-guide.ru/">Руководство пользователя</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../admin-guide.ru/">Руководство администратора</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../api-overview.ru/">Обзор API</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../deploy-guide.ru/">Руководство по развёртыванию</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../db-schema.ru/">Схема базы данных</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Architecture</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >ADRs</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../0000-adr-template/">ADR Template</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../0001-initial-fastapi-choice/">Initial FastAPI Choice</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../0002-switch-to-django-drf/">Switch to Django + DRF</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../0003-database-schema-and-relations/">DB Schema & Relations (MVP)</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../0004-search-engine-integration/">Search Integration</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../0005-single-node-docker-deployment/">Single-node Docker Deploy (MVP)</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../0006-database-choice-postgresql/">DB Engine Choice</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../diagrams/">Diagrams</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">MedAgg Docs</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">ADR-0004 – Поисковый модуль и интеграция medagg-search</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="adr-0004-medagg-search">ADR-0004 – Поисковый модуль и интеграция medagg-search</h1>
+<ul>
+<li>Статус: принято</li>
+<li>Дата: 2025-11-24</li>
+<li>Владельцы: backend-разработчик, инженер по поиску/ML</li>
+<li>Связанный репозиторий: <code>medagg-search</code></li>
+</ul>
+<h2 id="_1">Контекст</h2>
+<p>Пользователю нужно уметь искать по каталогу датасетов, используя:</p>
+<ul>
+<li><strong>свободный текстовый запрос</strong> (RU/EN), например: «pneumonia chest xray»;</li>
+<li><strong>структурированные фильтры</strong> (модальность, область, тип задачи, теги).</li>
+</ul>
+<p>Команда запланировала отдельный модуль <code>medagg-search</code>, который:</p>
+<ul>
+<li>использует <strong>YAML-онтологию / таксономию</strong> медицинских и технических терминов;</li>
+<li>парсит свободный текст и извлекает из него структурированные слоты;</li>
+<li>может вычислять оценки релевантности для датасетов.</li>
+</ul>
+<p>Нужно определить, как этот модуль встраивается в Django-backend.</p>
+<h2 id="_2">Решение</h2>
+<p>Мы решили:</p>
+<ol>
+<li>Оставить <code>medagg-search</code> <strong>отдельным модулем / библиотекой</strong>, а не частью монолита.</li>
+<li>Интегрировать его с backend-ом через:</li>
+<li>вызовы из view/handler-ов, отвечающих за поиск в <code>medagg-backend</code>;</li>
+<li>передачу текстового запроса пользователя и опционального контекста;</li>
+<li>приём нормализованной структуры запроса и подсказок по ранжированию.</li>
+<li>Сохранить PostgreSQL в качестве основного хранилища и источника истины;
+   поисковый модуль <strong>не заменяет</strong> реляционный каталог.</li>
+</ol>
+<h2 id="_3">Рассмотренные альтернативы</h2>
+<ul>
+<li><strong>Полнотекстовый поиск только в PostgreSQL</strong><br />
+  Плюсы:</li>
+<li>не нужен отдельный модуль;</li>
+<li>проще развёртывание.<br />
+  Минусы:</li>
+<li>сложнее реализовать доменно-специфическую таксономию и нормализацию RU/EN;</li>
+<li>
+<p>меньший контроль над интерпретацией запросов.</p>
+</li>
+<li>
+<p><strong>Внешний поисковый движок</strong> (Elasticsearch, OpenSearch и т.п.)<br />
+  Плюсы:</p>
+</li>
+<li>мощные возможности полнотекстового поиска;<br />
+  Минусы:</li>
+<li>дополнительная инфраструктурная сложность;</li>
+<li>потенциально избыточно для учебного MVP.</li>
+</ul>
+<h2 id="_4">Последствия</h2>
+<p>Положительные:</p>
+<ul>
+<li>чёткое разделение между хранилищем каталога (PostgreSQL) и логикой поиска
+  (<code>medagg-search</code>);</li>
+<li>проще экспериментировать с поведением поиска, не трогая схему БД;</li>
+<li>логика по работе с RU/EN и медицинскими терминами остаётся рядом с кодом поиска.</li>
+</ul>
+<p>Отрицательные / риски:</p>
+<ul>
+<li>необходимость развёртывать и сопровождать дополнительный Python-модуль;</li>
+<li>нужно следить за согласованностью таксономии и ожиданий backend-а.</li>
+</ul>
+<h2 id="_5">Ссылки</h2>
+<ul>
+<li>репозиторий <code>medagg-search</code></li>
+<li>эндпоинты, связанные с поиском, в <code>medagg-backend</code>.</li>
+</ul>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

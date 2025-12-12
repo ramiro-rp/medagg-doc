@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Чек-лист ревью по ролям - MedAgg Docs</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "\u0427\u0435\u043a-\u043b\u0438\u0441\u0442 \u0440\u0435\u0432\u044c\u044e \u043f\u043e \u0440\u043e\u043b\u044f\u043c";
+        var mkdocs_page_input_path = "review-checklist.ru.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> MedAgg Docs
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Overview</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../product-overview/">Product Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../modules/">System Modules</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../db-schema/">Database Schema</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Guides (EN)</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../user-guide/">User Guide</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../admin-guide/">Admin Guide</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api-overview/">API Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../deploy-guide/">Deploy Guide</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Guides (RU)</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../product-overview.ru/">Общее описание продукта</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../user-guide.ru/">Руководство пользователя</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../admin-guide.ru/">Руководство администратора</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api-overview.ru/">Обзор API</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../deploy-guide.ru/">Руководство по развёртыванию</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../db-schema.ru/">Схема базы данных</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Architecture</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >ADRs</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0000-adr-template/">ADR Template</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0001-initial-fastapi-choice/">Initial FastAPI Choice</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0002-switch-to-django-drf/">Switch to Django + DRF</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0003-database-schema-and-relations/">DB Schema & Relations (MVP)</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0004-search-engine-integration/">Search Integration</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0005-single-node-docker-deployment/">Single-node Docker Deploy (MVP)</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0006-database-choice-postgresql/">DB Engine Choice</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../diagrams/">Diagrams</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">MedAgg Docs</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Чек-лист ревью по ролям</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="-">Чек-лист ревью по ролям</h1>
+<p>Этот документ связывает файлы документации с <strong>ролями команды</strong>, которые
+должны просмотреть и утвердить их до того, как MVP будет считаться завершённым.</p>
+<p>Роли в проекте:</p>
+<ul>
+<li><strong>Тимлид / DevOps</strong></li>
+<li><strong>Backend-разработчик</strong></li>
+<li><strong>Frontend-разработчик</strong></li>
+<li><strong>DBA (администратор базы данных)</strong></li>
+<li><strong>Ответственный за документацию</strong></li>
+</ul>
+<hr />
+<h2 id="1">1. Основные продуктовые документы</h2>
+<ul>
+<li><code>docs/product-overview.md</code> / <code>.ru.md</code></li>
+<li><strong>Обязательное ревью:</strong><ul>
+<li>Тимлид / DevOps (общий охват и границы MVP)</li>
+<li>Backend-разработчик (техническая реализуемость)</li>
+<li>Frontend-разработчик (предполагаемые аспекты UI / UX)</li>
+</ul>
+</li>
+<li>
+<p><strong>Желательно просмотреть:</strong></p>
+<ul>
+<li>DBA (влияние на данные и хранение)</li>
+</ul>
+</li>
+<li>
+<p><code>docs/modules.md</code></p>
+</li>
+<li><strong>Обязательное ревью:</strong><ul>
+<li>Тимлид / DevOps</li>
+<li>Backend-разработчик</li>
+</ul>
+</li>
+<li>
+<p><strong>Желательно просмотреть:</strong></p>
+<ul>
+<li>Frontend-разработчик</li>
+<li>DBA</li>
+</ul>
+</li>
+<li>
+<p><code>docs/db-schema.md</code></p>
+</li>
+<li><strong>Обязательное ревью:</strong><ul>
+<li>Оба DBA</li>
+<li>Backend-разработчик</li>
+</ul>
+</li>
+<li><strong>Желательно просмотреть:</strong><ul>
+<li>Тимлид / DevOps</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h2 id="2">2. Руководства</h2>
+<ul>
+<li><code>docs/user-guide.md</code> / <code>.ru.md</code></li>
+<li><strong>Обязательное ревью:</strong><ul>
+<li>Frontend-разработчик (потоки интерфейса должны совпадать с реализацией)</li>
+<li>Ответственный за документацию</li>
+</ul>
+</li>
+<li>
+<p><strong>Желательно просмотреть:</strong></p>
+<ul>
+<li>Тимлид / DevOps</li>
+</ul>
+</li>
+<li>
+<p><code>docs/admin-guide.md</code> / <code>.ru.md</code></p>
+</li>
+<li><strong>Обязательное ревью:</strong><ul>
+<li>Backend-разработчик (ожидания по admin API и модели данных)</li>
+<li>Тимлид / DevOps</li>
+</ul>
+</li>
+<li>
+<p><strong>Желательно просмотреть:</strong></p>
+<ul>
+<li>DBA (админские сценарии, влияющие на каталог и справочники)</li>
+</ul>
+</li>
+<li>
+<p><code>docs/api-overview.md</code> / <code>.ru.md</code></p>
+</li>
+<li><strong>Обязательное ревью:</strong><ul>
+<li>Backend-разработчик</li>
+<li>Тимлид / DevOps</li>
+</ul>
+</li>
+<li>
+<p><strong>Желательно просмотреть:</strong></p>
+<ul>
+<li>DBA (паттерны чтения, влияние на запросы к БД)</li>
+</ul>
+</li>
+<li>
+<p><code>docs/deploy-guide.md</code> / <code>.ru.md</code></p>
+</li>
+<li><strong>Обязательное ревью:</strong><ul>
+<li>Тимлид / DevOps</li>
+</ul>
+</li>
+<li><strong>Желательно просмотреть:</strong><ul>
+<li>Backend-разработчик (окружение и настройки)</li>
+<li>DBA (части, относящиеся к БД)</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h2 id="3-adr">3. Архитектурные решения (ADR)</h2>
+<ul>
+<li><code>docs/adr/0000-adr-template.md</code></li>
+<li><code>docs/adr/0001-initial-fastapi-choice.md</code></li>
+<li><code>docs/adr/0002-switch-to-django-drf.md</code></li>
+<li><code>docs/adr/0003-database-schema-and-relations.md</code></li>
+<li><code>docs/adr/0004-search-engine-integration.md</code></li>
+<li>
+<p><code>docs/adr/0005-single-node-docker-deployment.md</code></p>
+</li>
+<li>
+<p><strong>Обязательное ревью:</strong></p>
+<ul>
+<li>Тимлид / DevOps</li>
+<li>Backend-разработчик</li>
+<li>DBA (для ADR, связанных с базой данных)</li>
+</ul>
+</li>
+<li><strong>Желательно просмотреть:</strong><ul>
+<li>Frontend-разработчик (для решений, влияющих на форму API)</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h2 id="4">4. Визуальные материалы и ассеты</h2>
+<ul>
+<li><code>docs/diagrams/</code> (ER-диаграммы, архитектурные схемы)</li>
+<li><strong>Обязательное ревью:</strong><ul>
+<li>Тимлид / DevOps</li>
+<li>DBA (для диаграмм БД)</li>
+</ul>
+</li>
+<li>
+<p><strong>Желательно просмотреть:</strong></p>
+<ul>
+<li>Backend-разработчик</li>
+<li>Frontend-разработчик</li>
+</ul>
+</li>
+<li>
+<p><code>docs/screenshots/</code></p>
+</li>
+<li><strong>Обязательное ревью:</strong><ul>
+<li>Frontend-разработчик</li>
+<li>Ответственный за документацию</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h2 id="5">5. Процесс</h2>
+<p>Перед демо MVP:</p>
+<ol>
+<li>Каждая роль проходит по файлам, отмеченным как «Обязательное ревью».</li>
+<li>Комментарии оставляются через PR или в виде встроенных заметок.</li>
+<li>Ответственный за документацию обновляет как английскую, так и русскую версии, где это применимо.</li>
+</ol>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

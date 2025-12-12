@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>User Guide - MedAgg Docs</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "User Guide";
+        var mkdocs_page_input_path = "user-guide.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> MedAgg Docs
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Overview</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../product-overview/">Product Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../modules/">System Modules</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../db-schema/">Database Schema</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Guides (EN)</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">User Guide</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#1-signing-in">1. Signing in</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#2-main-screen-search">2. Main screen (Search)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#3-searching-for-datasets">3. Searching for datasets</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#31-basic-search">3.1 Basic search</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#32-viewing-dataset-details">3.2 Viewing dataset details</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#4-building-a-custom-collection">4. Building a custom collection</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#41-selecting-datasets">4.1 Selecting datasets</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#42-starting-collection-build">4.2 Starting collection build</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#5-my-datasets-history">5. “My datasets” (history)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#6-logging-out">6. Logging out</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#7-common-issues-and-tips">7. Common issues and tips</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../admin-guide/">Admin Guide</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api-overview/">API Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../deploy-guide/">Deploy Guide</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Guides (RU)</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../product-overview.ru/">Общее описание продукта</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../user-guide.ru/">Руководство пользователя</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../admin-guide.ru/">Руководство администратора</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api-overview.ru/">Обзор API</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../deploy-guide.ru/">Руководство по развёртыванию</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../db-schema.ru/">Схема базы данных</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Architecture</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >ADRs</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0000-adr-template/">ADR Template</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0001-initial-fastapi-choice/">Initial FastAPI Choice</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0002-switch-to-django-drf/">Switch to Django + DRF</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0003-database-schema-and-relations/">DB Schema & Relations (MVP)</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0004-search-engine-integration/">Search Integration</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0005-single-node-docker-deployment/">Single-node Docker Deploy (MVP)</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0006-database-choice-postgresql/">DB Engine Choice</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../diagrams/">Diagrams</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">MedAgg Docs</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Guides (EN)</li>
+      <li class="breadcrumb-item active">User Guide</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="user-guide">User Guide</h1>
+<p>This document explains how an end user (clinician, researcher,
+student) interacts with <strong>Medical Imaging Dataset Aggregator</strong>.</p>
+<hr />
+<h2 id="1-signing-in">1. Signing in</h2>
+<ol>
+<li>Open the application in your browser.<br />
+   Example: <code>http://&lt;server-host&gt;/</code></li>
+<li>If you already have an account, click <strong>“Log in”</strong>.</li>
+<li>If you do not, click <strong>“Sign up / Register”</strong> and fill in the form.</li>
+</ol>
+<p><screenshot: auth-page></p>
+<p>Exact labels and field names depend on the final frontend implementation.
+Replace placeholders with real screenshots when the UI is stable.</p>
+<hr />
+<h2 id="2-main-screen-search">2. Main screen (Search)</h2>
+<p>After signing in, you land on the <strong>Search</strong> page. Typically it contains:</p>
+<ul>
+<li>a <strong>free‑text search</strong> input;</li>
+<li><strong>filters</strong> for:</li>
+<li>modality;</li>
+<li>anatomical area;</li>
+<li>ML task type;</li>
+<li>tags;</li>
+<li>a table with <strong>search results</strong>.</li>
+</ul>
+<p>In the navigation bar you usually see:</p>
+<ul>
+<li><strong>Search</strong>;</li>
+<li><strong>My datasets</strong>;</li>
+<li>(for admins) <strong>Admin</strong>.</li>
+</ul>
+<p><screenshot: main-search-page></p>
+<hr />
+<h2 id="3-searching-for-datasets">3. Searching for datasets</h2>
+<h3 id="31-basic-search">3.1 Basic search</h3>
+<ol>
+<li>Enter a query in the search box.<br />
+   Examples:</li>
+<li><code>pneumonia chest xray</code></li>
+<li><code>пневмония грудная клетка КТ</code></li>
+<li>Optionally apply filters:</li>
+<li>Modality = X‑ray;</li>
+<li>Area = Chest;</li>
+<li>Task type = Classification.</li>
+<li>Click <strong>Search</strong>.</li>
+</ol>
+<p>The table will show datasets that match the query:</p>
+<ul>
+<li>title, source, modality;</li>
+<li>number of images;</li>
+<li>relevance score (if the search module is enabled);</li>
+<li>controls to select datasets.</li>
+</ul>
+<p><screenshot: search-results></p>
+<h3 id="32-viewing-dataset-details">3.2 Viewing dataset details</h3>
+<p>Click on a dataset row or a <strong>“Details”</strong> button to see:</p>
+<ul>
+<li>short description;</li>
+<li>link to the original resource;</li>
+<li>list of labels / pathologies (if available);</li>
+<li>example images (if implemented);</li>
+<li>approximate size.</li>
+</ul>
+<hr />
+<h2 id="4-building-a-custom-collection">4. Building a custom collection</h2>
+<h3 id="41-selecting-datasets">4.1 Selecting datasets</h3>
+<p>On the search results page:</p>
+<ol>
+<li>Select one or more datasets you want to include in the collection.</li>
+<li>If the UI provides additional options, configure them, for example:</li>
+<li>maximum number of images per dataset;</li>
+<li>class balancing rules, etc.</li>
+</ol>
+<p><screenshot: select-datasets-for-collection></p>
+<h3 id="42-starting-collection-build">4.2 Starting collection build</h3>
+<ol>
+<li>Click <strong>“Build collection”</strong> (exact label may differ).</li>
+<li>Check the summary information:</li>
+<li>how many datasets are selected;</li>
+<li>approximate number of images;</li>
+<li>approximate archive size.</li>
+<li>Confirm creation.</li>
+</ol>
+<p>The system will create a <strong>collection build request</strong> and either redirect you
+to <strong>My datasets</strong> or show a notification.</p>
+<hr />
+<h2 id="5-my-datasets-history">5. “My datasets” (history)</h2>
+<p>The <strong>My datasets</strong> section shows previously built collections.</p>
+<p>For each collection you will typically see:</p>
+<ul>
+<li>ID or name;</li>
+<li>original query text or short description;</li>
+<li>creation date;</li>
+<li>status:</li>
+<li><code>Pending</code> – still processing;</li>
+<li><code>Ready</code> – archive is available for download;</li>
+<li><code>Expired</code> – archive has been removed; the collection may be rebuilt;</li>
+<li>actions:</li>
+<li><strong>Download ZIP</strong> (if status is Ready);</li>
+<li><strong>Regenerate</strong> (if implemented).</li>
+</ul>
+<p><screenshot: my-datasets-page></p>
+<p>Clicking <strong>Download ZIP</strong> downloads an archive that usually contains:</p>
+<ul>
+<li>an <code>images/</code> directory with image files;</li>
+<li>a <code>metadata.csv</code> file with a table of metadata for each image
+  (ID, labels, modality, source dataset, etc.).</li>
+</ul>
+<hr />
+<h2 id="6-logging-out">6. Logging out</h2>
+<p>Click your profile icon or the menu item with your name and choose
+<strong>“Log out”</strong>.</p>
+<hr />
+<h2 id="7-common-issues-and-tips">7. Common issues and tips</h2>
+<ul>
+<li><strong>“No results found”</strong></li>
+<li>Relax some filters or simplify the query.</li>
+<li>Check whether the catalog actually contains datasets for that modality / task.</li>
+<li><strong>“Status stays ‘Pending’ for too long”</strong></li>
+<li>There may be high server load or slow external sources.</li>
+<li>If the wait time is clearly abnormal, contact the administrator.</li>
+<li><strong>“Download link does not work / collection expired”</strong></li>
+<li>The archive may have been deleted by an automatic retention policy.
+    Try rebuilding the collection or running the search again.</li>
+</ul>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../db-schema/" class="btn btn-neutral float-left" title="Database Schema"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../admin-guide/" class="btn btn-neutral float-right" title="Admin Guide">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../db-schema/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../admin-guide/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

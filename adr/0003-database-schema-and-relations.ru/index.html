@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>ADR-0003 – Схема базы данных и основные связи (MVP) - MedAgg Docs</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "ADR-0003 \u2013 \u0421\u0445\u0435\u043c\u0430 \u0431\u0430\u0437\u044b \u0434\u0430\u043d\u043d\u044b\u0445 \u0438 \u043e\u0441\u043d\u043e\u0432\u043d\u044b\u0435 \u0441\u0432\u044f\u0437\u0438 (MVP)";
+        var mkdocs_page_input_path = "adr\\0003-database-schema-and-relations.ru.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> MedAgg Docs
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Overview</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../product-overview/">Product Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../modules/">System Modules</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../db-schema/">Database Schema</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Guides (EN)</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../user-guide/">User Guide</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../admin-guide/">Admin Guide</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../api-overview/">API Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../deploy-guide/">Deploy Guide</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Guides (RU)</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../product-overview.ru/">Общее описание продукта</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../user-guide.ru/">Руководство пользователя</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../admin-guide.ru/">Руководство администратора</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../api-overview.ru/">Обзор API</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../deploy-guide.ru/">Руководство по развёртыванию</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../db-schema.ru/">Схема базы данных</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Architecture</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >ADRs</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../0000-adr-template/">ADR Template</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../0001-initial-fastapi-choice/">Initial FastAPI Choice</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../0002-switch-to-django-drf/">Switch to Django + DRF</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../0003-database-schema-and-relations/">DB Schema & Relations (MVP)</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../0004-search-engine-integration/">Search Integration</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../0005-single-node-docker-deployment/">Single-node Docker Deploy (MVP)</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../0006-database-choice-postgresql/">DB Engine Choice</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../diagrams/">Diagrams</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">MedAgg Docs</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">ADR-0003 – Схема базы данных и основные связи (MVP)</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="adr-0003-mvp">ADR-0003 – Схема базы данных и основные связи (MVP)</h1>
+<ul>
+<li>Статус: принято</li>
+<li>Дата: 2025-11-17</li>
+<li>Владельцы: DBA, backend‑разработчик</li>
+<li>Связанные документы:</li>
+<li><code>docs/db-schema.md</code></li>
+<li><code>docs/db-schema.ru.md</code></li>
+<li><code>docs/diagrams/er-medagg-core.png</code></li>
+<li>SQL‑скрипт DBA: <code>БД.sql</code></li>
+</ul>
+<h2 id="_1">Контекст</h2>
+<p>Система должна описывать:</p>
+<ul>
+<li><strong>исходные наборы данных</strong> (внешние коллекции изображений);</li>
+<li><strong>справочники</strong>, описывающие эти наборы
+  (анатомические области, модальности, типы ML‑задач, теги);</li>
+<li><strong>активность пользователей</strong>, связанную с поиском и скачиванием коллекций.</li>
+</ul>
+<p>Для MVP команда решила <strong>не моделировать отдельные изображения</strong> строками
+в БД. Вместо этого БД отслеживает только датасеты и сформированные из них
+коллекции, а детали на уровне файлов остаются в исходных ресурсах или
+в структуре файлового хранилища.</p>
+<p>Схема должна:</p>
+<ul>
+<li>быть достаточно простой для MVP и демонстрации;</li>
+<li>поддерживать эффективный поиск и фильтрацию по каталогу;</li>
+<li>позволять создавать и «протухать» пользовательские коллекции.</li>
+</ul>
+<h2 id="_2">Решение</h2>
+<p>Мы выбрали <strong>реляционную схему в PostgreSQL</strong> со следующими ключевыми сущностями:</p>
+<ul>
+<li><code>roles</code>, <code>users</code> – учётные записи пользователей и их роли;</li>
+<li><code>anatomical_areas</code>, <code>modalities</code>, <code>ml_tasks</code>, <code>tags</code> – справочники;</li>
+<li><code>datasets</code> – исходные датасеты с основной метаинформацией и ссылками на хранилище;</li>
+<li><code>dataset_modalities</code>, <code>dataset_ml_tasks</code>, <code>dataset_tags</code> – связи многие‑ко‑многим;</li>
+<li><code>user_search_queries</code> – история поисковых запросов и фильтров;</li>
+<li><code>user_dataset_collections</code> – коллекции датасетов, сформированные пользователем
+  (с путём к архиву и сроком жизни);</li>
+<li><code>collection_datasets</code> – связь между коллекциями и датасетами с опциональной
+  оценкой релевантности.</li>
+</ul>
+<p>Эта модель детально описана в <strong><code>docs/db-schema.md</code></strong> (и <code>docs/db-schema.ru.md</code>)
+и визуализирована на диаграмме <code>docs/diagrams/er-medagg-core.png</code>.</p>
+<h2 id="_3">Рассмотренные альтернативы</h2>
+<h3 id="a">A. Моделировать каждое изображение в БД</h3>
+<p>Добавить таблицы вида <code>images</code> и <code>image_labels</code> с одной строкой на изображение.</p>
+<ul>
+<li>Плюсы:</li>
+<li>точное отслеживание каждого изображения, попавшего в коллекцию;</li>
+<li>гибкая аналитика по меткам и использованию изображений.</li>
+<li>Минусы:</li>
+<li>более сложная схема и миграции;</li>
+<li>значительно больший объём таблиц;</li>
+<li>для текущих целей MVP это избыточно.</li>
+</ul>
+<h3 id="b-json">B. Хранить всё в JSON‑полях</h3>
+<p>Держать основную метаинформацию о датасетах в JSON, а не в нормализованных таблицах.</p>
+<ul>
+<li>Плюсы:</li>
+<li>гибкая структура, проще эволюционировать;</li>
+<li>Минусы:</li>
+<li>сложнее выполнять эффективные запросы;</li>
+<li>менее прозрачно для DBA и аналитических задач;</li>
+<li>всё равно нужны структурированные таблицы для справочников и связей.</li>
+</ul>
+<h2 id="_4">Последствия</h2>
+<p>Положительные:</p>
+<ul>
+<li>понятная и явная модель данных для датасетов и коллекций;</li>
+<li>DBA могут проектировать индексы, ограничения и оценивать производительность;</li>
+<li>пользовательские коллекции воспроизводимы через таблицы
+  <code>user_dataset_collections</code> и <code>collection_datasets</code>;</li>
+<li>схема совпадает с SQL‑скриптом, поддерживаемым DBA.</li>
+</ul>
+<p>Отрицательные / риски:</p>
+<ul>
+<li>аналитика на уровне отдельных изображений требует обращения к исходным
+  ресурсам или метаданным файловой системы, а не к реляционной схеме;</li>
+<li>если в будущих версиях понадобится строгое отслеживание изображений,
+  схему придётся расширять (например, добавлять <code>images</code> / <code>image_labels</code>).</li>
+</ul>
+<h2 id="_5">Замечания</h2>
+<ul>
+<li>Поле <code>storage_path_hdfs</code> в таблице <code>user_dataset_collections</code> по смыслу
+  универсально: оно может указывать на локальный диск, примонтированный том,
+  HDFS, объектное хранилище и т.п. Конкретную инфраструктуру определяют
+  DevOps и решения по развёртыванию.</li>
+<li>Триггер устанавливает <code>expires_at = created_at + 1 day</code> для пользовательских
+  коллекций; фоновые задания или cron‑скрипты должны периодически удалять
+  протухшие архивы из хранилища.</li>
+</ul>
+<h2 id="_6">Ссылки</h2>
+<ul>
+<li><code>docs/db-schema.md</code></li>
+<li><code>docs/db-schema.ru.md</code></li>
+<li>Диаграмма ER: <code>docs/diagrams/er-medagg-core.png</code></li>
+<li>SQL‑скрипт: <code>БД.sql</code></li>
+</ul>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

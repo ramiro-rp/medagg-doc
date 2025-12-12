@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Руководство пользователя - MedAgg Docs</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "\u0420\u0443\u043a\u043e\u0432\u043e\u0434\u0441\u0442\u0432\u043e \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f";
+        var mkdocs_page_input_path = "user-guide.ru.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> MedAgg Docs
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Overview</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../product-overview/">Product Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../modules/">System Modules</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../db-schema/">Database Schema</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Guides (EN)</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../user-guide/">User Guide</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../admin-guide/">Admin Guide</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api-overview/">API Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../deploy-guide/">Deploy Guide</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Guides (RU)</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../product-overview.ru/">Общее описание продукта</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Руководство пользователя</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#1">1. Вход в систему</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#2">2. Главный экран (Поиск)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#3">3. Поиск наборов данных</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#31">3.1 Базовый поиск</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#32">3.2 Просмотр деталей набора</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#4">4. Формирование собственной коллекции</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#41">4.1 Выбор наборов</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#42">4.2 Запуск формирования</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#5">5. Раздел «Мои наборы» (история)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#6">6. Выход из системы</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#7">7. Частые проблемы и рекомендации</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../admin-guide.ru/">Руководство администратора</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api-overview.ru/">Обзор API</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../deploy-guide.ru/">Руководство по развёртыванию</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../db-schema.ru/">Схема базы данных</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Architecture</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >ADRs</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0000-adr-template/">ADR Template</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0001-initial-fastapi-choice/">Initial FastAPI Choice</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0002-switch-to-django-drf/">Switch to Django + DRF</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0003-database-schema-and-relations/">DB Schema & Relations (MVP)</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0004-search-engine-integration/">Search Integration</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0005-single-node-docker-deployment/">Single-node Docker Deploy (MVP)</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0006-database-choice-postgresql/">DB Engine Choice</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../diagrams/">Diagrams</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">MedAgg Docs</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Guides (RU)</li>
+      <li class="breadcrumb-item active">Руководство пользователя</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="_1">Руководство пользователя</h1>
+<p>В этом документе описано, как обычный пользователь (врач, исследователь,
+студент) работает с системой <strong>Medical Imaging Dataset Aggregator</strong>.</p>
+<hr />
+<h2 id="1">1. Вход в систему</h2>
+<ol>
+<li>Откройте приложение в браузере.<br />
+   Пример: <code>http://&lt;server-host&gt;/</code></li>
+<li>Если у вас уже есть аккаунт, нажмите <strong>«Войти»</strong>.</li>
+<li>Если аккаунта нет, нажмите <strong>«Регистрация»</strong> и заполните форму.</li>
+</ol>
+<p><screenshot: auth-page></p>
+<p>Точные названия кнопок и полей зависят от реализации фронтенда. После
+завершения разработки замените плейсхолдеры реальными скриншотами.</p>
+<hr />
+<h2 id="2">2. Главный экран (Поиск)</h2>
+<p>После входа вы попадаете на страницу <strong>поиска</strong>. Обычно она содержит:</p>
+<ul>
+<li>поле <strong>свободного текстового поиска</strong>;</li>
+<li><strong>фильтры</strong> по:</li>
+<li>модальности;</li>
+<li>анатомической области;</li>
+<li>типу ML-задачи;</li>
+<li>тегам;</li>
+<li>таблицу с <strong>результатами поиска</strong>.</li>
+</ul>
+<p>В навигации, как правило, есть разделы:</p>
+<ul>
+<li><strong>Search / Поиск</strong>;</li>
+<li><strong>My datasets / Мои наборы</strong>;</li>
+<li>(для администратора) <strong>Admin / Админ</strong>.</li>
+</ul>
+<p><screenshot: main-search-page></p>
+<hr />
+<h2 id="3">3. Поиск наборов данных</h2>
+<h3 id="31">3.1 Базовый поиск</h3>
+<ol>
+<li>Введите запрос в строку поиска.<br />
+   Примеры:</li>
+<li><code>pneumonia chest xray</code></li>
+<li><code>пневмония грудная клетка КТ</code></li>
+<li>Задайте фильтры при необходимости:</li>
+<li>Модальность = X-ray / Рентген;</li>
+<li>Область = Chest / Грудная клетка;</li>
+<li>Тип задачи = Classification / Классификация.</li>
+<li>Нажмите <strong>Search / Поиск</strong>.</li>
+</ol>
+<p>В таблице появятся наборы данных, удовлетворяющие запросу:</p>
+<ul>
+<li>название, источник, модальность;</li>
+<li>количество изображений;</li>
+<li>оценка релевантности (если используется модуль поиска);</li>
+<li>элементы управления для выбора наборов.</li>
+</ul>
+<p><screenshot: search-results></p>
+<h3 id="32">3.2 Просмотр деталей набора</h3>
+<p>Нажмите на строку набора или кнопку <strong>«Details / Подробнее»</strong>, чтобы увидеть:</p>
+<ul>
+<li>краткое описание;</li>
+<li>ссылку на исходный ресурс;</li>
+<li>список меток / патологий (если есть);</li>
+<li>примерные изображения (если реализовано);</li>
+<li>примерный размер набора.</li>
+</ul>
+<hr />
+<h2 id="4">4. Формирование собственной коллекции</h2>
+<h3 id="41">4.1 Выбор наборов</h3>
+<p>На странице результатов поиска:</p>
+<ol>
+<li>Отметьте один или несколько наборов, которые хотите включить в коллекцию.</li>
+<li>Если интерфейс предоставляет дополнительные настройки, укажите их, например:</li>
+<li>максимальное число изображений из каждого набора;</li>
+<li>правила балансировки классов и т.п.</li>
+</ol>
+<p><screenshot: select-datasets-for-collection></p>
+<h3 id="42">4.2 Запуск формирования</h3>
+<ol>
+<li>Нажмите кнопку <strong>«Сформировать набор»</strong> (название может отличаться).</li>
+<li>Проверьте сводную информацию:</li>
+<li>сколько наборов выбрано;</li>
+<li>примерное число изображений;</li>
+<li>примерный размер архива.</li>
+<li>Подтвердите создание.</li>
+</ol>
+<p>Система создаст <strong>запрос на формирование коллекции</strong> и перенаправит вас
+в раздел <strong>«Мои наборы»</strong> или покажет уведомление.</p>
+<hr />
+<h2 id="5">5. Раздел «Мои наборы» (история)</h2>
+<p>В разделе <strong>«Мои наборы»</strong> отображается список ранее сформированных коллекций.</p>
+<p>Для каждой коллекции показываются:</p>
+<ul>
+<li>идентификатор или название;</li>
+<li>текст исходного запроса или краткое описание;</li>
+<li>дата создания;</li>
+<li>статус:</li>
+<li><code>Pending / В процессе</code> – коллекция ещё формируется;</li>
+<li><code>Ready / Готов</code> – архив доступен для скачивания;</li>
+<li><code>Expired / Истёк</code> – архив удалён, коллекцию можно пересоздать;</li>
+<li>действия:</li>
+<li><strong>Download ZIP / Скачать</strong> (если статус Ready);</li>
+<li><strong>Regenerate / Пересоздать</strong> (если реализовано).</li>
+</ul>
+<p><screenshot: my-datasets-page></p>
+<p>При нажатии <strong>Download ZIP</strong> скачивается архив, который обычно содержит:</p>
+<ul>
+<li>каталог <code>images/</code> с файлами изображений;</li>
+<li>файл <code>metadata.csv</code> с таблицей метаданных по каждому изображению
+  (ID, метки, модальность, исходный набор и т.п.).</li>
+</ul>
+<hr />
+<h2 id="6">6. Выход из системы</h2>
+<p>Нажмите на иконку профиля или пункт меню с вашим именем и выберите
+<strong>«Выход / Log out»</strong>.</p>
+<hr />
+<h2 id="7">7. Частые проблемы и рекомендации</h2>
+<ul>
+<li><strong>«Ничего не найдено»</strong></li>
+<li>Уберите часть фильтров или смягчите условия.</li>
+<li>Проверьте, есть ли в каталоге наборы для выбранной модальности / задачи.</li>
+<li><strong>«Статус долго остаётся ‘В процессе’»</strong></li>
+<li>Возможна высокая нагрузка на сервер или медленная работа внешних источников.</li>
+<li>Если ожидание значительно превышает нормальное время, обратитесь к администратору.</li>
+<li><strong>«Ссылка на скачивание не работает или архив истёк»</strong></li>
+<li>Коллекция могла быть автоматически удалена по истечении срока хранения.
+    Попробуйте пересоздать набор или выполнить поиск заново.</li>
+</ul>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../product-overview.ru/" class="btn btn-neutral float-left" title="Общее описание продукта"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../admin-guide.ru/" class="btn btn-neutral float-right" title="Руководство администратора">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../product-overview.ru/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../admin-guide.ru/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
