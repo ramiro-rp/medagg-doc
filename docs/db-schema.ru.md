@@ -1,9 +1,9 @@
 # Схема базы данных (MVP)
 
-В этом документе описывается **фактическая SQL‑схема**, подготовленная DBA
-для MVP системы *Medical Imaging Dataset Aggregator*.
+В этом документе описывается **фактическая SQL-схема** для MVP системы
+*Medical Imaging Dataset Aggregator*.
 
-База данных – PostgreSQL. ER‑диаграмма, соответствующая схеме, хранится в файле:
+База данных – **PostgreSQL**. ER-диаграмма, соответствующая схеме, хранится в файле:
 
 - `docs/diagrams/er-medagg-core.png`
 
@@ -19,7 +19,7 @@
 
 1. **Пользователи и роли**
 2. **Справочники** (анатомические области, модальности, типы ML‑задач, теги)
-3. **Каталог наборов данных** (исходные датасеты и их атрибуты)
+3. **Каталог наборов данных** (исходные датасеты и их атрибуты, включая лицензию)
 4. **Активность пользователей** (поисковые запросы и собранные датасеты)
 
 ---
@@ -97,11 +97,12 @@
 - `local_storage_path VARCHAR(500)` – путь к локальной копии (если есть)
 - `record_count INTEGER` – количество записей / изображений (оценка)
 - `dataset_size_mb INTEGER` – примерный размер в МБ
+- `license VARCHAR(100)` – краткое обозначение лицензии (например, «CC BY 4.0»)
 - `anatomical_area_id INTEGER REFERENCES anatomical_areas(id)`
 - `created_at TIMESTAMPTZ DEFAULT NOW()`
 - `updated_at TIMESTAMPTZ DEFAULT NOW()`
 
-### 4.2 Связь датасетов и модальностей – `dataset_modalities`
+### 4.2 `dataset_modalities`
 
 Таблица для связи многие‑ко‑многим между датасетами и модальностями.
 
@@ -109,7 +110,7 @@
 - `modality_id INTEGER NOT NULL REFERENCES modalities(id)`
 - `PRIMARY KEY (dataset_id, modality_id)`
 
-### 4.3 Связь датасетов и типов задач – `dataset_ml_tasks`
+### 4.3 `dataset_ml_tasks`
 
 Таблица для связи многие‑ко‑многим между датасетами и типами ML‑задач.
 
@@ -117,7 +118,7 @@
 - `ml_task_id INTEGER NOT NULL REFERENCES ml_tasks(id)`
 - `PRIMARY KEY (dataset_id, ml_task_id)`
 
-### 4.4 Связь датасетов и тегов – `dataset_tags`
+### 4.4 `dataset_tags`
 
 Таблица для связи многие‑ко‑многим между датасетами и тегами.
 
@@ -175,7 +176,7 @@ CREATE TRIGGER set_expiration_date
 
 - `collection_id INTEGER NOT NULL REFERENCES user_dataset_collections(id) ON DELETE CASCADE`
 - `dataset_id INTEGER NOT NULL REFERENCES datasets(id)`
-- `relevance_score DECIMAL(5,4)` – оценка релевантности от поисковой/ML‑модели
+- `relevance_score DECIMAL(5,4)` – оценка релевантности от поисковой/ML‑модели (опционально)
 - `query_id INTEGER NOT NULL REFERENCES user_search_queries(id) ON DELETE CASCADE`
 - `PRIMARY KEY (collection_id, dataset_id)`
 

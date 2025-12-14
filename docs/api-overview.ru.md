@@ -3,15 +3,19 @@
 > Это **высокоуровневое** описание. Источником истины являются схема и код
 > в `medagg-backend` (Django + DRF).
 
-Базовый URL backend-а: `http://<server-host>/api/v1`
+Базовый URL backend-а: `http://<server-host>`
+
+Далее предполагается, что все эндпоинты находятся под префиксом `/api`,
+например: `GET /api/datasets/`, `POST /api/datasets/search/`. При желании
+можно добавить версионирование (`/api/v1`).
 
 ---
 
 ## 1. Аутентификация
 
-### POST `/auth/login/`
+### POST `/api/auth/login/`
 
-Аутентифицирует пользователя и возвращает токен доступа (например, JWT)
+Аутентифицирует пользователя и возвращает access-токен (например, JWT)
 или устанавливает сессионную cookie.
 
 Пример запроса:
@@ -32,7 +36,7 @@
 }
 ```
 
-Далее токен передаётся в заголовке:
+Затем токен передаётся в заголовке:
 
 ```http
 Authorization: Bearer <token>
@@ -40,101 +44,136 @@ Authorization: Bearer <token>
 
 ---
 
-## 2. Каталог наборов данных
+## 2. Каталог датасетов
 
-### GET `/datasets/`
+### GET `/api/datasets/`
 
-Возвращает список наборов данных с возможностью фильтрации.
+Возвращает список датасетов с основными полями, необходимыми фронтенду.
 
-Типичные параметры запроса:
+Опциональные query-параметры:
 
-- `q` – строка свободного текстового поиска;
-- `modality` – код / ID модальности;
-- `area` – код / ID анатомической области;
-- `task_type` – код / ID типа ML-задачи;
+- `q` – строка полнотекстового поиска;
+- `modality` – код/ID модальности;
+- `area` – код/ID анатомической области;
+- `task_type` – код/ID типа ML‑задачи;
 - `tags` – список ID или имён тегов (через запятую).
 
-Пример ответа (упрощённо):
+Пример ответа (упрощённо, один элемент):
 
 ```json
 [
   {
     "id": 1,
     "title": "Chest X-ray Pneumonia Dataset",
-    "source_url": "https://example.com/datasets/pneumonia",
-    "modality": ["XR"],
-    "area": "chest",
-    "task_types": ["classification"],
-    "num_images": 5863,
-    "size_mb": 1200,
-    "tags": ["pneumonia", "thorax"]
+    "description": "Short dataset description...",
+    "externalLink": "https://example.com/datasets/pneumonia",
+    "recordCount": 5863,
+    "datasetSizeMB": 1200,
+    "anatomicalArea": "chest",
+    "modalities": ["XR"],
+    "mlTasks": ["classification"],
+    "license": "CC BY 4.0",
+    "tags": ["pneumonia", "thorax"],
+    "createdAt": "2025-01-01T12:00:00Z"
   }
 ]
 ```
 
-### GET `/datasets/{id}/`
+Это соответствует форме объекта датасета, которую ожидает фронтенд:
 
-Возвращает детальную информацию по одному набору данных.
+```json
+{
+  "id": null,
+  "title": "",
+  "description": "",
+  "externalLink": "",
+  "recordCount": null,
+  "datasetSizeMB": null,
+  "anatomicalArea": "",
+  "modalities": [],
+  "mlTasks": [],
+  "license": "",
+  "createdAt": ""
+}
+```
+
+### GET `/api/datasets/{id}/`
+
+Возвращает подробную информацию по одному датасету.
+
+Структура совпадает с ответом `GET /api/datasets/`, при необходимости
+может быть более развёрнутое поле `description` и дополнительные метаданные.
 
 ---
 
 ## 3. Поиск
 
-Поиск может быть реализован:
+Поиск вынесен в отдельный эндпоинт, который фронтенд использует для запросов
+по ключевым словам и структурированным фильтрам.
 
-- через дополнительные параметры `GET /datasets/`; или
-- через отдельный эндпоинт.
+### POST `/api/datasets/search/`
 
-Пример отдельного эндпоинта:
+Выполняет поиск по текстовому запросу и фильтрам.
 
-### POST `/search/datasets/`
-
-Выполняет поиск по свободному тексту и структурированным фильтрам.
-
-Пример запроса:
+Пример тела запроса:
 
 ```json
 {
-  "query_text": "пневмония грудная клетка КТ",
+  "query": "pneumonia chest xray",
   "filters": {
-    "area": "chest",
-    "modality": ["CT"],
-    "task_type": ["classification"]
+    "anatomicalArea": "chest",
+    "modalities": ["XR"],
+    "mlTasks": ["classification"],
+    "tags": ["pneumonia"]
   }
 }
 ```
 
-Пример ответа (упрощённо):
+Формат ответа:
+
+- список объектов датасетов с **той же структурой**, что и в
+  `GET /api/datasets/` (отдельная обёртка для MVP не требуется).
+
+Пример (упрощённо):
 
 ```json
 [
   {
-    "dataset": {
-      "id": 1,
-      "title": "Chest CT Pneumonia",
-      "modality": ["CT"],
-      "area": "chest"
-    },
-    "relevance_score": 0.93
+    "id": 1,
+    "title": "Chest X-ray Pneumonia Dataset",
+    "description": "Short dataset description...",
+    "externalLink": "https://example.com/datasets/pneumonia",
+    "recordCount": 5863,
+    "datasetSizeMB": 1200,
+    "anatomicalArea": "chest",
+    "modalities": ["XR"],
+    "mlTasks": ["classification"],
+    "license": "CC BY 4.0",
+    "tags": ["pneumonia", "thorax"],
+    "createdAt": "2025-01-01T12:00:00Z"
   }
 ]
 ```
 
+(Внутри поисковый модуль может вычислять оценку релевантности, но для MVP
+её необязательно отдавать отдельным полем.)
+
 ---
 
-## 4. Коллекции пользователя
+## 4. Пользовательские коллекции
 
-### POST `/collections/`
+### POST `/api/collections/`
 
-Создаёт новую **коллекцию** – запрос на формирование кастомного набора данных.
+Создаёт новую **коллекцию** – запрос на формирование пользовательского набора
+(архива ZIP) для текущего пользователя.
 
 Пример запроса:
 
 ```json
 {
-  "query_text": "pneumonia chest xray",
-  "dataset_ids": [1, 3],
-  "limit_per_dataset": 1000
+  "query": "pneumonia chest xray",
+  "datasetIds": [1, 3],
+  "limitPerDataset": 1000
 }
 ```
 
@@ -144,15 +183,15 @@ Authorization: Bearer <token>
 {
   "id": 42,
   "status": "pending",
-  "created_at": "2025-01-01T12:00:00Z"
+  "createdAt": "2025-01-01T12:00:00Z"
 }
 ```
 
-### GET `/collections/`
+### GET `/api/collections/`
 
-Возвращает список коллекций для текущего пользователя.
+Возвращает список коллекций текущего пользователя.
 
-### GET `/collections/{id}/`
+### GET `/api/collections/{id}/`
 
 Возвращает детали коллекции:
 
@@ -160,24 +199,24 @@ Authorization: Bearer <token>
 - текст запроса / краткое описание;
 - время создания;
 - статус (`pending`, `ready`, `failed`, `expired`);
-- размер архива (если сформирован);
-- ссылка для скачивания (если применимо).
+- размер архива (если доступен);
+- ссылка для скачивания (если архив готов).
 
-### GET `/collections/{id}/download/`
+### GET `/api/collections/{id}/download/`
 
-Скачивание ZIP-архива, если коллекция готова и срок её хранения не истёк.
+Скачивает ZIP‑архив, если коллекция готова и не просрочена.
 
 ---
 
-## 5. Админ-эндпоинты (примеры)
+## 5. Админские эндпоинты (примеры)
 
-Доступны только пользователям с ролью Admin. Возможные примеры:
+Доступны только администраторам. Возможные примеры:
 
-- `POST /admin/datasets/` – создание записи набора данных;
-- `PUT /admin/datasets/{id}/` – редактирование;
-- `GET /admin/requests/` – просмотр запросов и коллекций пользователей.
+- `POST /api/admin/datasets/` – создание записи о датасете;
+- `PUT /api/admin/datasets/{id}/` – обновление датасета;
+- `GET /api/admin/requests/` – просмотр пользовательских запросов и коллекций.
 
-Точный список зависит от реализации в `medagg-backend`.
+Точный список зависит от конкретной реализации в `medagg-backend`.
 
 ---
 

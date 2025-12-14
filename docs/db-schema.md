@@ -1,10 +1,9 @@
 # Database Schema (MVP)
 
-This document describes the **actual SQL schema** provided by the DBAs
-for the MVP of *Medical Imaging Dataset Aggregator*.
+This document describes the **actual SQL schema** for the MVP of
+*Medical Imaging Dataset Aggregator*.
 
-The database is PostgreSQL. The ER diagram corresponding to this schema
-is stored as:
+The database engine is **PostgreSQL**. The corresponding ER diagram is:
 
 - `docs/diagrams/er-medagg-core.png`
 
@@ -19,8 +18,8 @@ datasets and user-formed collections of datasets.
 Conceptually the schema covers four areas:
 
 1. **Users and roles**
-2. **Reference dictionaries (anatomical areas, modalities, ML task types, tags)**
-3. **Dataset catalog** (source datasets and their attributes)
+2. **Reference dictionaries** (anatomical areas, modalities, ML task types, tags)
+3. **Dataset catalog** (source datasets and their attributes, including license)
 4. **User activity** (search queries and collected datasets)
 
 ---
@@ -86,7 +85,7 @@ Free-form tags describing datasets (pathologies, keywords, etc.).
 
 ### 4.1 `datasets`
 
-Represents a **source dataset** (e.g. open chest X‑ray dataset).
+Represents a **source dataset** (e.g. open chest X-ray dataset).
 
 Main columns:
 
@@ -97,11 +96,12 @@ Main columns:
 - `local_storage_path VARCHAR(500)` – path to a local copy, if present
 - `record_count INTEGER` – number of records / images (approximate)
 - `dataset_size_mb INTEGER` – approximate size in MB
+- `license VARCHAR(100)` – short license identifier (e.g. "CC BY 4.0")
 - `anatomical_area_id INTEGER REFERENCES anatomical_areas(id)`
 - `created_at TIMESTAMPTZ DEFAULT NOW()`
 - `updated_at TIMESTAMPTZ DEFAULT NOW()`
 
-### 4.2 Dataset ↔ modality (`dataset_modalities`)
+### 4.2 `dataset_modalities`
 
 Many-to-many relation between datasets and modalities.
 
@@ -109,7 +109,7 @@ Many-to-many relation between datasets and modalities.
 - `modality_id INTEGER NOT NULL REFERENCES modalities(id)`
 - `PRIMARY KEY (dataset_id, modality_id)`
 
-### 4.3 Dataset ↔ ML task (`dataset_ml_tasks`)
+### 4.3 `dataset_ml_tasks`
 
 Many-to-many relation between datasets and ML task types.
 
@@ -117,7 +117,7 @@ Many-to-many relation between datasets and ML task types.
 - `ml_task_id INTEGER NOT NULL REFERENCES ml_tasks(id)`
 - `PRIMARY KEY (dataset_id, ml_task_id)`
 
-### 4.4 Dataset ↔ tags (`dataset_tags`)
+### 4.4 `dataset_tags`
 
 Many-to-many relation between datasets and tags.
 
@@ -174,7 +174,7 @@ Links a user collection with the datasets that were included in it.
 
 - `collection_id INTEGER NOT NULL REFERENCES user_dataset_collections(id) ON DELETE CASCADE`
 - `dataset_id INTEGER NOT NULL REFERENCES datasets(id)`
-- `relevance_score DECIMAL(5,4)` – relevance score from the search model (optional)
+- `relevance_score DECIMAL(5,4)` – optional relevance score from search/ML
 - `query_id INTEGER NOT NULL REFERENCES user_search_queries(id) ON DELETE CASCADE`
 - `PRIMARY KEY (collection_id, dataset_id)`
 
@@ -194,5 +194,5 @@ This table allows us to:
   in practice it can point to any storage (local filesystem, mounted volume,
   object storage gateway, etc.).
 - Automatic expiration of collections is handled via a trigger that sets
-  `expires_at = created_at + 1 day`; the application can periodically
-  clean up expired archives.
+  `expires_at = created_at + 1 day`; the application or background jobs
+  can periodically clean up expired archives.

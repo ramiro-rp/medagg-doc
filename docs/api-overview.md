@@ -1,15 +1,19 @@
 # API Overview (MVP)
 
-> This is a **high‑level** description. The source of truth is the schema
+> This is a **high-level** description. The source of truth is the schema
 > and code in `medagg-backend` (Django + DRF).
 
-Base backend URL: `http://<server-host>/api/v1`
+Base backend URL: `http://<server-host>`
+
+All endpoints below are assumed to live under the `/api` prefix, e.g.
+`GET /api/datasets/`, `POST /api/datasets/search/`. Versioning (e.g. `/api/v1`)
+can be added later if needed.
 
 ---
 
 ## 1. Authentication
 
-### POST `/auth/login/`
+### POST `/api/auth/login/`
 
 Authenticates a user and returns an access token (e.g. JWT) or sets
 a session cookie.
@@ -23,7 +27,7 @@ Request example:
 }
 ```
 
-Response example (JWT‑style):
+Response example (JWT-style):
 
 ```json
 {
@@ -42,99 +46,134 @@ Authorization: Bearer <token>
 
 ## 2. Dataset catalog
 
-### GET `/datasets/`
+### GET `/api/datasets/`
 
-Returns a list of datasets with filtering options.
+Returns a list of datasets with basic fields required by the frontend.
 
-Typical query parameters:
+Optional query parameters:
 
-- `q` – free‑text search string;
+- `q` – free-text search string;
 - `modality` – modality code / ID;
 - `area` – anatomical area code / ID;
 - `task_type` – ML task type code / ID;
-- `tags` – list of tag IDs or names (comma‑separated).
+- `tags` – list of tag IDs or names (comma-separated).
 
-Response example (simplified):
+Response example (simplified, single item):
 
 ```json
 [
   {
     "id": 1,
     "title": "Chest X-ray Pneumonia Dataset",
-    "source_url": "https://example.com/datasets/pneumonia",
-    "modality": ["XR"],
-    "area": "chest",
-    "task_types": ["classification"],
-    "num_images": 5863,
-    "size_mb": 1200,
-    "tags": ["pneumonia", "thorax"]
+    "description": "Short dataset description...",
+    "externalLink": "https://example.com/datasets/pneumonia",
+    "recordCount": 5863,
+    "datasetSizeMB": 1200,
+    "anatomicalArea": "chest",
+    "modalities": ["XR"],
+    "mlTasks": ["classification"],
+    "license": "CC BY 4.0",
+    "tags": ["pneumonia", "thorax"],
+    "createdAt": "2025-01-01T12:00:00Z"
   }
 ]
 ```
 
-### GET `/datasets/{id}/`
+This matches the shape requested by the frontend for a dataset card:
+
+```json
+{
+  "id": null,
+  "title": "",
+  "description": "",
+  "externalLink": "",
+  "recordCount": null,
+  "datasetSizeMB": null,
+  "anatomicalArea": "",
+  "modalities": [],
+  "mlTasks": [],
+  "license": "",
+  "createdAt": ""
+}
+```
+
+### GET `/api/datasets/{id}/`
 
 Returns detailed information about a single dataset.
+
+The structure is the same as in `GET /api/datasets/`, optionally with a
+longer `description` and extra metadata fields if needed.
 
 ---
 
 ## 3. Search
 
-Search can be implemented:
+Search is exposed via a dedicated endpoint that the frontend will call
+for keyword-based queries and structured filters.
 
-- via extra parameters to `GET /datasets/`; or
-- via a dedicated endpoint.
+### POST `/api/datasets/search/`
 
-Example dedicated endpoint:
-
-### POST `/search/datasets/`
-
-Performs search using free text and structured filters.
+Performs search using free text and optional filters / tags.
 
 Request example:
 
 ```json
 {
-  "query_text": "пневмония грудная клетка КТ",
+  "query": "pneumonia chest xray",
   "filters": {
-    "area": "chest",
-    "modality": ["CT"],
-    "task_type": ["classification"]
+    "anatomicalArea": "chest",
+    "modalities": ["XR"],
+    "mlTasks": ["classification"],
+    "tags": ["pneumonia"]
   }
 }
 ```
 
-Response example (simplified):
+Response format:
+
+- a list of dataset objects with the **same structure** as
+  `GET /api/datasets/` (no extra wrapper is required for the MVP).
+
+Example (simplified):
 
 ```json
 [
   {
-    "dataset": {
-      "id": 1,
-      "title": "Chest CT Pneumonia",
-      "modality": ["CT"],
-      "area": "chest"
-    },
-    "relevance_score": 0.93
+    "id": 1,
+    "title": "Chest X-ray Pneumonia Dataset",
+    "description": "Short dataset description...",
+    "externalLink": "https://example.com/datasets/pneumonia",
+    "recordCount": 5863,
+    "datasetSizeMB": 1200,
+    "anatomicalArea": "chest",
+    "modalities": ["XR"],
+    "mlTasks": ["classification"],
+    "license": "CC BY 4.0",
+    "tags": ["pneumonia", "thorax"],
+    "createdAt": "2025-01-01T12:00:00Z"
   }
 ]
 ```
+
+(Internally, the search engine may compute a relevance score, but for the MVP
+it does not need to be returned as a separate field.)
 
 ---
 
 ## 4. User collections
 
-### POST `/collections/`
+### POST `/api/collections/`
 
-Creates a new **collection** – a request to build a custom dataset.
+Creates a new **collection** – a request to build a custom dataset
+(zip archive) for the current user.
 
 Request example:
 
 ```json
 {
-  "query_text": "pneumonia chest xray",
-  "dataset_ids": [1, 3],
-  "limit_per_dataset": 1000
+  "query": "pneumonia chest xray",
+  "datasetIds": [1, 3],
+  "limitPerDataset": 1000
 }
 ```
 
@@ -144,15 +183,15 @@ Response example:
 {
   "id": 42,
   "status": "pending",
-  "created_at": "2025-01-01T12:00:00Z"
+  "createdAt": "2025-01-01T12:00:00Z"
 }
 ```
 
-### GET `/collections/`
+### GET `/api/collections/`
 
 Returns the list of collections for the current user.
 
-### GET `/collections/{id}/`
+### GET `/api/collections/{id}/`
 
 Returns collection details:
 
@@ -163,7 +202,7 @@ Returns collection details:
 - archive size (if available);
 - download link (if applicable).
 
-### GET `/collections/{id}/download/`
+### GET `/api/collections/{id}/download/`
 
 Downloads the ZIP archive if the collection is ready and not expired.
 
@@ -173,9 +212,9 @@ Downloads the ZIP archive if the collection is ready and not expired.
 
 Available only to admin users. Possible examples:
 
-- `POST /admin/datasets/` – create dataset entry;
-- `PUT /admin/datasets/{id}/` – update dataset;
-- `GET /admin/requests/` – view user requests and collections.
+- `POST /api/admin/datasets/` – create dataset entry;
+- `PUT /api/admin/datasets/{id}/` – update dataset;
+- `GET /api/admin/requests/` – view user requests and collections.
 
 The exact list depends on the actual implementation in `medagg-backend`.
 
