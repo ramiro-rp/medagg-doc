@@ -1,231 +1,107 @@
 # Обзор API (MVP)
 
-> Это **высокоуровневое** описание. Источником истины являются схема и код
-> в `medagg-backend` (Django + DRF).
+> Это **высокоуровневое** описание контракта MVP. Источник истины — код backend-а
+> (`medagg-backend`, Django + DRF).
 
-Базовый URL backend-а: `http://<server-host>`
+## Базовый URL
 
-Далее предполагается, что все эндпоинты находятся под префиксом `/api`,
-например: `GET /api/datasets/`, `POST /api/datasets/search/`. При желании
-можно добавить версионирование (`/api/v1`).
+Базовый URL API: `http://<server-host>:8000/api/v1/`
+
+Основные ресурсы:
+
+- `datasets/` — каталог датасетов (только чтение)
+- `search/` — поиск
 
 ---
 
-## 1. Аутентификация
+## 1. Аутентификация (MVP)
 
-### POST `/api/auth/login/`
+В MVP обычно используется API **без** токен‑аутентификации.
 
-Аутентифицирует пользователя и возвращает access-токен (например, JWT)
-или устанавливает сессионную cookie.
+- Админка: `GET /admin/` (Django admin)
+- Логин для browsable API (только для разработки): `GET /api-auth/`
 
-Пример запроса:
-
-```json
-{
-  "username": "user@example.com",
-  "password": "string"
-}
-```
-
-Пример ответа (JWT-стиль):
-
-```json
-{
-  "access_token": "jwt-token-here",
-  "token_type": "bearer"
-}
-```
-
-Затем токен передаётся в заголовке:
-
-```http
-Authorization: Bearer <token>
-```
+Если позже появится JWT/OAuth, этот документ нужно обновить вместе с backend-реализацией.
 
 ---
 
 ## 2. Каталог датасетов
 
-### GET `/api/datasets/`
+### GET `/api/v1/datasets/`
 
-Возвращает список датасетов с основными полями, необходимыми фронтенду.
+Возвращает список датасетов (для списка и detail используется один и тот же сериализатор).
 
-Опциональные query-параметры:
-
-- `q` – строка полнотекстового поиска;
-- `modality` – код/ID модальности;
-- `area` – код/ID анатомической области;
-- `task_type` – код/ID типа ML‑задачи;
-- `tags` – список ID или имён тегов (через запятую).
-
-Пример ответа (упрощённо, один элемент):
+Пример ответа (1 элемент, упрощённо):
 
 ```json
 [
   {
     "id": 1,
-    "title": "Chest X-ray Pneumonia Dataset",
-    "description": "Short dataset description...",
-    "externalLink": "https://example.com/datasets/pneumonia",
-    "recordCount": 5863,
-    "datasetSizeMB": 1200,
-    "anatomicalArea": "chest",
-    "modalities": ["XR"],
-    "mlTasks": ["classification"],
-    "license": "CC BY 4.0",
-    "tags": ["pneumonia", "thorax"],
-    "createdAt": "2025-01-01T12:00:00Z"
+    "title": "Test Brain MRI Dataset",
+    "description": "Test dataset for README generation",
+    "external_path": "https://example.com/datasets/brain-mri",
+    "local_path": null,
+    "record_count": 100,
+    "size": 500,
+    "anatomical_area": 1,
+    "anatomical_area_name": "Brain",
+    "modalities": [{"id": 1, "name": "MRI"}],
+    "ml_tasks": [{"id": 1, "name": "Segmentation"}],
+    "tags": [{"id": 1, "name": "medical"}],
+    "created_at": "2026-01-11T12:00:00Z",
+    "updated_at": "2026-01-11T12:00:00Z",
+    "readme_content": "# Dataset README\n..."
   }
 ]
 ```
 
-Это соответствует форме объекта датасета, которую ожидает фронтенд:
+Примечания:
 
-```json
-{
-  "id": null,
-  "title": "",
-  "description": "",
-  "externalLink": "",
-  "recordCount": null,
-  "datasetSizeMB": null,
-  "anatomicalArea": "",
-  "modalities": [],
-  "mlTasks": [],
-  "license": "",
-  "createdAt": ""
-}
-```
+- Имена полей — **snake_case**.
+- `readme_content` генерируется на стороне backend-а модулем генерации README.
 
-### GET `/api/datasets/{id}/`
+### GET `/api/v1/datasets/{id}/`
 
-Возвращает подробную информацию по одному датасету.
-
-Структура совпадает с ответом `GET /api/datasets/`, при необходимости
-может быть более развёрнутое поле `description` и дополнительные метаданные.
+Возвращает один датасет (та же схема, что и в списке).
 
 ---
 
-## 3. Поиск
+## 3. Поиск по датасетам
 
-Поиск вынесен в отдельный эндпоинт, который фронтенд использует для запросов
-по ключевым словам и структурированным фильтрам.
+### POST `/api/v1/search/datasets/`
 
-### POST `/api/datasets/search/`
+Выполняет поиск по датасетам.
 
-Выполняет поиск по текстовому запросу и фильтрам.
+Тело запроса (минимально):
 
-Пример тела запроса:
+```json
+{ "query": "brain mri" }
+```
+
+Дополнительные фильтры можно передать как **query-параметры**:
+
+- `anatomical_area_name`
+- `record_count_min`, `record_count_max`
+- `size_min`, `size_max`
+- `modalities_list` (список строк)
+- `ml_tasks_list` (список строк)
+- `tags_list` (список строк)
+- `ordering` (ключ сортировки, определённый backend-ом)
+
+Ответ:
 
 ```json
 {
-  "query": "pneumonia chest xray",
-  "filters": {
-    "anatomicalArea": "chest",
-    "modalities": ["XR"],
-    "mlTasks": ["classification"],
-    "tags": ["pneumonia"]
-  }
+  "count": 12,
+  "results": [ /* датасеты в той же форме, что и /datasets/ */ ]
 }
 ```
 
-Формат ответа:
-
-- список объектов датасетов с **той же структурой**, что и в
-  `GET /api/datasets/` (отдельная обёртка для MVP не требуется).
-
-Пример (упрощённо):
-
-```json
-[
-  {
-    "id": 1,
-    "title": "Chest X-ray Pneumonia Dataset",
-    "description": "Short dataset description...",
-    "externalLink": "https://example.com/datasets/pneumonia",
-    "recordCount": 5863,
-    "datasetSizeMB": 1200,
-    "anatomicalArea": "chest",
-    "modalities": ["XR"],
-    "mlTasks": ["classification"],
-    "license": "CC BY 4.0",
-    "tags": ["pneumonia", "thorax"],
-    "createdAt": "2025-01-01T12:00:00Z"
-  }
-]
-```
-
-(Внутри поисковый модуль может вычислять оценку релевантности, но для MVP
-её необязательно отдавать отдельным полем.)
-
 ---
 
-## 4. Пользовательские коллекции
+## 4. Типовые коды ответа
 
-### POST `/api/collections/`
-
-Создаёт новую **коллекцию** – запрос на формирование пользовательского набора
-(архива ZIP) для текущего пользователя.
-
-Пример запроса:
-
-```json
-{
-  "query": "pneumonia chest xray",
-  "datasetIds": [1, 3],
-  "limitPerDataset": 1000
-}
-```
-
-Пример ответа:
-
-```json
-{
-  "id": 42,
-  "status": "pending",
-  "createdAt": "2025-01-01T12:00:00Z"
-}
-```
-
-### GET `/api/collections/`
-
-Возвращает список коллекций текущего пользователя.
-
-### GET `/api/collections/{id}/`
-
-Возвращает детали коллекции:
-
-- идентификатор;
-- текст запроса / краткое описание;
-- время создания;
-- статус (`pending`, `ready`, `failed`, `expired`);
-- размер архива (если доступен);
-- ссылка для скачивания (если архив готов).
-
-### GET `/api/collections/{id}/download/`
-
-Скачивает ZIP‑архив, если коллекция готова и не просрочена.
-
----
-
-## 5. Админские эндпоинты (примеры)
-
-Доступны только администраторам. Возможные примеры:
-
-- `POST /api/admin/datasets/` – создание записи о датасете;
-- `PUT /api/admin/datasets/{id}/` – обновление датасета;
-- `GET /api/admin/requests/` – просмотр пользовательских запросов и коллекций.
-
-Точный список зависит от конкретной реализации в `medagg-backend`.
-
----
-
-## 6. Схема и интерактивная документация
-
-Django REST Framework может предоставлять:
-
-- страницы browsable API;
-- схему OpenAPI (JSON/YAML) через `drf-spectacular`, `drf-yasg` и т.п.
-
-Для точного описания форматов запросов и ответов используйте опубликованную
-схему backend-а или просматривайте viewset-ы и сериализаторы в исходном коде.
+- `200 OK` — успешно
+- `400 Bad Request` — ошибки валидации (например, слишком короткий query)
+- `404 Not Found` — датасет не найден (detail)
+- `500` — ошибка сервера (смотрите логи backend-а)

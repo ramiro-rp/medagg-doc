@@ -1,231 +1,109 @@
 # API Overview (MVP)
 
-> This is a **high-level** description. The source of truth is the schema
-> and code in `medagg-backend` (Django + DRF).
+> This is a **high‑level** description of the MVP API contract. The source of truth
+> is the backend code (`medagg-backend`, Django + DRF).
 
-Base backend URL: `http://<server-host>`
+## Base URL
 
-All endpoints below are assumed to live under the `/api` prefix, e.g.
-`GET /api/datasets/`, `POST /api/datasets/search/`. Versioning (e.g. `/api/v1`)
-can be added later if needed.
+Backend API base: `http://<server-host>:8000/api/v1/`
+
+Main resources:
+
+- `datasets/` – dataset catalog (read-only)
+- `search/` – search endpoints
 
 ---
 
-## 1. Authentication
+## 1. Authentication (MVP)
 
-### POST `/api/auth/login/`
+The MVP API is typically used **without** token-based authentication.
 
-Authenticates a user and returns an access token (e.g. JWT) or sets
-a session cookie.
+- Admin UI: `GET /admin/` (Django admin)
+- Browsable API login (dev only): `GET /api-auth/`
 
-Request example:
-
-```json
-{
-  "username": "user@example.com",
-  "password": "string"
-}
-```
-
-Response example (JWT-style):
-
-```json
-{
-  "access_token": "jwt-token-here",
-  "token_type": "bearer"
-}
-```
-
-The token is then passed in the header:
-
-```http
-Authorization: Bearer <token>
-```
+If authentication is required later (JWT/OAuth), this document should be updated
+together with the backend implementation.
 
 ---
 
 ## 2. Dataset catalog
 
-### GET `/api/datasets/`
+### GET `/api/v1/datasets/`
 
-Returns a list of datasets with basic fields required by the frontend.
+Returns a list of datasets (detailed serializer is used for list & detail).
 
-Optional query parameters:
-
-- `q` – free-text search string;
-- `modality` – modality code / ID;
-- `area` – anatomical area code / ID;
-- `task_type` – ML task type code / ID;
-- `tags` – list of tag IDs or names (comma-separated).
-
-Response example (simplified, single item):
+Response example (single item, simplified):
 
 ```json
 [
   {
     "id": 1,
-    "title": "Chest X-ray Pneumonia Dataset",
-    "description": "Short dataset description...",
-    "externalLink": "https://example.com/datasets/pneumonia",
-    "recordCount": 5863,
-    "datasetSizeMB": 1200,
-    "anatomicalArea": "chest",
-    "modalities": ["XR"],
-    "mlTasks": ["classification"],
-    "license": "CC BY 4.0",
-    "tags": ["pneumonia", "thorax"],
-    "createdAt": "2025-01-01T12:00:00Z"
+    "title": "Test Brain MRI Dataset",
+    "description": "Test dataset for README generation",
+    "external_path": "https://example.com/datasets/brain-mri",
+    "local_path": null,
+    "record_count": 100,
+    "size": 500,
+    "anatomical_area": 1,
+    "anatomical_area_name": "Brain",
+    "modalities": [{"id": 1, "name": "MRI"}],
+    "ml_tasks": [{"id": 1, "name": "Segmentation"}],
+    "tags": [{"id": 1, "name": "medical"}],
+    "created_at": "2026-01-11T12:00:00Z",
+    "updated_at": "2026-01-11T12:00:00Z",
+    "readme_content": "# Dataset README\n..."
   }
 ]
 ```
 
-This matches the shape requested by the frontend for a dataset card:
+Notes:
 
-```json
-{
-  "id": null,
-  "title": "",
-  "description": "",
-  "externalLink": "",
-  "recordCount": null,
-  "datasetSizeMB": null,
-  "anatomicalArea": "",
-  "modalities": [],
-  "mlTasks": [],
-  "license": "",
-  "createdAt": ""
-}
-```
+- Field naming uses **snake_case**.
+- `readme_content` is generated server‑side by the README generator module.
+  If it is empty in your environment, verify the DB schema and generation workflow.
 
-### GET `/api/datasets/{id}/`
+### GET `/api/v1/datasets/{id}/`
 
-Returns detailed information about a single dataset.
-
-The structure is the same as in `GET /api/datasets/`, optionally with a
-longer `description` and extra metadata fields if needed.
+Returns a single dataset (same schema as list items).
 
 ---
 
-## 3. Search
+## 3. Dataset search
 
-Search is exposed via a dedicated endpoint that the frontend will call
-for keyword-based queries and structured filters.
+### POST `/api/v1/search/datasets/`
 
-### POST `/api/datasets/search/`
+Performs a search over datasets.
 
-Performs search using free text and optional filters / tags.
+Request body (minimal):
 
-Request example:
+```json
+{ "query": "brain mri" }
+```
+
+Optional filters can be passed as **query parameters**:
+
+- `anatomical_area_name`
+- `record_count_min`, `record_count_max`
+- `size_min`, `size_max`
+- `modalities_list` (list of strings)
+- `ml_tasks_list` (list of strings)
+- `tags_list` (list of strings)
+- `ordering` (backend-defined ordering key)
+
+Response:
 
 ```json
 {
-  "query": "pneumonia chest xray",
-  "filters": {
-    "anatomicalArea": "chest",
-    "modalities": ["XR"],
-    "mlTasks": ["classification"],
-    "tags": ["pneumonia"]
-  }
+  "count": 12,
+  "results": [ /* datasets in the same shape as /datasets/ */ ]
 }
 ```
 
-Response format:
-
-- a list of dataset objects with the **same structure** as
-  `GET /api/datasets/` (no extra wrapper is required for the MVP).
-
-Example (simplified):
-
-```json
-[
-  {
-    "id": 1,
-    "title": "Chest X-ray Pneumonia Dataset",
-    "description": "Short dataset description...",
-    "externalLink": "https://example.com/datasets/pneumonia",
-    "recordCount": 5863,
-    "datasetSizeMB": 1200,
-    "anatomicalArea": "chest",
-    "modalities": ["XR"],
-    "mlTasks": ["classification"],
-    "license": "CC BY 4.0",
-    "tags": ["pneumonia", "thorax"],
-    "createdAt": "2025-01-01T12:00:00Z"
-  }
-]
-```
-
-(Internally, the search engine may compute a relevance score, but for the MVP
-it does not need to be returned as a separate field.)
-
 ---
 
-## 4. User collections
+## 4. Status codes (typical)
 
-### POST `/api/collections/`
-
-Creates a new **collection** – a request to build a custom dataset
-(zip archive) for the current user.
-
-Request example:
-
-```json
-{
-  "query": "pneumonia chest xray",
-  "datasetIds": [1, 3],
-  "limitPerDataset": 1000
-}
-```
-
-Response example:
-
-```json
-{
-  "id": 42,
-  "status": "pending",
-  "createdAt": "2025-01-01T12:00:00Z"
-}
-```
-
-### GET `/api/collections/`
-
-Returns the list of collections for the current user.
-
-### GET `/api/collections/{id}/`
-
-Returns collection details:
-
-- identifier;
-- query text / short description;
-- creation time;
-- status (`pending`, `ready`, `failed`, `expired`);
-- archive size (if available);
-- download link (if applicable).
-
-### GET `/api/collections/{id}/download/`
-
-Downloads the ZIP archive if the collection is ready and not expired.
-
----
-
-## 5. Admin endpoints (examples)
-
-Available only to admin users. Possible examples:
-
-- `POST /api/admin/datasets/` – create dataset entry;
-- `PUT /api/admin/datasets/{id}/` – update dataset;
-- `GET /api/admin/requests/` – view user requests and collections.
-
-The exact list depends on the actual implementation in `medagg-backend`.
-
----
-
-## 6. Schema and interactive docs
-
-Django REST Framework may provide:
-
-- browsable API pages;
-- OpenAPI schema (JSON/YAML) via `drf-spectacular`, `drf-yasg`, etc.
-
-For precise request / response formats, use the published backend schema
-or inspect viewsets and serializers in the source code.
+- `200 OK` – successful request
+- `400 Bad Request` – validation errors (e.g. too short query)
+- `404 Not Found` – dataset not found (detail endpoint)
+- `500` – server error (check backend logs)

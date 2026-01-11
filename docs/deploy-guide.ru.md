@@ -1,165 +1,101 @@
 # Руководство по развёртыванию
 
-В этом документе описано, как развернуть систему
-**Medical Imaging Dataset Aggregator** в простом одноузловом окружении.
+В этом документе описывается, как развернуть **Medical Imaging Dataset Aggregator**
+в простом односерверном окружении (MVP).
 
 ---
 
-## 1. Обзор архитектуры
+## 1. Архитектура (кратко)
 
-Компоненты системы:
+Компоненты:
 
-- **Backend** – Django + Django REST Framework;
-- **База данных** – PostgreSQL;
-- **Frontend** – Vite + React + Ant Design (SPA);
-- **Файловое хранилище** – локальная файловая система для ZIP-архивов.
-
-В рамках MVP все компоненты запускаются на **одном Linux-хосте**, обычно
-с использованием Docker / docker-compose.
+- **Backend** — Django + Django REST Framework
+- **Database** — PostgreSQL
+- **Frontend** — Vite + React + Ant Design (SPA)
+- **Файловое хранилище** — локальная файловая система (опционально)
 
 ---
 
 ## 2. Требования
 
-- Linux-сервер или рабочая станция (для разработки возможны WSL2 / macOS);
-- Docker и docker-compose (или Docker + плагин compose);
-- Git;
-- опционально для демо: Raspberry Pi 4 или аналог + SSD.
+- Linux / macOS / WSL2 (для разработки)
+- Docker и docker compose
+- Git (если клонируете репозитории)
 
 ---
 
-## 3. Развёртывание backend-а (кратко)
+## 3. Развёртывание backend-а (Docker)
 
-Типичный сценарий:
+### 3.1 Клонирование
 
 ```bash
-git clone https://github.com/b-barsky/medagg-backend.git
+git clone <backend-repo-url>
 cd medagg-backend
+```
 
-# Скопировать пример env-файла (если есть)
-cp .env.example .env
+### 3.2 Файлы окружения
 
-# Настроить .env (подключение к БД, секретный ключ и т.п.)
+`docker-compose.yml` ожидает два файла:
 
-# Запустить сервисы
-docker compose up -d  # или: docker-compose up -d
+- `./.env/database.env`
+- `./.env/settings.env`
+
+Если в репозитории нет шаблонов, создайте папку и начните с минимального примера.
+
+**`.env/database.env`** (пример):
+
+```bash
+DB_ENGINE=postgresql
+DB_HOST=db
+DB_PORT=5432
+DB_NAME=medagg
+DB_USER=medagg
+DB_PASSWORD=change-me
+```
+
+**`.env/settings.env`** (пример):
+
+```bash
+DJANGO_SECRET_KEY=change-me
+DJANGO_DEBUG_MODE=0
+DJANGO_ALLOWED_HOSTS=127.0.0.1,localhost
+```
+
+### 3.3 Запуск
+
+Если в проекте есть вспомогательный скрипт:
+
+```bash
+python configure.py --docker
+```
+
+Или напрямую через compose:
+
+```bash
+docker compose up -d
 ```
 
 После запуска:
 
-- API backend-а доступно по адресу вида `http://<server-host>:8000/api/v1/`;
-- browsable API / схема могут быть доступны по путям `/api/`, `/api/schema/`
-  (в зависимости от конфигурации).
-
-Применение миграций (если не выполняется автоматически):
-
-```bash
-docker compose exec backend python manage.py migrate
-```
+- API: `http://<server-host>:8000/api/v1/`
+- Админка: `http://<server-host>:8000/admin/`
+- Browsable API логин (dev): `http://<server-host>:8000/api-auth/`
 
 ---
 
-## 4. Развёртывание frontend-а (кратко)
+## 4. Frontend
 
-### Режим разработки
+### 4.1 Dev режим
 
-```bash
-git clone https://github.com/solиноid/medagg-frontend.git
-cd medagg-frontend
-
-npm install
-npm run dev
-```
-
-По умолчанию dev-сервер Vite доступен по адресу `http://localhost:5173/`
-и обращается к API backend-а.
-
-### Простой вариант для production
-
-1. Собрать фронтенд:
-
-   ```bash
-   npm run build
-   ```
-
-2. Отдавать содержимое каталога `dist/` через `nginx`, `caddy` или другой HTTP-сервер.
-
-Важно:
-
-- указать корректный базовый URL API backend-а для фронтенда;
-- настроить CORS на стороне backend-а, чтобы разрешить запросы с origin фронтенда.
-
----
-
-## 5. Конфигурация
-
-Основные параметры (обычно через `.env`):
-
-- **Backend**
-  - хост, порт, имя БД, пользователь, пароль;
-  - секретный ключ Django;
-  - список допустимых хостов;
-  - настройки CORS;
-  - путь к каталогу с ZIP-архивами (сформированными коллекциями).
-- **PostgreSQL**
-  - том / директория для данных БД.
-- **Frontend**
-  - базовый URL API (например, `VITE_API_BASE_URL`).
-
-Точные имена переменных смотрите в README соответствующих репозиториев.
-
----
-
-## 6. Резервное копирование и восстановление
-
-### 6.1 PostgreSQL
-
-Пример резервного копирования:
+Frontend читает `VITE_API_URL` — базовый URL backend API, например:
 
 ```bash
-pg_dump -U <db_user> <db_name> > backup.sql
+VITE_API_URL=http://127.0.0.1:8000/api/v1
 ```
 
-Пример восстановления:
+> Если frontend запускается на другом origin (Vite dev server), может понадобиться CORS или dev proxy.
+> Конкретная настройка зависит от выбранного способа развёртывания в команде.
 
-```bash
-psql -U <db_user> <db_name> < backup.sql
-```
+### 4.2 Production (static build)
 
-В Docker-окружении команды выполняются через `docker compose exec db ...`
-по инструкциям из README backend-а.
-
-### 6.2 Сформированные архивы
-
-Сформированные коллекции сохраняются в виде ZIP-файлов в каталоге на хосте
-или в примонтированном Docker-томе. Для их резервного копирования можно:
-
-- периодически архивировать или копировать этот каталог;
-- использовать внешнюю систему backup-ов.
-
-Если включена автоматическая политика хранения (удаление архивов старше N дней),
-нужно заранее решить, требуется ли долгосрочное хранение таких файлов.
-
----
-
-## 7. Мониторинг и логи
-
-Базовый мониторинг можно выполнять по логам:
-
-```bash
-docker compose logs -f backend
-docker compose logs -f db
-```
-
-Для более серьёзной эксплуатации можно:
-
-- настроить HTTPS через reverse-proxy (nginx, caddy);
-- добавить сбор метрик и дашборды (Prometheus, Grafana и т.п.).
-
----
-
-## 8. Ограничения развёртывания MVP
-
-- одноузловое развёртывание (без кластеризации и горизонтального масштабирования);
-- только локальное файловое хранилище для сформированных архивов;
-- минимальный мониторинг и алертинг «из коробки».
+Для простого демо frontend можно собрать и отдавать через Nginx (см. README фронтенд‑репозитория).

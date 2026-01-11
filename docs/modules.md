@@ -1,138 +1,78 @@
 # System Modules
 
 This document gives a high‑level overview of the main modules in the system
-and how they relate to each other. The actual implementation is split across
-separate repositories; for **low‑level technical details, installation and
-developer instructions**, always refer to the README of the corresponding repo.
+and how they relate to each other.
+
+The implementation is split across separate repositories; for **low‑level technical details,
+installation and developer instructions**, always refer to the README of the corresponding repo.
 
 ---
 
 ## 0. Repositories
 
-- **Backend API** – `medagg-backend`  
-  GitHub: <https://github.com/b-barsky/medagg-backend>  
+- **Backend API** – `medagg-backend` (Django + DRF)  
   Main docs: `README.md` in that repo (API endpoints, settings, docker-compose).
 
+- **Frontend** – `medagg-frontend` (Vite + React + Ant Design)  
+  Main docs: `README.md` in that repo (dev server, build, environment vars).
+
 - **Search module** – `medagg-search`  
-  GitHub: <https://github.com/ESBehtev/medagg-search>  
-  Main docs: `README.md` in that repo (taxonomy format, query parsing, examples).
-
-- **Frontend** – `medagg-frontend`  
-  GitHub: <https://github.com/solinoid/medagg-frontend>  
-  Main docs: `README.md` in that repo (Vite dev server, build, environment vars).
-
-This `medagg-docs` repository does **not** duplicate all technical details –
-instead it links to the module‑specific READMEs where appropriate.
+  In the current MVP backend snapshot, the search implementation is also vendored under
+  `src/libs/medsearch/` and is used by the backend search service.
 
 ---
 
 ## 1. Backend (`medagg-backend`)
 
-### 1.1 Responsibilities
+### 1.1 Responsibilities (MVP)
 
 - expose REST API for:
-  - authentication and user management;
-  - dataset catalog (list, filter, detail);
-  - search integration;
-  - collection management (create, list, download);
-  - admin operations;
-- store and validate data in PostgreSQL;
-- coordinate background work for building collections (if used).
+  - dataset catalog (list, detail);
+  - search endpoint used by the frontend;
+  - vocabulary/dictionary entities (areas, modalities, ML tasks, tags) as part of dataset payloads;
+- store data in PostgreSQL;
+- provide admin interface for maintaining reference entities and datasets.
 
-### 1.2 Main components (conceptual)
+### 1.2 Key internal modules
 
-- Django models for datasets, images, vocabularies, collections, etc.;
-- DRF serializers and viewsets for API endpoints;
-- authentication and permission configuration;
-- settings for database (PostgreSQL), storage paths, CORS, etc.
-
-For **concrete endpoints, settings and docker-compose usage**, see:
-
-- `medagg-backend` → [`README.md`](https://github.com/b-barsky/medagg-backend#readme)
-
-Additional related docs in this repo:
-
-- `docs/api-overview.md`
-- `docs/db-schema.md` / `docs/db-schema.ru.md`
-- ADRs related to backend and database choices (`docs/adr/0001*`, `0002*`, `0003*`, `0006*`).
+- **Datasets app** (`apps.datasets`)
+  - Django models: `Dataset`, `AnatomicalArea`, `Modality`, `MLTask`, `Tag` (+ M2M tables).
+  - DRF viewsets/serializers under `apps.datasets.api.v1`.
+- **Search app** (`apps.search`)
+  - Search API under `apps.search.api.v1`.
+  - Search service integrates `libs.medsearch`.
+- **README generator** (part of `apps.datasets`)
+  - Generates markdown README content for a dataset.
+  - Output is stored in `Dataset.readme_content`.
+  - In the reference MVP branch, README is generated automatically on save if `readme_content` is empty.
 
 ---
 
-## 2. Search module (`medagg-search`)
+## 2. Frontend (`medagg-frontend`)
 
-### 2.1 Responsibilities
+### 2.1 Responsibilities (MVP)
 
-- parse free‑text user queries in Russian / English;
-- map terms to elements of a **taxonomy** (stored in YAML or similar);
-- extract structured slots:
-  - modality;
-  - anatomical area;
-  - pathology / keyword;
-  - task type;
-- optionally compute relevance scores for datasets.
+- provide a SPA UI for:
+  - dataset list (catalog)
+  - dataset detail page
+  - search input + results
+  - viewing generated dataset README content
 
-### 2.2 Integration contract
+### 2.2 Backend integration
 
-Input from backend:
+Frontend reads `VITE_API_URL` (base URL for backend API, e.g. `http://127.0.0.1:8000/api/v1`)
+and uses:
 
-- query text as entered by user;
-- optional context (language, default area, etc.).
-
-Output to backend:
-
-- normalized query representation;
-- list of candidate datasets or filter suggestions;
-- scores or ranking hints.
-
-For **taxonomy structure, configuration and usage examples**, see:
-
-- `medagg-search` → [`README.md`](https://github.com/ESBehtev/medagg-search#readme)
-
-Related ADR:
-
-- `docs/adr/0004-search-engine-integration.md` – explains the integration strategy.
+- `GET /datasets`
+- `GET /datasets/{id}`
+- `POST /search/datasets`
 
 ---
 
-## 3. Frontend (`medagg-frontend`)
+## 3. Database (PostgreSQL)
 
-### 3.1 Responsibilities
+The MVP schema is centered around the dataset catalog and reference dictionaries.
+See `db-schema.md` for entities and relations.
 
-- provide the main user interface for search, filtering and collection creation;
-- authenticate users and store tokens / session state on the client;
-- call backend API and display results;
-- provide admin UI for dataset and vocabulary management (where applicable).
-
-### 3.2 Stack
-
-- Vite (build tooling, dev server);
-- React (component model);
-- Ant Design (UI components and layout).
-
-For **dev commands, build & deploy instructions and environment variables**, see:
-
-- `medagg-frontend` → [`README.md`](https://github.com/solinoid/medagg-frontend#readme)
-
-Screens and flows are described at a product level in:
-
-- `docs/user-guide.md` / `.ru.md`
-- `docs/admin-guide.md` / `.ru.md`
-
-Corresponding screenshots should be placed in `docs/screenshots/` and linked
-from those guides.
-
----
-
-## 4. Auxiliary modules / services
-
-Depending on the final implementation, additional modules may include:
-
-- background workers (Celery, RQ, Django Q, etc.) for long‑running tasks
-  such as building large collections;
-- storage adapters:
-  - local filesystem for MVP;
-  - later – cloud storage (S3‑compatible, etc.);
-- monitoring and logging integrations.
-
-These elements are not strictly required for the MVP, but should be kept in mind
-when evolving the architecture.
+> Note: the backend uses Django migrations as the standard schema management mechanism.
+> If the team applies DB changes manually (SQL/ALTER), reflect them in both migrations and docs to avoid drift.
