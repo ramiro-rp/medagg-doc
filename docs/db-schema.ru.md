@@ -1,51 +1,77 @@
-# Database Schema (MVP)
+# Схема базы данных (MVP)
 
-Этот документ фиксирует схему базы данных проекта. Сейчас существуют **две версии описания схемы**:
+Этот документ отражает **текущую схему базы данных** из материалов DBA:
 
-1) **DBA init SQL / ER‑модель** (см. `init-db.sql` и документацию DBA): отдельная Postgres‑схема с таблицами `roles`, `users`, `datasets`, а также дополнительными таблицами `collections` и `search_queries`.
-
-2) **Backend (Django) модели + миграции**: backend API реализован на Django/DRF и использует свои модели и миграции (включая таблицы `django.contrib.auth`).
-
-Поскольку эти источники пока не полностью согласованы, ниже они разделены и отмечены известные расхождения.
+- `init-db.sql`
+- ER-диаграмма в `docs/diagrams/`
 
 ---
 
-## A) DBA‑схема (init-db.sql)
+## Справочные таблицы
 
-### Основные таблицы
+- `roles` (`id`, `name`)
+- `anatomical_areas` (`id`, `name`)
+- `modalities` (`id`, `name`)
+- `ml_tasks` (`id`, `name`)
+- `tags` (`id`, `name`)
 
-- `roles`
-- `users`
-- `anatomical_areas`
-- `modalities`
-- `ml_tasks`
-- `tags`
-- `datasets`
+---
 
-### Таблицы связей many‑to‑many
+## Основные таблицы
 
-- `dataset_modalities`
-- `dataset_ml_tasks`
-- `dataset_tags`
+### `users`
 
-### Коллекции и сохранённые поиски
+- `id`
+- `login`
+- `password_hash`
+- `role_id` → `roles(id)`
+- `created_at`
 
-- `collections`
+### `datasets`
+
+- `id`
+- `title`
+- `description`
+- `external_link`
+- `local_storage_path`
+- `record_count`
+- `dataset_size_mb`
+- `license`
+- `anatomical_area_id` → `anatomical_areas(id)`
+- `created_at`
+- `updated_at`
+
+---
+
+## Таблицы связей (many-to-many)
+
+- `dataset_modalities` (`dataset_id` → `datasets(id)`, `modality_id` → `modalities(id)`)
+- `dataset_ml_tasks` (`dataset_id` → `datasets(id)`, `ml_task_id` → `ml_tasks(id)`)
+- `dataset_tags` (`dataset_id` → `datasets(id)`, `tag_id` → `tags(id)`)
+
+---
+
+## Коллекции и сохранённые поисковые запросы
+
+- `user_dataset_collections`
+  - `id`
+  - `user_id` → `users(id)`
+  - `storage_path_hdfs`
+  - `archive_size_mb`
+  - `created_at`
+  - `expires_at` (устанавливается триггером)
+
+- `user_search_queries`
+  - `id`
+  - `user_id` → `users(id)` (nullable)
+  - `query_text`
+  - `filters` (JSONB)
+  - `performed_at`
+
 - `collection_datasets`
-- `search_queries`
-- `search_query_datasets`
+  - `collection_id` → `user_dataset_collections(id)`
+  - `dataset_id` → `datasets(id)`
+  - `relevance_score`
+  - `query_id` → `user_search_queries(id)`
 
-> Примечание: в текущих материалах DBA **нет** колонки `readme_content` в таблице датасетов.
-
----
-
-## B) Backend‑схема (Django)
-
-Backend API использует Django‑модели и миграции. В snapshot backend, который используется для обновления документации, serializer датасета включает поле `license`, и в репозитории есть миграция для этого поля.
-
-### Важное замечание по согласованию: `readme_content`
-
-Генератор README для датасетов был реализован в feature‑ветке (`feature/search`) и использует поле с контентом README (обычно `readme_content`).
-
-- В текущем DBA init SQL / ER‑описании этого поля нет.
-- Наличие этой колонки в развернутой Postgres‑схеме нужно подтвердить у backend‑разработчика и DBA.
+Триггер `set_expiration_date` устанавливает `expires_at = created_at + 1 day` при вставке в `user_dataset_collections`.

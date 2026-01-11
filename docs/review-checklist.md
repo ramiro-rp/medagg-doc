@@ -35,6 +35,8 @@ Roles in this project:
   - **Must review:**
     - Both DBAs
     - Backend Dev
+  - **Also verify:**
+    - README generation: if storing generated README text is required, align and update the DB schema (ER/init SQL) and backend migrations/docs. (Currently not present in DBA init schema.)
   - **Nice to review:**
     - Team Lead / DevOps
 
