@@ -12,8 +12,8 @@ details live in three main repositories:
 - **Search module** – `medagg-search`  
   GitHub: <https://github.com/ESBehtev/medagg-search>
 
-- **Frontend** – `medagg-frontend`  
-  GitHub: <https://github.com/solinoid/medagg-frontend>
+- **Frontend** – `frontend-DataHive`  
+  GitHub: <https://github.com/Nikitmen/frontend-DataHive>
 
 For things like:
 
@@ -55,6 +55,3 @@ The documentation is maintained in a **docs‑as‑code** style:
 
 See `docs/review-checklist.md` for which team role is expected to
 validate each document.
-=======
-# medagg-doc
-Product documentation for Medical Dataset Aggregator

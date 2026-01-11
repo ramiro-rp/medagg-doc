@@ -19,10 +19,6 @@ using Docker / docker-compose.
 
 ---
 
-
-
-> Note on search module: the backend expects the `medagg-search` package under `src/libs/medsearch/`.
-> If you cloned the backend repo, initialize it via git submodules (or copy the package into that path) before running the API.
 ## 2. Requirements
 
 - Linux server or workstation (WSL2 / macOS can be used for development);
@@ -37,7 +33,7 @@ using Docker / docker-compose.
 Typical workflow:
 
 ```bash
-git clone https://github.com/AnastasiaGladir/medagg-backend.git
+git clone https://github.com/b-barsky/medagg-backend.git
 cd medagg-backend
 
 # Copy example env file if present
@@ -68,8 +64,8 @@ docker compose exec backend python manage.py migrate
 ### Development mode
 
 ```bash
-git clone https://github.com/NikaAsadli/medagg-frontend.git
-cd medagg-frontend
+git clone https://github.com/Nikitmen/frontend-DataHive.git
+cd frontend-DataHive
 
 npm install
 npm run dev
@@ -108,7 +104,7 @@ Key parameters (usually via `.env`):
 - **PostgreSQL**
   - volume / directory for DB data.
 - **Frontend**
-  - API base URL (e.g. `VITE_API_BASE_URL`).
+  - API base URL (e.g. `VITE_API_URL`).
 
 See the READMEs in each repo for exact variable names.
 
@@ -130,7 +126,7 @@ Restore example:
 psql -U <db_user> <db_name> < backup.sql
 ```
 
-In Docker environments, these commands are run via `docker-compose exec db psql -U <db_user> <db_name>`
+In Docker environments, these commands are run via `docker compose exec db ...`
 as described in the backend README.
 
 ### 6.2 Built archives

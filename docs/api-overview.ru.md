@@ -1,89 +1,66 @@
-# Обзор API (MVP)
+# API Overview (MVP)
 
-> Это **высокоуровневое** описание. Источник истины — код в репозитории
-> `medagg-backend` (Django + DRF).
+Этот документ описывает **текущую** API‑поверхность, которую использует MVP‑frontend и которая реализована в backend (Django REST Framework).
 
-## Базовый URL
+## Base URL
 
-Для референсной версии backend API версионирован:
+Все endpoints ниже доступны под:
 
-- Base: `http://<server-host>:8000/api/v1/`
+- `/api/v1/`
 
-Frontend использует `VITE_API_URL` и затем добавляет пути вроде `/datasets` и
-`/search/datasets`.
+## Аутентификация
 
----
+- Backend предоставляет стандартный DRF session auth UI: `/api-auth/`.
+- Другие механизмы (например, JWT) **не входят** в текущую реализацию MVP.
 
-## 1. Датасеты
+## Датасеты
 
-### GET `/datasets/`
+### GET `/api/v1/datasets/`
 
-Возвращает список датасетов с детальными метаданными.
+Возвращает список датасетов.
 
-**Ответ (200)**  
-JSON-массив объектов датасетов.
+**Ответ (структура)**
 
-### GET `/datasets/{id}/`
+Каждый элемент — объект датасета. Набор полей задаётся serializer’ом backend и включает (как минимум):
 
-Возвращает один датасет по `id`.
+- `id`, `title`, `description`
+- `external_path`, `local_path`
+- `record_count`, `size`, `license`
+- `anatomical_area`, `anatomical_area_name`
+- `modalities`, `ml_tasks`, `tags`
+- `created_at`, `updated_at`
 
-**Ответ (200)**  
-Объект датасета.
+### GET `/api/v1/datasets/{id}/`
 
----
+Возвращает один датасет по id (тот же набор полей).
 
-## 2. Поиск
+## Поиск
 
-### POST `/search/datasets/`
+### POST `/api/v1/search/datasets/`
 
-Поиск датасетов по строке запроса и (опционально) фильтрам.
+Поиск датасетов.
 
-- Тело запроса (JSON): `{ "query": "<string>" }`
-- Фильтры передаются через query params (см. ниже).
+**Body**
 
-**Ответ (200)**
-```json
-{
-  "count": 1,
-  "results": [
-    {
-      "id": 1,
-      "title": "Test Brain MRI Dataset",
-      "description": "Test dataset",
-      "external_path": "https://example.org/datasets/brain-mri",
-      "local_path": "/data/brain-mri",
-      "record_count": 100,
-      "size": 500,
-      "license": "CC BY 4.0",
-      "anatomical_area": 1,
-      "anatomical_area_name": "Brain",
-      "modalities": [{"id": 1, "name": "MRI"}],
-      "ml_tasks": [{"id": 1, "name": "Segmentation"}],
-      "tags": [{"id": 1, "name": "medical"}],
-      "created_at": "2026-01-01T12:00:00Z",
-      "updated_at": "2026-01-01T12:00:00Z"
-    }
-  ]
-}
-```
+- `query` (string, min length 2)
 
-### 2.1 Фильтры поиска (query params)
+**Необязательные GET query params (фильтры)**
 
-Поддерживаются следующие параметры:
+- `anatomical_area_name`
+- `record_count_min`, `record_count_max`
+- `modalities_list` (через запятую)
+- `ml_tasks_list` (через запятую)
+- `tags_list` (через запятую)
+- `size_min`, `size_max`
+- `ordering` (параметр‑список; по умолчанию backend использует `["created_at", "desc"]`)
 
-- `anatomical_area_name` – строка
-- `record_count_min` / `record_count_max` – числа
-- `size_min` / `size_max` – числа
-- `modalities_list` – список через запятую (например `MRI,CT`)
-- `ml_tasks_list` – список через запятую
-- `tags_list` – список через запятую
-- `ordering` – список максимум из 2 элементов: `[ "<column>", "asc|desc" ]`  
-  По умолчанию: `["created_at", "desc"]`
+**Ответ**
 
----
+- `count` (integer)
+- `results` (массив объектов датасетов, та же структура что и в detail)
 
-## 3. Примечания
+## Users (admin / internal)
 
-- Аутентификация для MVP сейчас реализована через Django admin и/или DRF session auth
-  (`/api-auth/`). Токены (JWT) можно добавить позже при необходимости.
-- Семантика полей (`external_path`, `local_path` и т.п.) должна соответствовать сериалайзерам и моделям backend.
+### `/api/v1/users/`
+
+User‑endpoints существуют под этим префиксом. В текущем MVP они предназначены для административного/внутреннего использования и могут требовать аутентификации (см. `/api-auth/`).

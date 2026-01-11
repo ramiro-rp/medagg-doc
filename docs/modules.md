@@ -10,74 +10,134 @@ developer instructions**, always refer to the README of the corresponding repo.
 ## 0. Repositories
 
 - **Backend API** – `medagg-backend`  
-  GitHub: <https://github.com/AnastasiaGladir/medagg-backend>  
+  GitHub: <https://github.com/b-barsky/medagg-backend>  
   Main docs: `README.md` in that repo (API endpoints, settings, docker-compose).
 
 - **Search module** – `medagg-search`  
   GitHub: <https://github.com/ESBehtev/medagg-search>  
-  Note: in the backend, the search code is expected under `src/libs/medsearch/`
-  (commonly populated via a git submodule or by copying the `medagg-search` package).
+  Main docs: `README.md` in that repo (taxonomy format, query parsing, examples).
 
-- **Frontend** – `medagg-frontend`  
-  GitHub: <https://github.com/NikaAsadli/medagg-frontend>  
+- **Frontend** – `frontend-DataHive`  
+  GitHub: <https://github.com/Nikitmen/frontend-DataHive>  
   Main docs: `README.md` in that repo (Vite dev server, build, environment vars).
 
----
-
-## 1. Backend API (Django + DRF)
-
-The backend is a Django application that provides:
-
-- **Datasets API**: list + detail endpoints for dataset metadata.
-- **Search API**: query‑based search plus filter parameters.
-- **Admin UI**: Django admin for internal management.
-
-Key implementation directories (in `medagg-backend`):
-
-- `src/apps/datasets/` – dataset catalog (models, serializers, views).
-- `src/apps/search/` – search endpoint (calls the search service).
-- `src/apps/users/` – user API (thin wrapper around Django auth, if enabled).
-- `src/config/` – project settings and URL routing.
+This `medagg-docs` repository does **not** duplicate all technical details –
+instead it links to the module‑specific READMEs where appropriate.
 
 ---
 
-## 2. Search module
+## 1. Backend (`medagg-backend`)
 
-Search is exposed via the backend endpoint:
+### 1.1 Responsibilities
 
-- `POST /api/v1/search/datasets/`
+- expose REST API for:
+  - authentication and user management;
+  - dataset catalog (list, filter, detail);
+  - search integration;
+  - collection management (create, list, download);
+  - admin operations;
+- store and validate data in PostgreSQL;
+- coordinate background work for building collections (if used).
 
-The backend delegates query execution to `SearchService`
-(`src/apps/search/services.py`). The low‑level search logic lives in the
-`medagg-search` package (expected under `src/libs/medsearch/`).
+### 1.2 Main components (conceptual)
+
+- Django models for datasets, images, vocabularies, collections, etc.;
+- DRF serializers and viewsets for API endpoints;
+- authentication and permission configuration;
+- settings for database (PostgreSQL), storage paths, CORS, etc.
+
+For **concrete endpoints, settings and docker-compose usage**, see:
+
+- `medagg-backend` → [`README.md`](https://github.com/b-barsky/medagg-backend#readme)
+
+Additional related docs in this repo:
+
+- `docs/api-overview.md`
+- `docs/db-schema.md` / `docs/db-schema.ru.md`
+- ADRs related to backend and database choices (`docs/adr/0001*`, `0002*`, `0003*`, `0006*`).
 
 ---
 
-## 3. Frontend
+## 2. Search module (`medagg-search`)
 
-The frontend is a Vite/React application that calls the backend API.
+### 2.1 Responsibilities
 
-It uses the environment variable:
+- parse free‑text user queries in Russian / English;
+- map terms to elements of a **taxonomy** (stored in YAML or similar);
+- extract structured slots:
+  - modality;
+  - anatomical area;
+  - pathology / keyword;
+  - task type;
+- optionally compute relevance scores for datasets.
 
-- `VITE_API_URL` – base API URL (example for local dev: `http://127.0.0.1:8000/api/v1`)
+### 2.2 Integration contract
 
-The current frontend calls:
+Input from backend:
 
-- `GET  {VITE_API_URL}/datasets`
-- `GET  {VITE_API_URL}/datasets/{id}`
-- `POST {VITE_API_URL}/search/datasets` with JSON body `{ "query": "brain mri" }`
+- query text as entered by user;
+- optional context (language, default area, etc.).
+
+Output to backend:
+
+- normalized query representation;
+- list of candidate datasets or filter suggestions;
+- scores or ranking hints.
+
+For **taxonomy structure, configuration and usage examples**, see:
+
+- `medagg-search` → [`README.md`](https://github.com/ESBehtev/medagg-search#readme)
+
+Related ADR:
+
+- `docs/adr/0004-search-engine-integration.md` – explains the integration strategy.
 
 ---
 
-## 4. README generation (experimental)
 
-A README generation feature was developed in a backend feature branch and
-shared in the team chat (branch example: `medagg-backend/tree/feature/search`).
-It is **not part of the reference backend snapshot unless it is merged**.
+### README generation (feature branch)
 
-If/when it is merged, the documentation should be updated to describe:
+A README generator for datasets was implemented in a feature branch (`feature/search`) and uses a dataset README content field commonly referred to as `readme_content`. Whether this is already present in the deployed database schema is **to be confirmed** with backend/DBA; current DBA init SQL does not include such a column.
 
-- where the generated README is stored (DB column name),
-- when it is generated (on create/save vs manual),
-- and how it is exposed via API (serializer field).
+## 3. Frontend (`frontend-DataHive`)
 
+### 3.1 Responsibilities
+
+- provide the main user interface for search, filtering and collection creation;
+- authenticate users and store tokens / session state on the client;
+- call backend API and display results;
+- provide admin UI for dataset and vocabulary management (where applicable).
+
+### 3.2 Stack
+
+- Vite (build tooling, dev server);
+- React (component model);
+- Ant Design (UI components and layout).
+
+For **dev commands, build & deploy instructions and environment variables**, see:
+
+- `frontend-DataHive` → [`README.md`](https://github.com/Nikitmen/frontend-DataHive#readme)
+
+Screens and flows are described at a product level in:
+
+- `docs/user-guide.md` / `.ru.md`
+- `docs/admin-guide.md` / `.ru.md`
+
+Corresponding screenshots should be placed in `docs/screenshots/` and linked
+from those guides.
+
+---
+
+## 4. Auxiliary modules / services
+
+Depending on the final implementation, additional modules may include:
+
+- background workers (Celery, RQ, Django Q, etc.) for long‑running tasks
+  such as building large collections;
+- storage adapters:
+  - local filesystem for MVP;
+  - later – cloud storage (S3‑compatible, etc.);
+- monitoring and logging integrations.
+
+These elements are not strictly required for the MVP, but should be kept in mind
+when evolving the architecture.

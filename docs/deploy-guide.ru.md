@@ -19,10 +19,6 @@
 
 ---
 
-
-
-> Примечание про search: backend ожидает пакет `medagg-search` в `src/libs/medsearch/`.
-> Если вы клонировали backend-репозиторий, инициализируйте submodules (или скопируйте пакет в эту папку) перед запуском API.
 ## 2. Требования
 
 - Linux-сервер или рабочая станция (для разработки возможны WSL2 / macOS);
@@ -37,7 +33,7 @@
 Типичный сценарий:
 
 ```bash
-git clone https://github.com/AnastasiaGladir/medagg-backend.git
+git clone https://github.com/b-barsky/medagg-backend.git
 cd medagg-backend
 
 # Скопировать пример env-файла (если есть)
@@ -69,7 +65,7 @@ docker compose exec backend python manage.py migrate
 
 ```bash
 git clone https://github.com/solиноid/medagg-frontend.git
-cd medagg-frontend
+cd frontend-DataHive
 
 npm install
 npm run dev
@@ -108,7 +104,7 @@ npm run dev
 - **PostgreSQL**
   - том / директория для данных БД.
 - **Frontend**
-  - базовый URL API (например, `VITE_API_BASE_URL`).
+  - базовый URL API (например, `VITE_API_URL`).
 
 Точные имена переменных смотрите в README соответствующих репозиториев.
 
@@ -130,7 +126,7 @@ pg_dump -U <db_user> <db_name> > backup.sql
 psql -U <db_user> <db_name> < backup.sql
 ```
 
-В Docker-окружении команды выполняются через `docker-compose exec db psql -U <db_user> <db_name>`
+В Docker-окружении команды выполняются через `docker compose exec db ...`
 по инструкциям из README backend-а.
 
 ### 6.2 Сформированные архивы
