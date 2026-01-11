@@ -1,78 +1,83 @@
 # System Modules
 
 This document gives a high‑level overview of the main modules in the system
-and how they relate to each other.
-
-The implementation is split across separate repositories; for **low‑level technical details,
-installation and developer instructions**, always refer to the README of the corresponding repo.
+and how they relate to each other. The actual implementation is split across
+separate repositories; for **low‑level technical details, installation and
+developer instructions**, always refer to the README of the corresponding repo.
 
 ---
 
 ## 0. Repositories
 
-- **Backend API** – `medagg-backend` (Django + DRF)  
+- **Backend API** – `medagg-backend`  
+  GitHub: <https://github.com/AnastasiaGladir/medagg-backend>  
   Main docs: `README.md` in that repo (API endpoints, settings, docker-compose).
 
-- **Frontend** – `medagg-frontend` (Vite + React + Ant Design)  
-  Main docs: `README.md` in that repo (dev server, build, environment vars).
-
 - **Search module** – `medagg-search`  
-  In the current MVP backend snapshot, the search implementation is also vendored under
-  `src/libs/medsearch/` and is used by the backend search service.
+  GitHub: <https://github.com/ESBehtev/medagg-search>  
+  Note: in the backend, the search code is expected under `src/libs/medsearch/`
+  (commonly populated via a git submodule or by copying the `medagg-search` package).
+
+- **Frontend** – `medagg-frontend`  
+  GitHub: <https://github.com/NikaAsadli/medagg-frontend>  
+  Main docs: `README.md` in that repo (Vite dev server, build, environment vars).
 
 ---
 
-## 1. Backend (`medagg-backend`)
+## 1. Backend API (Django + DRF)
 
-### 1.1 Responsibilities (MVP)
+The backend is a Django application that provides:
 
-- expose REST API for:
-  - dataset catalog (list, detail);
-  - search endpoint used by the frontend;
-  - vocabulary/dictionary entities (areas, modalities, ML tasks, tags) as part of dataset payloads;
-- store data in PostgreSQL;
-- provide admin interface for maintaining reference entities and datasets.
+- **Datasets API**: list + detail endpoints for dataset metadata.
+- **Search API**: query‑based search plus filter parameters.
+- **Admin UI**: Django admin for internal management.
 
-### 1.2 Key internal modules
+Key implementation directories (in `medagg-backend`):
 
-- **Datasets app** (`apps.datasets`)
-  - Django models: `Dataset`, `AnatomicalArea`, `Modality`, `MLTask`, `Tag` (+ M2M tables).
-  - DRF viewsets/serializers under `apps.datasets.api.v1`.
-- **Search app** (`apps.search`)
-  - Search API under `apps.search.api.v1`.
-  - Search service integrates `libs.medsearch`.
-- **README generator** (part of `apps.datasets`)
-  - Generates markdown README content for a dataset.
-  - Output is stored in `Dataset.readme_content`.
-  - In the reference MVP branch, README is generated automatically on save if `readme_content` is empty.
+- `src/apps/datasets/` – dataset catalog (models, serializers, views).
+- `src/apps/search/` – search endpoint (calls the search service).
+- `src/apps/users/` – user API (thin wrapper around Django auth, if enabled).
+- `src/config/` – project settings and URL routing.
 
 ---
 
-## 2. Frontend (`medagg-frontend`)
+## 2. Search module
 
-### 2.1 Responsibilities (MVP)
+Search is exposed via the backend endpoint:
 
-- provide a SPA UI for:
-  - dataset list (catalog)
-  - dataset detail page
-  - search input + results
-  - viewing generated dataset README content
+- `POST /api/v1/search/datasets/`
 
-### 2.2 Backend integration
-
-Frontend reads `VITE_API_URL` (base URL for backend API, e.g. `http://127.0.0.1:8000/api/v1`)
-and uses:
-
-- `GET /datasets`
-- `GET /datasets/{id}`
-- `POST /search/datasets`
+The backend delegates query execution to `SearchService`
+(`src/apps/search/services.py`). The low‑level search logic lives in the
+`medagg-search` package (expected under `src/libs/medsearch/`).
 
 ---
 
-## 3. Database (PostgreSQL)
+## 3. Frontend
 
-The MVP schema is centered around the dataset catalog and reference dictionaries.
-See `db-schema.md` for entities and relations.
+The frontend is a Vite/React application that calls the backend API.
 
-> Note: the backend uses Django migrations as the standard schema management mechanism.
-> If the team applies DB changes manually (SQL/ALTER), reflect them in both migrations and docs to avoid drift.
+It uses the environment variable:
+
+- `VITE_API_URL` – base API URL (example for local dev: `http://127.0.0.1:8000/api/v1`)
+
+The current frontend calls:
+
+- `GET  {VITE_API_URL}/datasets`
+- `GET  {VITE_API_URL}/datasets/{id}`
+- `POST {VITE_API_URL}/search/datasets` with JSON body `{ "query": "brain mri" }`
+
+---
+
+## 4. README generation (experimental)
+
+A README generation feature was developed in a backend feature branch and
+shared in the team chat (branch example: `medagg-backend/tree/feature/search`).
+It is **not part of the reference backend snapshot unless it is merged**.
+
+If/when it is merged, the documentation should be updated to describe:
+
+- where the generated README is stored (DB column name),
+- when it is generated (on create/save vs manual),
+- and how it is exposed via API (serializer field).
+

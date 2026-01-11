@@ -1,109 +1,90 @@
 # API Overview (MVP)
 
-> This is a **high‑level** description of the MVP API contract. The source of truth
-> is the backend code (`medagg-backend`, Django + DRF).
+> This is a **high-level** description. The source of truth is the code in
+> `medagg-backend` (Django + DRF).
 
 ## Base URL
 
-Backend API base: `http://<server-host>:8000/api/v1/`
+For the reference backend snapshot, the API is versioned:
 
-Main resources:
+- Base: `http://<server-host>:8000/api/v1/`
 
-- `datasets/` – dataset catalog (read-only)
-- `search/` – search endpoints
-
----
-
-## 1. Authentication (MVP)
-
-The MVP API is typically used **without** token-based authentication.
-
-- Admin UI: `GET /admin/` (Django admin)
-- Browsable API login (dev only): `GET /api-auth/`
-
-If authentication is required later (JWT/OAuth), this document should be updated
-together with the backend implementation.
+The frontend uses `VITE_API_URL` and then appends paths like `/datasets` and
+`/search/datasets`.
 
 ---
 
-## 2. Dataset catalog
+## 1. Datasets
 
-### GET `/api/v1/datasets/`
+### GET `/datasets/`
 
-Returns a list of datasets (detailed serializer is used for list & detail).
+Returns a list of datasets with detailed metadata.
 
-Response example (single item, simplified):
+**Response (200)**
+A JSON array of dataset objects.
 
-```json
-[
-  {
-    "id": 1,
-    "title": "Test Brain MRI Dataset",
-    "description": "Test dataset for README generation",
-    "external_path": "https://example.com/datasets/brain-mri",
-    "local_path": null,
-    "record_count": 100,
-    "size": 500,
-    "anatomical_area": 1,
-    "anatomical_area_name": "Brain",
-    "modalities": [{"id": 1, "name": "MRI"}],
-    "ml_tasks": [{"id": 1, "name": "Segmentation"}],
-    "tags": [{"id": 1, "name": "medical"}],
-    "created_at": "2026-01-11T12:00:00Z",
-    "updated_at": "2026-01-11T12:00:00Z",
-    "readme_content": "# Dataset README\n..."
-  }
-]
-```
+### GET `/datasets/{id}/`
 
-Notes:
+Returns a single dataset object.
 
-- Field naming uses **snake_case**.
-- `readme_content` is generated server‑side by the README generator module.
-  If it is empty in your environment, verify the DB schema and generation workflow.
-
-### GET `/api/v1/datasets/{id}/`
-
-Returns a single dataset (same schema as list items).
+**Response (200)**
+A dataset object.
 
 ---
 
-## 3. Dataset search
+## 2. Search
 
-### POST `/api/v1/search/datasets/`
+### POST `/search/datasets/`
 
-Performs a search over datasets.
+Searches for datasets by query and optional filter parameters.
 
-Request body (minimal):
+- Request body (JSON): `{ "query": "<string>" }`
+- Optional filters are passed as query params (see below).
 
-```json
-{ "query": "brain mri" }
-```
-
-Optional filters can be passed as **query parameters**:
-
-- `anatomical_area_name`
-- `record_count_min`, `record_count_max`
-- `size_min`, `size_max`
-- `modalities_list` (list of strings)
-- `ml_tasks_list` (list of strings)
-- `tags_list` (list of strings)
-- `ordering` (backend-defined ordering key)
-
-Response:
-
+**Response (200)**
 ```json
 {
-  "count": 12,
-  "results": [ /* datasets in the same shape as /datasets/ */ ]
+  "count": 1,
+  "results": [
+    {
+      "id": 1,
+      "title": "Test Brain MRI Dataset",
+      "description": "Test dataset",
+      "external_path": "https://example.org/datasets/brain-mri",
+      "local_path": "/data/brain-mri",
+      "record_count": 100,
+      "size": 500,
+      "license": "CC BY 4.0",
+      "anatomical_area": 1,
+      "anatomical_area_name": "Brain",
+      "modalities": [{"id": 1, "name": "MRI"}],
+      "ml_tasks": [{"id": 1, "name": "Segmentation"}],
+      "tags": [{"id": 1, "name": "medical"}],
+      "created_at": "2026-01-01T12:00:00Z",
+      "updated_at": "2026-01-01T12:00:00Z"
+    }
+  ]
 }
 ```
 
+### 2.1 Search filters (query params)
+
+The search endpoint accepts the following optional query params:
+
+- `anatomical_area_name` – string
+- `record_count_min` / `record_count_max` – integers
+- `size_min` / `size_max` – integers
+- `modalities_list` – comma-separated list (e.g. `MRI,CT`)
+- `ml_tasks_list` – comma-separated list
+- `tags_list` – comma-separated list
+- `ordering` – list with up to 2 items: `[ "<column>", "asc|desc" ]`  
+  Default: `["created_at", "desc"]`
+
 ---
 
-## 4. Status codes (typical)
+## 3. Notes
 
-- `200 OK` – successful request
-- `400 Bad Request` – validation errors (e.g. too short query)
-- `404 Not Found` – dataset not found (detail endpoint)
-- `500` – server error (check backend logs)
+- Authentication for the MVP is currently handled via the Django admin and/or DRF session auth
+  (`/api-auth/`). Token-based auth (JWT) can be added later if required.
+- Exact field semantics (e.g., what is stored in `external_path` vs `local_path`) should follow the
+  backend serializers and models.

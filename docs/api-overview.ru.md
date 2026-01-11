@@ -1,107 +1,89 @@
 # Обзор API (MVP)
 
-> Это **высокоуровневое** описание контракта MVP. Источник истины — код backend-а
-> (`medagg-backend`, Django + DRF).
+> Это **высокоуровневое** описание. Источник истины — код в репозитории
+> `medagg-backend` (Django + DRF).
 
 ## Базовый URL
 
-Базовый URL API: `http://<server-host>:8000/api/v1/`
+Для референсной версии backend API версионирован:
 
-Основные ресурсы:
+- Base: `http://<server-host>:8000/api/v1/`
 
-- `datasets/` — каталог датасетов (только чтение)
-- `search/` — поиск
-
----
-
-## 1. Аутентификация (MVP)
-
-В MVP обычно используется API **без** токен‑аутентификации.
-
-- Админка: `GET /admin/` (Django admin)
-- Логин для browsable API (только для разработки): `GET /api-auth/`
-
-Если позже появится JWT/OAuth, этот документ нужно обновить вместе с backend-реализацией.
+Frontend использует `VITE_API_URL` и затем добавляет пути вроде `/datasets` и
+`/search/datasets`.
 
 ---
 
-## 2. Каталог датасетов
+## 1. Датасеты
 
-### GET `/api/v1/datasets/`
+### GET `/datasets/`
 
-Возвращает список датасетов (для списка и detail используется один и тот же сериализатор).
+Возвращает список датасетов с детальными метаданными.
 
-Пример ответа (1 элемент, упрощённо):
+**Ответ (200)**  
+JSON-массив объектов датасетов.
 
-```json
-[
-  {
-    "id": 1,
-    "title": "Test Brain MRI Dataset",
-    "description": "Test dataset for README generation",
-    "external_path": "https://example.com/datasets/brain-mri",
-    "local_path": null,
-    "record_count": 100,
-    "size": 500,
-    "anatomical_area": 1,
-    "anatomical_area_name": "Brain",
-    "modalities": [{"id": 1, "name": "MRI"}],
-    "ml_tasks": [{"id": 1, "name": "Segmentation"}],
-    "tags": [{"id": 1, "name": "medical"}],
-    "created_at": "2026-01-11T12:00:00Z",
-    "updated_at": "2026-01-11T12:00:00Z",
-    "readme_content": "# Dataset README\n..."
-  }
-]
-```
+### GET `/datasets/{id}/`
 
-Примечания:
+Возвращает один датасет по `id`.
 
-- Имена полей — **snake_case**.
-- `readme_content` генерируется на стороне backend-а модулем генерации README.
-
-### GET `/api/v1/datasets/{id}/`
-
-Возвращает один датасет (та же схема, что и в списке).
+**Ответ (200)**  
+Объект датасета.
 
 ---
 
-## 3. Поиск по датасетам
+## 2. Поиск
 
-### POST `/api/v1/search/datasets/`
+### POST `/search/datasets/`
 
-Выполняет поиск по датасетам.
+Поиск датасетов по строке запроса и (опционально) фильтрам.
 
-Тело запроса (минимально):
+- Тело запроса (JSON): `{ "query": "<string>" }`
+- Фильтры передаются через query params (см. ниже).
 
-```json
-{ "query": "brain mri" }
-```
-
-Дополнительные фильтры можно передать как **query-параметры**:
-
-- `anatomical_area_name`
-- `record_count_min`, `record_count_max`
-- `size_min`, `size_max`
-- `modalities_list` (список строк)
-- `ml_tasks_list` (список строк)
-- `tags_list` (список строк)
-- `ordering` (ключ сортировки, определённый backend-ом)
-
-Ответ:
-
+**Ответ (200)**
 ```json
 {
-  "count": 12,
-  "results": [ /* датасеты в той же форме, что и /datasets/ */ ]
+  "count": 1,
+  "results": [
+    {
+      "id": 1,
+      "title": "Test Brain MRI Dataset",
+      "description": "Test dataset",
+      "external_path": "https://example.org/datasets/brain-mri",
+      "local_path": "/data/brain-mri",
+      "record_count": 100,
+      "size": 500,
+      "license": "CC BY 4.0",
+      "anatomical_area": 1,
+      "anatomical_area_name": "Brain",
+      "modalities": [{"id": 1, "name": "MRI"}],
+      "ml_tasks": [{"id": 1, "name": "Segmentation"}],
+      "tags": [{"id": 1, "name": "medical"}],
+      "created_at": "2026-01-01T12:00:00Z",
+      "updated_at": "2026-01-01T12:00:00Z"
+    }
+  ]
 }
 ```
 
+### 2.1 Фильтры поиска (query params)
+
+Поддерживаются следующие параметры:
+
+- `anatomical_area_name` – строка
+- `record_count_min` / `record_count_max` – числа
+- `size_min` / `size_max` – числа
+- `modalities_list` – список через запятую (например `MRI,CT`)
+- `ml_tasks_list` – список через запятую
+- `tags_list` – список через запятую
+- `ordering` – список максимум из 2 элементов: `[ "<column>", "asc|desc" ]`  
+  По умолчанию: `["created_at", "desc"]`
+
 ---
 
-## 4. Типовые коды ответа
+## 3. Примечания
 
-- `200 OK` — успешно
-- `400 Bad Request` — ошибки валидации (например, слишком короткий query)
-- `404 Not Found` — датасет не найден (detail)
-- `500` — ошибка сервера (смотрите логи backend-а)
+- Аутентификация для MVP сейчас реализована через Django admin и/или DRF session auth
+  (`/api-auth/`). Токены (JWT) можно добавить позже при необходимости.
+- Семантика полей (`external_path`, `local_path` и т.п.) должна соответствовать сериалайзерам и моделям backend.

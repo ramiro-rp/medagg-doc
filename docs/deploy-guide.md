@@ -1,7 +1,7 @@
 # Deploy Guide
 
-This document describes how to deploy **Medical Imaging Dataset Aggregator**
-in a simple single‑node environment (MVP scope).
+This document describes how to deploy
+**Medical Imaging Dataset Aggregator** in a simple single‑node environment.
 
 ---
 
@@ -12,97 +12,158 @@ System components:
 - **Backend** – Django + Django REST Framework;
 - **Database** – PostgreSQL;
 - **Frontend** – Vite + React + Ant Design (SPA);
-- **File storage** – local filesystem (optional, if datasets are mirrored locally).
+- **File storage** – local filesystem for ZIP archives.
 
-The MVP can be deployed either:
-
-- as **separate containers** (recommended for demo / single node), or
-- with the frontend served separately (dev server) pointing to the backend API.
+In the MVP, all components are deployed on **a single Linux host**, typically
+using Docker / docker-compose.
 
 ---
 
+
+
+> Note on search module: the backend expects the `medagg-search` package under `src/libs/medsearch/`.
+> If you cloned the backend repo, initialize it via git submodules (or copy the package into that path) before running the API.
 ## 2. Requirements
 
 - Linux server or workstation (WSL2 / macOS can be used for development);
-- Docker and docker compose (or Docker + compose plugin);
-- Git (if cloning repos directly).
+- Docker and docker-compose (or Docker + compose plugin);
+- Git;
+- optional for demo: Raspberry Pi 4 or similar + SSD.
 
 ---
 
-## 3. Backend deployment (Docker, recommended)
+## 3. Backend deployment (short version)
 
-### 3.1 Clone backend
+Typical workflow:
 
 ```bash
-git clone <backend-repo-url>
+git clone https://github.com/AnastasiaGladir/medagg-backend.git
 cd medagg-backend
-```
 
-### 3.2 Environment files
+# Copy example env file if present
+cp .env.example .env
 
-The `docker-compose.yml` expects two env files:
+# Configure .env (DB connection, secret key, etc.)
 
-- `./.env/database.env`
-- `./.env/settings.env`
-
-If your repo does not include templates for them, create the folder and start from this minimal example.
-
-**`.env/database.env`** (example):
-
-```bash
-DB_ENGINE=postgresql
-DB_HOST=db
-DB_PORT=5432
-DB_NAME=medagg
-DB_USER=medagg
-DB_PASSWORD=change-me
-```
-
-**`.env/settings.env`** (example):
-
-```bash
-DJANGO_SECRET_KEY=change-me
-DJANGO_DEBUG_MODE=0
-DJANGO_ALLOWED_HOSTS=127.0.0.1,localhost
-```
-
-> Adjust values for your environment (especially secrets and allowed hosts).
-
-### 3.3 Start services
-
-If the project provides the helper script, use it:
-
-```bash
-python configure.py --docker
-```
-
-Or run compose directly:
-
-```bash
-docker compose up -d
+# Start services
+docker compose up -d  # or: docker-compose up -d
 ```
 
 After startup:
 
-- Backend API: `http://<server-host>:8000/api/v1/`
-- Django admin: `http://<server-host>:8000/admin/`
-- Browsable API login (dev only): `http://<server-host>:8000/api-auth/`
+- backend API is available at `http://<server-host>:8000/api/v1/`;
+- browsable API / schema may be available at `/api/`, `/api/schema/`
+  (depending on configuration).
+
+Run migrations (if not applied automatically):
+
+```bash
+docker compose exec backend python manage.py migrate
+```
 
 ---
 
-## 4. Frontend deployment
+## 4. Frontend deployment (short version)
 
-### 4.1 Development mode
-
-Run the frontend dev server and point it to the backend API via `VITE_API_URL`, e.g.:
+### Development mode
 
 ```bash
-VITE_API_URL=http://127.0.0.1:8000/api/v1
+git clone https://github.com/NikaAsadli/medagg-frontend.git
+cd medagg-frontend
+
+npm install
+npm run dev
 ```
 
-> If you run the frontend dev server on a different origin, you may need to enable CORS on the backend
-> or use a dev proxy in Vite. The exact setup depends on your team’s deployment choice.
+By default the Vite dev server runs at `http://localhost:5173/`
+and talks to the backend API.
 
-### 4.2 Production mode (static build)
+### Simple production setup
 
-For a simple single-node demo, the frontend can be built and served by Nginx (see the frontend repository’s README).
+1. Build the frontend:
+
+   ```bash
+   npm run build
+   ```
+
+2. Serve the `dist/` directory via `nginx`, `caddy` or another HTTP server.
+
+Important:
+
+- configure the correct backend API base URL for the frontend;
+- configure CORS on the backend to allow requests from the frontend origin.
+
+---
+
+## 5. Configuration
+
+Key parameters (usually via `.env`):
+
+- **Backend**
+  - DB host, port, name, user, password;
+  - Django secret key;
+  - allowed hosts list;
+  - CORS settings;
+  - path to the directory with ZIP archives (built collections).
+- **PostgreSQL**
+  - volume / directory for DB data.
+- **Frontend**
+  - API base URL (e.g. `VITE_API_BASE_URL`).
+
+See the READMEs in each repo for exact variable names.
+
+---
+
+## 6. Backup and restore
+
+### 6.1 PostgreSQL
+
+Backup example:
+
+```bash
+pg_dump -U <db_user> <db_name> > backup.sql
+```
+
+Restore example:
+
+```bash
+psql -U <db_user> <db_name> < backup.sql
+```
+
+In Docker environments, these commands are run via `docker-compose exec db psql -U <db_user> <db_name>`
+as described in the backend README.
+
+### 6.2 Built archives
+
+Built collections are stored as ZIP files on the host filesystem
+or in a mounted Docker volume. For backup you can:
+
+- periodically archive or copy this directory;
+- use an external backup system.
+
+If an automatic retention policy is enabled (deleting archives older than N days),
+decide in advance whether long‑term storage is required.
+
+---
+
+## 7. Monitoring and logs
+
+Basic monitoring can be done via logs:
+
+```bash
+docker compose logs -f backend
+docker compose logs -f db
+```
+
+For more serious setups you can:
+
+- configure HTTPS via a reverse proxy (nginx, caddy);
+- add metrics and dashboards (Prometheus, Grafana, etc.).
+
+---
+
+## 8. MVP deployment limitations
+
+- single‑node environment (no clustering or horizontal scaling);
+- only local file storage for built archives;
+- minimal monitoring and alerting out of the box.
