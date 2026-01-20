@@ -2,12 +2,12 @@
 
 ## 1. Purpose
 
-Researchers and clinicians often need **custom medical imaging datasets**
+Researchers and clinicians often need **custom medical datasets**
 for training and evaluating machine learning models. Such data is scattered
 across different platforms (Kaggle, PhysioNet, open clinical repositories, etc.)
 and uses different formats and structures.
 
-**Medical Imaging Dataset Aggregator** is a web application that:
+**Medical Dataset Aggregator** is a web application that:
 
 - centralizes **metadata** about open datasets;
 - provides a **single search interface**;
