@@ -73,10 +73,7 @@ docker compose exec backend python manage.py migrate
 ### Development mode
 
 ```bash
-<<<<<<< Updated upstream
-=======
 # Frontend repo
->>>>>>> Stashed changes
 git clone https://github.com/Nikitmen/frontend-DataHive.git
 cd frontend-DataHive
 
@@ -117,11 +114,7 @@ Key parameters (usually via `.env`):
 - **PostgreSQL**
   - volume / directory for DB data.
 - **Frontend**
-<<<<<<< Updated upstream
-  - API base URL (e.g. `VITE_API_URL`).
-=======
   - API base URL (frontend expects `VITE_API_URL`).
->>>>>>> Stashed changes
 
 See the READMEs in each repo for exact variable names.
 

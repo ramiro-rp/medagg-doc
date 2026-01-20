@@ -74,12 +74,8 @@ docker compose exec backend python manage.py migrate
 ### Режим разработки
 
 ```bash
-<<<<<<< Updated upstream
-git clone https://github.com/solиноid/medagg-frontend.git
-=======
 # Frontend репозиторий
 git clone https://github.com/Nikitmen/frontend-DataHive.git
->>>>>>> Stashed changes
 cd frontend-DataHive
 
 npm install
@@ -118,11 +114,7 @@ npm run dev
 - **PostgreSQL**
   - каталог/volume для данных БД.
 - **Frontend**
-<<<<<<< Updated upstream
-  - базовый URL API (например, `VITE_API_URL`).
-=======
   - base URL API (фронтенд ожидает `VITE_API_URL`).
->>>>>>> Stashed changes
 
 Точные имена переменных смотрите в README каждого репозитория.
 

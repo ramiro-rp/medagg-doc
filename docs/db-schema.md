@@ -1,82 +1,5 @@
 # Database Schema (integration snapshot)
 
-<<<<<<< Updated upstream
-This document reflects the **current database schema** from the DBA materials:
-
-- `init-db.sql`
-- ER diagram in `docs/diagrams/`
-
----
-
-## Reference tables
-
-- `roles` (`id`, `name`)
-- `anatomical_areas` (`id`, `name`)
-- `modalities` (`id`, `name`)
-- `ml_tasks` (`id`, `name`)
-- `tags` (`id`, `name`)
-
----
-
-## Main tables
-
-### `users`
-
-- `id`
-- `login`
-- `password_hash`
-- `role_id` → `roles(id)`
-- `created_at`
-
-### `datasets`
-
-- `id`
-- `title`
-- `description`
-- `external_link`
-- `local_storage_path`
-- `record_count`
-- `dataset_size_mb`
-- `license`
-- `anatomical_area_id` → `anatomical_areas(id)`
-- `created_at`
-- `updated_at`
-
----
-
-## Link tables (many-to-many)
-
-- `dataset_modalities` (`dataset_id` → `datasets(id)`, `modality_id` → `modalities(id)`)
-- `dataset_ml_tasks` (`dataset_id` → `datasets(id)`, `ml_task_id` → `ml_tasks(id)`)
-- `dataset_tags` (`dataset_id` → `datasets(id)`, `tag_id` → `tags(id)`)
-
----
-
-## Collections and saved searches
-
-- `user_dataset_collections`
-  - `id`
-  - `user_id` → `users(id)`
-  - `storage_path_hdfs`
-  - `archive_size_mb`
-  - `created_at`
-  - `expires_at` (set by trigger)
-
-- `user_search_queries`
-  - `id`
-  - `user_id` → `users(id)` (nullable)
-  - `query_text`
-  - `filters` (JSONB)
-  - `performed_at`
-
-- `collection_datasets`
-  - `collection_id` → `user_dataset_collections(id)`
-  - `dataset_id` → `datasets(id)`
-  - `relevance_score`
-  - `query_id` → `user_search_queries(id)`
-
-A trigger `set_expiration_date` sets `expires_at = created_at + 1 day` on insert into `user_dataset_collections`.
-=======
 This document describes the **database schema observed during integration tests** of the MVP backend (Django ORM + migrations) on **PostgreSQL**.
 
 > A separate DBA-managed SQL schema (e.g., `init-db.sql` and ER diagrams) may exist for production planning. Before production deployment, the ORM migrations and the DBA SQL scripts must be aligned.
@@ -183,4 +106,3 @@ The backend stores **metadata only** (titles, descriptions, tags, etc.). It does
 ### 4.2 Text encoding
 
 All text fields should be stored as Unicode (UTF-8) end-to-end. If a README generator outputs non-ASCII text (e.g., Russian), ensure no extra `.encode()`/`.decode()` steps are applied before writing to the DB. If characters look garbled in a Windows terminal, verify the terminal code page; the DB itself should still store valid Unicode.
->>>>>>> Stashed changes
