@@ -1,4 +1,4 @@
-# Product Overview – Medical Imaging Dataset Aggregator
+# Product Overview – Medical Dataset Aggregator
 
 ## 1. Purpose
 
