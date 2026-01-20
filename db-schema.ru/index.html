@@ -73,51 +73,35 @@
                   </li>
                   <li class="toctree-l1 current"><a class="reference internal current" href="#">Схема базы данных</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#1">1. Общий обзор областей</a>
+    <li class="toctree-l2"><a class="reference internal" href="#1">1. Область действия</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#2">2. Пользователи и роли</a>
+    <li class="toctree-l2"><a class="reference internal" href="#2">2. Справочники</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#21-roles">2.1 roles</a>
+    <li class="toctree-l3"><a class="reference internal" href="#21">2.1 Анатомические области</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#22-users">2.2 users</a>
+    <li class="toctree-l3"><a class="reference internal" href="#22">2.2 Модальности</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#23-ml-">2.3 ML-задачи</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#24">2.4 Теги</a>
     </li>
         </ul>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#3">3. Справочники</a>
+    <li class="toctree-l2"><a class="reference internal" href="#3">3. Каталог датасетов</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#31-anatomical_areas">3.1 anatomical_areas</a>
+    <li class="toctree-l3"><a class="reference internal" href="#31">3.1 Датасеты</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#32-modalities">3.2 modalities</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#33-ml_tasks">3.3 ml_tasks</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#34-tags">3.4 tags</a>
+    <li class="toctree-l3"><a class="reference internal" href="#32-many-to-many">3.2 Таблицы связей many-to-many</a>
     </li>
         </ul>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#4">4. Каталог наборов данных</a>
+    <li class="toctree-l2"><a class="reference internal" href="#4">4. Примечания</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#41-datasets">4.1 datasets</a>
+    <li class="toctree-l3"><a class="reference internal" href="#41">4.1 Единицы размера и производительность</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#42-dataset_modalities">4.2 Связь датасетов и модальностей – dataset_modalities</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#43-dataset_ml_tasks">4.3 Связь датасетов и типов задач – dataset_ml_tasks</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#44-dataset_tags">4.4 Связь датасетов и тегов – dataset_tags</a>
+    <li class="toctree-l3"><a class="reference internal" href="#42">4.2 Кодировка текста</a>
     </li>
         </ul>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#5">5. Активность пользователей: поиски и коллекции</a>
-        <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#51-user_search_queries">5.1 user_search_queries</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#52-user_dataset_collections">5.2 user_dataset_collections</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#53-collection_datasets">5.3 collection_datasets</a>
-    </li>
-        </ul>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#6">6. Замечания и отличия от концептуальной модели</a>
     </li>
     </ul>
                   </li>
@@ -169,173 +153,116 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="mvp">Схема базы данных (MVP)</h1>
-<p>В этом документе описывается <strong>фактическая SQL‑схема</strong>, подготовленная DBA
-для MVP системы <em>Medical Imaging Dataset Aggregator</em>.</p>
-<p>База данных – PostgreSQL. ER‑диаграмма, соответствующая схеме, хранится в файле:</p>
-<ul>
-<li><code>docs/diagrams/er-medagg-core.png</code></li>
-</ul>
-<p>Модель работает на уровне <strong>наборов данных и коллекций</strong>: отдельные изображения
-не хранятся как строки в БД, система отслеживает только наборы и сформированные
-из них коллекции.</p>
+                <h1 id="_1">Схема базы данных (снапшот интеграционного теста)</h1>
+<p>Этот документ описывает <strong>схему БД, наблюдаемую в ходе интеграционных тестов</strong> MVP backend
+(Django ORM + migrations) на <strong>PostgreSQL</strong>.</p>
+<blockquote>
+<p>В проекте может существовать отдельная DBA-схема (например, <code>init-db.sql</code> и ER-диаграммы) для планирования продакшна.
+Перед продакшн-развёртыванием ORM-миграции и DBA SQL-скрипты должны быть синхронизированы.</p>
+</blockquote>
 <hr />
-<h2 id="1">1. Общий обзор областей</h2>
-<p>Логически схема состоит из четырёх блоков:</p>
-<ol>
-<li><strong>Пользователи и роли</strong></li>
-<li><strong>Справочники</strong> (анатомические области, модальности, типы ML‑задач, теги)</li>
-<li><strong>Каталог наборов данных</strong> (исходные датасеты и их атрибуты)</li>
-<li><strong>Активность пользователей</strong> (поисковые запросы и собранные датасеты)</li>
-</ol>
-<hr />
-<h2 id="2">2. Пользователи и роли</h2>
-<h3 id="21-roles">2.1 <code>roles</code></h3>
-<p>Простой справочник ролей.</p>
-<p>Основные поля:</p>
+<h2 id="1">1. Область действия</h2>
+<p>Реализовано в интеграционном снапшоте:</p>
 <ul>
-<li><code>id SERIAL PRIMARY KEY</code></li>
-<li><code>name VARCHAR(20) UNIQUE NOT NULL</code> – имя роли (например, <code>admin</code>, <code>user</code>).</li>
+<li>Справочники: анатомические области, модальности, типы ML-задач, теги.</li>
+<li>Каталог датасетов: таблица датасетов и связи many-to-many.</li>
 </ul>
-<h3 id="22-users">2.2 <code>users</code></h3>
-<p>Пользователи приложения.</p>
-<p>Основные поля:</p>
+<p>Запланировано / не реализовано в протестированном MVP снапшоте (оставляем как цели следующей итерации):</p>
 <ul>
-<li><code>id SERIAL PRIMARY KEY</code></li>
-<li><code>login VARCHAR(50) UNIQUE NOT NULL</code></li>
-<li><code>password_hash VARCHAR(255) NOT NULL</code></li>
-<li><code>role_id INTEGER NOT NULL REFERENCES roles(id)</code></li>
-<li><code>created_at TIMESTAMPTZ DEFAULT NOW()</code> – дата регистрации.</li>
+<li>Учетные записи пользователей и роли.</li>
+<li>История поиска / аналитика.</li>
+<li>Пользовательские коллекции, экспорт/архивы.</li>
 </ul>
 <hr />
-<h2 id="3">3. Справочники</h2>
-<h3 id="31-anatomical_areas">3.1 <code>anatomical_areas</code></h3>
-<p>Справочник анатомических областей (например, грудная клетка).</p>
+<h2 id="2">2. Справочники</h2>
+<p>Логические таблицы (реальные имена зависят от Django app labels; ниже приведены типичные):</p>
+<h3 id="21">2.1 Анатомические области</h3>
 <ul>
-<li><code>id SERIAL PRIMARY KEY</code></li>
-<li><code>name VARCHAR(100) UNIQUE NOT NULL</code></li>
+<li>Таблица: <code>datasets_anatomicalarea</code></li>
+<li>Колонки:</li>
+<li><code>id</code> (auto PK)</li>
+<li><code>name</code> <code>varchar(100)</code> unique</li>
 </ul>
-<h3 id="32-modalities">3.2 <code>modalities</code></h3>
-<p>Справочник модальностей визуализации (рентген, КТ и т.д.).</p>
+<h3 id="22">2.2 Модальности</h3>
 <ul>
-<li><code>id SERIAL PRIMARY KEY</code></li>
-<li><code>name VARCHAR(50) UNIQUE NOT NULL</code></li>
+<li>Таблица: <code>datasets_modality</code></li>
+<li>Колонки:</li>
+<li><code>id</code> (auto PK)</li>
+<li><code>name</code> <code>varchar(50)</code> unique</li>
 </ul>
-<h3 id="33-ml_tasks">3.3 <code>ml_tasks</code></h3>
-<p>Справочник типов ML‑задач (классификация, сегментация и т.п.).</p>
+<h3 id="23-ml-">2.3 ML-задачи</h3>
 <ul>
-<li><code>id SERIAL PRIMARY KEY</code></li>
-<li><code>name VARCHAR(50) UNIQUE NOT NULL</code></li>
+<li>Таблица: <code>datasets_mltask</code></li>
+<li>Колонки:</li>
+<li><code>id</code> (auto PK)</li>
+<li><code>name</code> <code>varchar(50)</code> unique</li>
 </ul>
-<h3 id="34-tags">3.4 <code>tags</code></h3>
-<p>Справочник тегов, которыми описываются датасеты (патологии, ключевые слова и т.п.).</p>
+<h3 id="24">2.4 Теги</h3>
 <ul>
-<li><code>id SERIAL PRIMARY KEY</code></li>
-<li><code>name VARCHAR(50) UNIQUE NOT NULL</code></li>
-</ul>
-<hr />
-<h2 id="4">4. Каталог наборов данных</h2>
-<h3 id="41-datasets">4.1 <code>datasets</code></h3>
-<p>Описывает <strong>исходный набор данных</strong> (например, открытый датасет рентгенов
-грудной клетки).</p>
-<p>Основные поля:</p>
-<ul>
-<li><code>id SERIAL PRIMARY KEY</code></li>
-<li><code>title VARCHAR(500) NOT NULL</code></li>
-<li><code>description TEXT</code></li>
-<li><code>external_link VARCHAR(1000)</code> – ссылка на исходный ресурс</li>
-<li><code>local_storage_path VARCHAR(500)</code> – путь к локальной копии (если есть)</li>
-<li><code>record_count INTEGER</code> – количество записей / изображений (оценка)</li>
-<li><code>dataset_size_mb INTEGER</code> – примерный размер в МБ</li>
-<li><code>anatomical_area_id INTEGER REFERENCES anatomical_areas(id)</code></li>
-<li><code>created_at TIMESTAMPTZ DEFAULT NOW()</code></li>
-<li><code>updated_at TIMESTAMPTZ DEFAULT NOW()</code></li>
-</ul>
-<h3 id="42-dataset_modalities">4.2 Связь датасетов и модальностей – <code>dataset_modalities</code></h3>
-<p>Таблица для связи многие‑ко‑многим между датасетами и модальностями.</p>
-<ul>
-<li><code>dataset_id INTEGER NOT NULL REFERENCES datasets(id) ON DELETE CASCADE</code></li>
-<li><code>modality_id INTEGER NOT NULL REFERENCES modalities(id)</code></li>
-<li><code>PRIMARY KEY (dataset_id, modality_id)</code></li>
-</ul>
-<h3 id="43-dataset_ml_tasks">4.3 Связь датасетов и типов задач – <code>dataset_ml_tasks</code></h3>
-<p>Таблица для связи многие‑ко‑многим между датасетами и типами ML‑задач.</p>
-<ul>
-<li><code>dataset_id INTEGER NOT NULL REFERENCES datasets(id) ON DELETE CASCADE</code></li>
-<li><code>ml_task_id INTEGER NOT NULL REFERENCES ml_tasks(id)</code></li>
-<li><code>PRIMARY KEY (dataset_id, ml_task_id)</code></li>
-</ul>
-<h3 id="44-dataset_tags">4.4 Связь датасетов и тегов – <code>dataset_tags</code></h3>
-<p>Таблица для связи многие‑ко‑многим между датасетами и тегами.</p>
-<ul>
-<li><code>dataset_id INTEGER NOT NULL REFERENCES datasets(id) ON DELETE CASCADE</code></li>
-<li><code>tag_id INTEGER NOT NULL REFERENCES tags(id)</code></li>
-<li><code>PRIMARY KEY (dataset_id, tag_id)</code></li>
+<li>Таблица: <code>datasets_tag</code></li>
+<li>Колонки:</li>
+<li><code>id</code> (auto PK)</li>
+<li><code>name</code> <code>varchar(50)</code> unique</li>
 </ul>
 <hr />
-<h2 id="5">5. Активность пользователей: поиски и коллекции</h2>
-<h3 id="51-user_search_queries">5.1 <code>user_search_queries</code></h3>
-<p>Хранит поисковые запросы пользователей и снимок фильтров.</p>
+<h2 id="3">3. Каталог датасетов</h2>
+<h3 id="31">3.1 Датасеты</h3>
 <ul>
-<li><code>id SERIAL PRIMARY KEY</code></li>
-<li><code>user_id INTEGER REFERENCES users(id)</code> – может быть <code>NULL</code> для анонимных запросов</li>
-<li><code>query_text TEXT NOT NULL</code></li>
-<li><code>filters JSONB</code> – сериализованные фильтры (области, модальности, задачи, теги и т.д.)</li>
-<li><code>performed_at TIMESTAMPTZ DEFAULT NOW()</code></li>
+<li>Таблица: <code>datasets_dataset</code></li>
+<li>Колонки:</li>
+<li><code>id</code> (auto PK)</li>
+<li><code>title</code> <code>varchar(500)</code> (обязательно)</li>
+<li><code>description</code> <code>text</code> (nullable)</li>
+<li><code>external_path</code> <code>varchar(1000)</code> (nullable)</li>
+<li><code>local_path</code> <code>varchar(500)</code> (nullable)</li>
+<li><code>record_count</code> <code>integer</code> (nullable)</li>
+<li><code>size</code> (nullable)<ul>
+<li>хранится в <strong>байтах</strong></li>
+<li><strong>важно:</strong> для внешних источников (например, Kaggle) <code>total_bytes</code> может превышать 2^31-1.
+  Для PostgreSQL используйте <code>BIGINT</code> (Django: <code>BigIntegerField</code>) или ограничивайте значение перед сохранением.</li>
 </ul>
-<h3 id="52-user_dataset_collections">5.2 <code>user_dataset_collections</code></h3>
-<p>Описывает <strong>собранный для пользователя датасет</strong> – это аналог сущности
-«собранный датасет» / «коллекция» на ER‑диаграмме.</p>
-<ul>
-<li><code>id SERIAL PRIMARY KEY</code></li>
-<li><code>user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE</code></li>
-<li><code>storage_path_hdfs VARCHAR(500) NOT NULL</code> – путь к итоговому архиву</li>
-<li><code>archive_size_mb INTEGER</code> – размер архива</li>
-<li><code>created_at TIMESTAMPTZ DEFAULT NOW()</code></li>
-<li><code>expires_at TIMESTAMPTZ</code> – время истечения срока хранения архива</li>
+</li>
+<li><code>license</code> <code>varchar(500)</code> (разрешён blank; используется фронтендом в протестированном контракте)</li>
+<li><code>anatomical_area_id</code> FK → <code>datasets_anatomicalarea(id)</code> (nullable)</li>
+<li><code>created_at</code> timestamp</li>
+<li><code>updated_at</code> timestamp</li>
+<li><code>readme_content</code> <code>text</code> (nullable, <strong>экспериментальная</strong> функция генерации README)</li>
 </ul>
-<p>Срок жизни архива задаётся триггером, который устанавливает <code>expires_at</code>
-на один день вперёд от <code>created_at</code>:</p>
-<pre><code class="language-sql">CREATE OR REPLACE FUNCTION set_expires_at()
-RETURNS TRIGGER AS $$
-BEGIN
-    NEW.expires_at = NEW.created_at + INTERVAL '1 day';
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER set_expiration_date
-    BEFORE INSERT ON user_dataset_collections
-    FOR EACH ROW
-    EXECUTE FUNCTION set_expires_at();
-</code></pre>
-<h3 id="53-collection_datasets">5.3 <code>collection_datasets</code></h3>
-<p>Связывает пользовательскую коллекцию с датасетами, которые в неё вошли.</p>
+<h3 id="32-many-to-many">3.2 Таблицы связей many-to-many</h3>
+<p>Реализованы через явные “through” модели в Django:</p>
 <ul>
-<li><code>collection_id INTEGER NOT NULL REFERENCES user_dataset_collections(id) ON DELETE CASCADE</code></li>
-<li><code>dataset_id INTEGER NOT NULL REFERENCES datasets(id)</code></li>
-<li><code>relevance_score DECIMAL(5,4)</code> – оценка релевантности от поисковой/ML‑модели</li>
-<li><code>query_id INTEGER NOT NULL REFERENCES user_search_queries(id) ON DELETE CASCADE</code></li>
-<li><code>PRIMARY KEY (collection_id, dataset_id)</code></li>
-</ul>
-<p>Эта таблица позволяет:</p>
-<ul>
-<li>восстановить, какие датасеты вошли в конкретную коллекцию;</li>
-<li>анализировать использование датасетов в разных запросах и коллекциях.</li>
+<li>Модальности:</li>
+<li>Таблица: <code>datasets_datasetmodality</code></li>
+<li>Колонки: <code>dataset_id</code> FK, <code>modality_id</code> FK</li>
+<li>
+<p>Уникальность: (<code>dataset_id</code>, <code>modality_id</code>)</p>
+</li>
+<li>
+<p>ML-задачи:</p>
+</li>
+<li>Таблица: <code>datasets_datasetmltask</code></li>
+<li>Колонки: <code>dataset_id</code> FK, <code>ml_task_id</code> FK</li>
+<li>
+<p>Уникальность: (<code>dataset_id</code>, <code>ml_task_id</code>)</p>
+</li>
+<li>
+<p>Теги:</p>
+</li>
+<li>Таблица: <code>datasets_datasettag</code></li>
+<li>Колонки: <code>dataset_id</code> FK, <code>tag_id</code> FK</li>
+<li>Уникальность: (<code>dataset_id</code>, <code>tag_id</code>)</li>
 </ul>
 <hr />
-<h2 id="6">6. Замечания и отличия от концептуальной модели</h2>
-<ul>
-<li>В схеме MVP <strong>нет отдельной таблицы изображений</strong> – система оперирует
-  наборами данных и коллекциями наборов. Детали на уровне отдельных файлов
-  остаются в исходных ресурсах или в структуре локального хранилища.</li>
-<li>Поле <code>storage_path_hdfs</code> по названию ориентировано на HDFS, но фактически
-  может указывать на любое хранилище (локальный диск, примонтированный том,
-  объектное хранилище и т.п.).</li>
-<li>Автоматическое истечение срока хранения реализовано триггером
-  <code>set_expiration_date</code>, который устанавливает <code>expires_at = created_at + 1 day</code>.
-  Приложение или служебные скрипты могут периодически удалять просроченные архивы.</li>
-</ul>
+<h2 id="4">4. Примечания</h2>
+<h3 id="41">4.1 Единицы размера и производительность</h3>
+<p>Backend хранит <strong>только метаданные</strong> (названия, описания, теги и т.п.).
+Он <strong>не скачивает</strong> содержимое датасетов при поиске; сохраняются лишь поля типа <code>external_path</code> и <code>size</code>.</p>
+<h3 id="42">4.2 Кодировка текста</h3>
+<p>Все текстовые поля должны храниться как Unicode (UTF‑8) end-to-end.
+Если генератор README выводит не-ASCII текст (например, русский),
+не должно быть лишних <code>.encode()</code>/<code>.decode()</code> шагов перед записью в БД.
+Если в Windows-терминале символы выглядят «битым текстом», проверьте кодовую страницу терминала;
+сама БД при корректной записи должна хранить валидный Unicode.</p>
               
             </div>
           </div><footer>

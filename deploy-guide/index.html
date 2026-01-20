@@ -166,6 +166,10 @@
 <p>In the MVP, all components are deployed on <strong>a single Linux host</strong>, typically
 using Docker / docker-compose.</p>
 <hr />
+<blockquote>
+<p>Note on search module: the backend expects the <code>medagg-search</code> package under <code>src/libs/medsearch/</code>.
+If you cloned the backend repo, initialize it via git submodules (or copy the package into that path) before running the API.</p>
+</blockquote>
 <h2 id="2-requirements">2. Requirements</h2>
 <ul>
 <li>Linux server or workstation (WSL2 / macOS can be used for development);</li>
@@ -173,10 +177,16 @@ using Docker / docker-compose.</p>
 <li>Git;</li>
 <li>optional for demo: Raspberry Pi 4 or similar + SSD.</li>
 </ul>
+<blockquote>
+<p>Note (local integration tests without Docker): the official MVP deployment path is Docker-based for reproducibility.
+If Docker is not available in your environment (e.g., Windows without WSL2/Docker), you can still run the backend and
+frontend locally by following each repository README. This document focuses on the standardized Docker single-node setup.</p>
+</blockquote>
 <hr />
 <h2 id="3-backend-deployment-short-version">3. Backend deployment (short version)</h2>
 <p>Typical workflow:</p>
-<pre><code class="language-bash">git clone https://github.com/b-barsky/medagg-backend.git
+<pre><code class="language-bash"># Reference backend repo (use your team fork if different)
+git clone https://github.com/b-barsky/medagg-backend.git
 cd medagg-backend
 
 # Copy example env file if present
@@ -199,8 +209,9 @@ docker compose up -d  # or: docker-compose up -d
 <hr />
 <h2 id="4-frontend-deployment-short-version">4. Frontend deployment (short version)</h2>
 <h3 id="development-mode">Development mode</h3>
-<pre><code class="language-bash">git clone https://github.com/solinoid/medagg-frontend.git
-cd medagg-frontend
+<pre><code class="language-bash"># Frontend repo
+git clone https://github.com/Nikitmen/frontend-DataHive.git
+cd frontend-DataHive
 
 npm install
 npm run dev
@@ -234,7 +245,7 @@ and talks to the backend API.</p>
 <li><strong>PostgreSQL</strong></li>
 <li>volume / directory for DB data.</li>
 <li><strong>Frontend</strong></li>
-<li>API base URL (e.g. <code>VITE_API_BASE_URL</code>).</li>
+<li>API base URL (frontend expects <code>VITE_API_URL</code>).</li>
 </ul>
 <p>See the READMEs in each repo for exact variable names.</p>
 <hr />
@@ -246,7 +257,7 @@ and talks to the backend API.</p>
 <p>Restore example:</p>
 <pre><code class="language-bash">psql -U &lt;db_user&gt; &lt;db_name&gt; &lt; backup.sql
 </code></pre>
-<p>In Docker environments, these commands are run via <code>docker compose exec db ...</code>
+<p>In Docker environments, these commands are run via <code>docker-compose exec db psql -U &lt;db_user&gt; &lt;db_name&gt;</code>
 as described in the backend README.</p>
 <h3 id="62-built-archives">6.2 Built archives</h3>
 <p>Built collections are stored as ZIP files on the host filesystem

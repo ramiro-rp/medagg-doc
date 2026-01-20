@@ -75,13 +75,13 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#2">2. Требования</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#3-backend-">3. Развёртывание backend-а (кратко)</a>
+    <li class="toctree-l2"><a class="reference internal" href="#3-backend">3. Развёртывание backend (кратко)</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#4-frontend-">4. Развёртывание frontend-а (кратко)</a>
+    <li class="toctree-l2"><a class="reference internal" href="#4-frontend">4. Развёртывание frontend (кратко)</a>
         <ul>
     <li class="toctree-l3"><a class="reference internal" href="#_2">Режим разработки</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#production">Простой вариант для production</a>
+    <li class="toctree-l3"><a class="reference internal" href="#production-">Простой production-вариант</a>
     </li>
         </ul>
     </li>
@@ -97,7 +97,7 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#7">7. Мониторинг и логи</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#8-mvp">8. Ограничения развёртывания MVP</a>
+    <li class="toctree-l2"><a class="reference internal" href="#8-mvp-">8. Ограничения MVP-развёртывания</a>
     </li>
     </ul>
                   </li>
@@ -152,128 +152,140 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="_1">Руководство по развёртыванию</h1>
-<p>В этом документе описано, как развернуть систему
+<p>В этом документе описано, как развернуть
 <strong>Medical Imaging Dataset Aggregator</strong> в простом одноузловом окружении.</p>
 <hr />
 <h2 id="1">1. Обзор архитектуры</h2>
 <p>Компоненты системы:</p>
 <ul>
 <li><strong>Backend</strong> – Django + Django REST Framework;</li>
-<li><strong>База данных</strong> – PostgreSQL;</li>
+<li><strong>Database</strong> – PostgreSQL;</li>
 <li><strong>Frontend</strong> – Vite + React + Ant Design (SPA);</li>
-<li><strong>Файловое хранилище</strong> – локальная файловая система для ZIP-архивов.</li>
+<li><strong>Хранилище файлов</strong> – локальная файловая система для ZIP-архивов.</li>
 </ul>
-<p>В рамках MVP все компоненты запускаются на <strong>одном Linux-хосте</strong>, обычно
-с использованием Docker / docker-compose.</p>
+<p>В MVP все компоненты могут быть развернуты на <strong>одной машине</strong>.
+Официальный путь развёртывания для воспроизводимости — Docker / docker-compose.</p>
+<blockquote>
+<p>Примечание по модулю поиска: backend ожидает пакет <code>medagg-search</code> в <code>src/libs/medsearch/</code>.
+Если вы клонируете backend репозиторий, инициализируйте подмодуль через git submodules
+(или скопируйте пакет в этот путь) перед запуском API.</p>
+</blockquote>
 <hr />
 <h2 id="2">2. Требования</h2>
 <ul>
-<li>Linux-сервер или рабочая станция (для разработки возможны WSL2 / macOS);</li>
-<li>Docker и docker-compose (или Docker + плагин compose);</li>
-<li>Git;</li>
-<li>опционально для демо: Raspberry Pi 4 или аналог + SSD.</li>
+<li>Linux сервер/рабочая станция (WSL2 / macOS подходят для разработки);</li>
+<li>Docker и docker-compose (или Docker + compose plugin);</li>
+<li>Git.</li>
 </ul>
+<blockquote>
+<p>Примечание (локальные интеграционные тесты без Docker): официальный MVP-путь развёртывания
+Docker-based для воспроизводимости.
+Если Docker недоступен в вашей среде (например, Windows без WSL2/Docker),
+backend и frontend можно запустить локально, следуя README каждого репозитория.
+Этот документ описывает стандартизированный одноузловой Docker-сетап.</p>
+</blockquote>
 <hr />
-<h2 id="3-backend-">3. Развёртывание backend-а (кратко)</h2>
-<p>Типичный сценарий:</p>
-<pre><code class="language-bash">git clone https://github.com/b-barsky/medagg-backend.git
+<h2 id="3-backend">3. Развёртывание backend (кратко)</h2>
+<p>Типовой сценарий:</p>
+<pre><code class="language-bash"># Референсный backend репозиторий (при необходимости используйте форк команды)
+git clone https://github.com/b-barsky/medagg-backend.git
 cd medagg-backend
 
-# Скопировать пример env-файла (если есть)
+# Скопируйте пример env-файла, если он присутствует
 cp .env.example .env
 
-# Настроить .env (подключение к БД, секретный ключ и т.п.)
+# Настройте .env (подключение к БД, secret key и т.п.)
 
-# Запустить сервисы
+# Запустите сервисы
 docker compose up -d  # или: docker-compose up -d
 </code></pre>
-<p>После запуска:</p>
+<p>После старта:</p>
 <ul>
-<li>API backend-а доступно по адресу вида <code>http://&lt;server-host&gt;:8000/api/v1/</code>;</li>
-<li>browsable API / схема могут быть доступны по путям <code>/api/</code>, <code>/api/schema/</code>
+<li>backend API доступен по адресу <code>http://&lt;server-host&gt;:8000/api/v1/</code>;</li>
+<li>browsable API / схема могут быть доступны на <code>/api/</code>, <code>/api/schema/</code>
   (в зависимости от конфигурации).</li>
 </ul>
-<p>Применение миграций (если не выполняется автоматически):</p>
+<p>Миграции (если не применяются автоматически):</p>
 <pre><code class="language-bash">docker compose exec backend python manage.py migrate
 </code></pre>
 <hr />
-<h2 id="4-frontend-">4. Развёртывание frontend-а (кратко)</h2>
+<h2 id="4-frontend">4. Развёртывание frontend (кратко)</h2>
 <h3 id="_2">Режим разработки</h3>
-<pre><code class="language-bash">git clone https://github.com/solиноid/medagg-frontend.git
-cd medagg-frontend
+<pre><code class="language-bash"># Frontend репозиторий
+git clone https://github.com/Nikitmen/frontend-DataHive.git
+cd frontend-DataHive
 
 npm install
 npm run dev
 </code></pre>
-<p>По умолчанию dev-сервер Vite доступен по адресу <code>http://localhost:5173/</code>
-и обращается к API backend-а.</p>
-<h3 id="production">Простой вариант для production</h3>
+<p>По умолчанию Vite dev server доступен на <code>http://localhost:5173/</code> и обращается к backend API.</p>
+<h3 id="production-">Простой production-вариант</h3>
 <ol>
-<li>Собрать фронтенд:</li>
+<li>Соберите фронтенд:</li>
 </ol>
 <p><code>bash
    npm run build</code></p>
 <ol>
-<li>Отдавать содержимое каталога <code>dist/</code> через <code>nginx</code>, <code>caddy</code> или другой HTTP-сервер.</li>
+<li>Раздавайте каталог <code>dist/</code> через <code>nginx</code>, <code>caddy</code> или другой HTTP-сервер.</li>
 </ol>
 <p>Важно:</p>
 <ul>
-<li>указать корректный базовый URL API backend-а для фронтенда;</li>
-<li>настроить CORS на стороне backend-а, чтобы разрешить запросы с origin фронтенда.</li>
+<li>задать корректный base URL backend API для фронтенда;</li>
+<li>настроить CORS на backend, чтобы разрешить запросы с origin фронтенда.</li>
 </ul>
 <hr />
 <h2 id="5">5. Конфигурация</h2>
-<p>Основные параметры (обычно через <code>.env</code>):</p>
+<p>Ключевые параметры (обычно через <code>.env</code>):</p>
 <ul>
 <li><strong>Backend</strong></li>
-<li>хост, порт, имя БД, пользователь, пароль;</li>
-<li>секретный ключ Django;</li>
-<li>список допустимых хостов;</li>
-<li>настройки CORS;</li>
-<li>путь к каталогу с ZIP-архивами (сформированными коллекциями).</li>
+<li>host/port/name/user/password для БД;</li>
+<li>Django secret key;</li>
+<li>allowed hosts;</li>
+<li>CORS;</li>
+<li>путь к директории ZIP-архивов (собранные коллекции).</li>
 <li><strong>PostgreSQL</strong></li>
-<li>том / директория для данных БД.</li>
+<li>каталог/volume для данных БД.</li>
 <li><strong>Frontend</strong></li>
-<li>базовый URL API (например, <code>VITE_API_BASE_URL</code>).</li>
+<li>base URL API (фронтенд ожидает <code>VITE_API_URL</code>).</li>
 </ul>
-<p>Точные имена переменных смотрите в README соответствующих репозиториев.</p>
+<p>Точные имена переменных смотрите в README каждого репозитория.</p>
 <hr />
 <h2 id="6">6. Резервное копирование и восстановление</h2>
 <h3 id="61-postgresql">6.1 PostgreSQL</h3>
-<p>Пример резервного копирования:</p>
+<p>Пример backup:</p>
 <pre><code class="language-bash">pg_dump -U &lt;db_user&gt; &lt;db_name&gt; &gt; backup.sql
 </code></pre>
-<p>Пример восстановления:</p>
+<p>Пример restore:</p>
 <pre><code class="language-bash">psql -U &lt;db_user&gt; &lt;db_name&gt; &lt; backup.sql
 </code></pre>
-<p>В Docker-окружении команды выполняются через <code>docker compose exec db ...</code>
-по инструкциям из README backend-а.</p>
+<p>В Docker окружениях эти команды выполняются через <code>docker compose exec db ...</code>,
+как описано в backend README.</p>
 <h3 id="62">6.2 Сформированные архивы</h3>
-<p>Сформированные коллекции сохраняются в виде ZIP-файлов в каталоге на хосте
-или в примонтированном Docker-томе. Для их резервного копирования можно:</p>
+<p>Собранные коллекции сохраняются как ZIP-файлы на файловой системе хоста
+или в примонтированном Docker volume. Для бэкапа можно:</p>
 <ul>
-<li>периодически архивировать или копировать этот каталог;</li>
-<li>использовать внешнюю систему backup-ов.</li>
+<li>периодически архивировать/копировать эту директорию;</li>
+<li>использовать внешнюю систему резервного копирования.</li>
 </ul>
-<p>Если включена автоматическая политика хранения (удаление архивов старше N дней),
-нужно заранее решить, требуется ли долгосрочное хранение таких файлов.</p>
+<p>Если включена политика ретенции (удаление архивов старше N дней),
+заранее определите, требуется ли долгосрочное хранение.</p>
 <hr />
 <h2 id="7">7. Мониторинг и логи</h2>
-<p>Базовый мониторинг можно выполнять по логам:</p>
+<p>Базовый мониторинг через логи:</p>
 <pre><code class="language-bash">docker compose logs -f backend
 docker compose logs -f db
 </code></pre>
-<p>Для более серьёзной эксплуатации можно:</p>
+<p>Для более серьёзных сетапов можно:</p>
 <ul>
-<li>настроить HTTPS через reverse-proxy (nginx, caddy);</li>
-<li>добавить сбор метрик и дашборды (Prometheus, Grafana и т.п.).</li>
+<li>настроить HTTPS через reverse proxy (nginx, caddy);</li>
+<li>добавить метрики и дашборды (Prometheus, Grafana и т.п.).</li>
 </ul>
 <hr />
-<h2 id="8-mvp">8. Ограничения развёртывания MVP</h2>
+<h2 id="8-mvp-">8. Ограничения MVP-развёртывания</h2>
 <ul>
-<li>одноузловое развёртывание (без кластеризации и горизонтального масштабирования);</li>
-<li>только локальное файловое хранилище для сформированных архивов;</li>
-<li>минимальный мониторинг и алертинг «из коробки».</li>
+<li>одноузловая среда (без кластеризации и горизонтального масштабирования);</li>
+<li>локальное файловое хранилище для ZIP-архивов;</li>
+<li>минимальные мониторинг и алёртинг «из коробки».</li>
 </ul>
               
             </div>

@@ -47,31 +47,13 @@
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#0-repositories">0. Repositories</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#1-backend-medagg-backend">1. Backend (medagg-backend)</a>
-        <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#11-responsibilities">1.1 Responsibilities</a>
+    <li class="toctree-l2"><a class="reference internal" href="#1-backend-api-django-drf">1. Backend API (Django + DRF)</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#12-main-components-conceptual">1.2 Main components (conceptual)</a>
+    <li class="toctree-l2"><a class="reference internal" href="#2-search-module">2. Search module</a>
     </li>
-        </ul>
+    <li class="toctree-l2"><a class="reference internal" href="#3-frontend">3. Frontend</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#2-search-module-medagg-search">2. Search module (medagg-search)</a>
-        <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#21-responsibilities">2.1 Responsibilities</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#22-integration-contract">2.2 Integration contract</a>
-    </li>
-        </ul>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#3-frontend-medagg-frontend">3. Frontend (medagg-frontend)</a>
-        <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#31-responsibilities">3.1 Responsibilities</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#32-stack">3.2 Stack</a>
-    </li>
-        </ul>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#4-auxiliary-modules-services">4. Auxiliary modules / services</a>
+    <li class="toctree-l2"><a class="reference internal" href="#4-readme-generation-experimental">4. README generation (experimental)</a>
     </li>
     </ul>
                   </li>
@@ -161,124 +143,76 @@ developer instructions</strong>, always refer to the README of the corresponding
 <ul>
 <li>
 <p><strong>Backend API</strong> – <code>medagg-backend</code><br />
-  GitHub: <a href="https://github.com/b-barsky/medagg-backend">https://github.com/b-barsky/medagg-backend</a><br />
-  Main docs: <code>README.md</code> in that repo (API endpoints, settings, docker-compose).</p>
+  Reference GitHub repo: <a href="https://github.com/b-barsky/medagg-backend">https://github.com/b-barsky/medagg-backend</a><br />
+  Note: the team may maintain forks/feature branches (e.g., <code>devel</code>, <code>feature/search</code>, <code>feature/readme</code>).
+  For integration tests, always follow the README of the exact branch you run.</p>
 </li>
 <li>
 <p><strong>Search module</strong> – <code>medagg-search</code><br />
   GitHub: <a href="https://github.com/ESBehtev/medagg-search">https://github.com/ESBehtev/medagg-search</a><br />
-  Main docs: <code>README.md</code> in that repo (taxonomy format, query parsing, examples).</p>
+  Note: in the backend, the search code is expected under <code>src/libs/medsearch/</code>
+  (commonly populated via a git submodule or by copying the <code>medagg-search</code> package).</p>
 </li>
 <li>
-<p><strong>Frontend</strong> – <code>medagg-frontend</code><br />
-  GitHub: <a href="https://github.com/solinoid/medagg-frontend">https://github.com/solinoid/medagg-frontend</a><br />
+<p><strong>Frontend</strong> – <code>frontend-DataHive</code><br />
+  GitHub: <a href="https://github.com/Nikitmen/frontend-DataHive">https://github.com/Nikitmen/frontend-DataHive</a><br />
   Main docs: <code>README.md</code> in that repo (Vite dev server, build, environment vars).</p>
 </li>
 </ul>
-<p>This <code>medagg-docs</code> repository does <strong>not</strong> duplicate all technical details –
-instead it links to the module‑specific READMEs where appropriate.</p>
 <hr />
-<h2 id="1-backend-medagg-backend">1. Backend (<code>medagg-backend</code>)</h2>
-<h3 id="11-responsibilities">1.1 Responsibilities</h3>
+<h2 id="1-backend-api-django-drf">1. Backend API (Django + DRF)</h2>
+<p>The backend is a Django application that provides:</p>
 <ul>
-<li>expose REST API for:</li>
-<li>authentication and user management;</li>
-<li>dataset catalog (list, filter, detail);</li>
-<li>search integration;</li>
-<li>collection management (create, list, download);</li>
-<li>admin operations;</li>
-<li>store and validate data in PostgreSQL;</li>
-<li>coordinate background work for building collections (if used).</li>
+<li><strong>Datasets API</strong>: list + detail endpoints for dataset metadata.</li>
+<li><strong>Search API</strong>: query‑based search plus filter parameters.</li>
+<li><strong>Admin UI</strong>: Django admin for internal management.</li>
 </ul>
-<h3 id="12-main-components-conceptual">1.2 Main components (conceptual)</h3>
+<p>Key implementation directories (in <code>medagg-backend</code>):</p>
 <ul>
-<li>Django models for datasets, images, vocabularies, collections, etc.;</li>
-<li>DRF serializers and viewsets for API endpoints;</li>
-<li>authentication and permission configuration;</li>
-<li>settings for database (PostgreSQL), storage paths, CORS, etc.</li>
-</ul>
-<p>For <strong>concrete endpoints, settings and docker-compose usage</strong>, see:</p>
-<ul>
-<li><code>medagg-backend</code> → <a href="https://github.com/b-barsky/medagg-backend#readme"><code>README.md</code></a></li>
-</ul>
-<p>Additional related docs in this repo:</p>
-<ul>
-<li><code>docs/api-overview.md</code></li>
-<li><code>docs/db-schema.md</code> / <code>docs/db-schema.ru.md</code></li>
-<li>ADRs related to backend and database choices (<code>docs/adr/0001*</code>, <code>0002*</code>, <code>0003*</code>, <code>0006*</code>).</li>
+<li><code>src/apps/datasets/</code> – dataset catalog (models, serializers, views).</li>
+<li><code>src/apps/search/</code> – search endpoint (calls the search service).</li>
+<li><code>src/apps/users/</code> – user API (thin wrapper around Django auth, if enabled).</li>
+<li><code>src/config/</code> – project settings and URL routing.</li>
 </ul>
 <hr />
-<h2 id="2-search-module-medagg-search">2. Search module (<code>medagg-search</code>)</h2>
-<h3 id="21-responsibilities">2.1 Responsibilities</h3>
+<h2 id="2-search-module">2. Search module</h2>
+<p>Search is exposed via the backend endpoint:</p>
 <ul>
-<li>parse free‑text user queries in Russian / English;</li>
-<li>map terms to elements of a <strong>taxonomy</strong> (stored in YAML or similar);</li>
-<li>extract structured slots:</li>
-<li>modality;</li>
-<li>anatomical area;</li>
-<li>pathology / keyword;</li>
-<li>task type;</li>
-<li>optionally compute relevance scores for datasets.</li>
+<li><code>POST /api/v1/search/datasets/</code></li>
 </ul>
-<h3 id="22-integration-contract">2.2 Integration contract</h3>
-<p>Input from backend:</p>
+<p>The backend delegates query execution to <code>SearchService</code>
+(<code>src/apps/search/services.py</code>). The low‑level search logic lives in the
+<code>medagg-search</code> package (expected under <code>src/libs/medsearch/</code>).</p>
+<hr />
+<h2 id="3-frontend">3. Frontend</h2>
+<p>The frontend is a Vite/React application that calls the backend API.</p>
+<p>It uses the environment variable:</p>
 <ul>
-<li>query text as entered by user;</li>
-<li>optional context (language, default area, etc.).</li>
+<li><code>VITE_API_URL</code> – base API URL (example for local dev: <code>http://127.0.0.1:8000/api/v1</code>)</li>
 </ul>
-<p>Output to backend:</p>
+<p>The current frontend calls:</p>
 <ul>
-<li>normalized query representation;</li>
-<li>list of candidate datasets or filter suggestions;</li>
-<li>scores or ranking hints.</li>
-</ul>
-<p>For <strong>taxonomy structure, configuration and usage examples</strong>, see:</p>
-<ul>
-<li><code>medagg-search</code> → <a href="https://github.com/ESBehtev/medagg-search#readme"><code>README.md</code></a></li>
-</ul>
-<p>Related ADR:</p>
-<ul>
-<li><code>docs/adr/0004-search-engine-integration.md</code> – explains the integration strategy.</li>
+<li><code>GET  {VITE_API_URL}/datasets/</code></li>
+<li><code>GET  {VITE_API_URL}/datasets/{id}/</code></li>
+<li><code>POST {VITE_API_URL}/search/datasets/</code> with JSON body <code>{ "query": "brain mri" }</code></li>
 </ul>
 <hr />
-<h2 id="3-frontend-medagg-frontend">3. Frontend (<code>medagg-frontend</code>)</h2>
-<h3 id="31-responsibilities">3.1 Responsibilities</h3>
+<h2 id="4-readme-generation-experimental">4. README generation (experimental)</h2>
+<p>An experimental feature branch introduces a <code>Dataset.readme_content</code> column
+and a generator that can populate it based on dataset metadata.</p>
+<p>Current integration-tested scope of the MVP does <strong>not</strong> require this feature
+to be enabled. If it is enabled:</p>
 <ul>
-<li>provide the main user interface for search, filtering and collection creation;</li>
-<li>authenticate users and store tokens / session state on the client;</li>
-<li>call backend API and display results;</li>
-<li>provide admin UI for dataset and vocabulary management (where applicable).</li>
+<li>the generated text is stored in <code>datasets_dataset.readme_content</code> (nullable text);</li>
+<li>generation is typically triggered on <code>Dataset.save()</code> if the field is empty,
+  or via an explicit "update" method (implementation-specific);</li>
+<li>the API/serializers must explicitly expose the field if the frontend should show it.</li>
 </ul>
-<h3 id="32-stack">3.2 Stack</h3>
-<ul>
-<li>Vite (build tooling, dev server);</li>
-<li>React (component model);</li>
-<li>Ant Design (UI components and layout).</li>
-</ul>
-<p>For <strong>dev commands, build &amp; deploy instructions and environment variables</strong>, see:</p>
-<ul>
-<li><code>medagg-frontend</code> → <a href="https://github.com/solinoid/medagg-frontend#readme"><code>README.md</code></a></li>
-</ul>
-<p>Screens and flows are described at a product level in:</p>
-<ul>
-<li><code>docs/user-guide.md</code> / <code>.ru.md</code></li>
-<li><code>docs/admin-guide.md</code> / <code>.ru.md</code></li>
-</ul>
-<p>Corresponding screenshots should be placed in <code>docs/screenshots/</code> and linked
-from those guides.</p>
-<hr />
-<h2 id="4-auxiliary-modules-services">4. Auxiliary modules / services</h2>
-<p>Depending on the final implementation, additional modules may include:</p>
-<ul>
-<li>background workers (Celery, RQ, Django Q, etc.) for long‑running tasks
-  such as building large collections;</li>
-<li>storage adapters:</li>
-<li>local filesystem for MVP;</li>
-<li>later – cloud storage (S3‑compatible, etc.);</li>
-<li>monitoring and logging integrations.</li>
-</ul>
-<p>These elements are not strictly required for the MVP, but should be kept in mind
-when evolving the architecture.</p>
+<p>Because this feature touches model code and migrations, it should be merged/rebased
+onto the main backend branch carefully to avoid schema drift.</p>
+<p>Implementation note from integration tests:
+- a <code>readme_content</code> DB field exists in the README feature snapshot, but it must not break the existing API contract
+  used by the current frontend (e.g., keep <code>license</code> and <code>tags</code> serializer formats consistent).</p>
               
             </div>
           </div><footer>

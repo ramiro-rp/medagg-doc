@@ -55,11 +55,11 @@
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#42-search-and-filtering">4.2 Search and filtering</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#43-building-a-collection">4.3 Building a collection</a>
+    <li class="toctree-l3"><a class="reference internal" href="#43-building-a-collection-planned">4.3 Building a collection (planned)</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#44-account-and-history">4.4 Account and history</a>
+    <li class="toctree-l3"><a class="reference internal" href="#44-account-and-history-planned">4.4 Account and history (planned)</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#45-admin-functions-minimal-set">4.5 Admin functions (minimal set)</a>
+    <li class="toctree-l3"><a class="reference internal" href="#45-admin-functions-minimal-set-planned">4.5 Admin functions (minimal set, planned)</a>
     </li>
         </ul>
     </li>
@@ -218,8 +218,12 @@ anatomical areas and modalities.</p>
 <li>relevance score (if the search module is used);</li>
 <li>controls to select datasets for collection building.</li>
 </ul>
-<h3 id="43-building-a-collection">4.3 Building a collection</h3>
-<p>Based on search results, the user can request a <strong>custom collection</strong>:</p>
+<blockquote>
+<p>Integration note: during the tested MVP integration, <strong>catalog + search + dataset detail</strong> were verified end-to-end.
+Collection building, accounts and admin UX remain roadmap items (next iteration).</p>
+</blockquote>
+<h3 id="43-building-a-collection-planned">4.3 Building a collection (planned)</h3>
+<p>Based on search results, the user will be able to request a <strong>custom collection</strong>:</p>
 <ol>
 <li>The system selects studies / images that match the query and filters.</li>
 <li>For supported sources, the system:</li>
@@ -232,16 +236,16 @@ anatomical areas and modalities.</p>
 </li>
 <li>The system logs the <strong>user query</strong> and links it to the created collection.</li>
 </ol>
-<h3 id="44-account-and-history">4.4 Account and history</h3>
-<p>After authentication, the user has access to a personal area where they can:</p>
+<h3 id="44-account-and-history-planned">4.4 Account and history (planned)</h3>
+<p>After authentication, the user will have access to a personal area where they can:</p>
 <ul>
 <li>view <strong>history of their collections</strong>;</li>
 <li>see collection status (in progress / ready / expired);</li>
 <li>download ready archives;</li>
 <li>re‑build expired collections if implemented.</li>
 </ul>
-<h3 id="45-admin-functions-minimal-set">4.5 Admin functions (minimal set)</h3>
-<p>An administrator can:</p>
+<h3 id="45-admin-functions-minimal-set-planned">4.5 Admin functions (minimal set, planned)</h3>
+<p>An administrator will be able to:</p>
 <ul>
 <li>create / edit / deactivate dataset entries;</li>
 <li>manage vocabularies (modalities, anatomical areas, task types, tags);</li>
@@ -253,7 +257,7 @@ anatomical areas and modalities.</p>
 <ul>
 <li>
 <p><strong>Backend</strong> – Django + Django REST Framework<br />
-  REST API for authentication, catalog, search, collections and admin operations,
+  REST API for catalog and search (collections and authentication are planned),
   with PostgreSQL as the main database.</p>
 </li>
 <li>
@@ -276,6 +280,10 @@ anatomical areas and modalities.</p>
 <li>local file storage for ZIP archives.</li>
 </ul>
 <p>The host may be:</p>
+<blockquote>
+<p>Local non-Docker runs (e.g., Windows without Docker) are possible for development and integration testing,
+but Docker remains the recommended/standardized deployment method.</p>
+</blockquote>
 <ul>
 <li>a developer’s laptop;</li>
 <li>a simple server or VPS;</li>

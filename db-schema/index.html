@@ -47,51 +47,35 @@
                   </li>
                   <li class="toctree-l1 current"><a class="reference internal current" href="#">Database Schema</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#1-overview-of-main-areas">1. Overview of main areas</a>
+    <li class="toctree-l2"><a class="reference internal" href="#1-scope">1. Scope</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#2-users-and-roles">2. Users and roles</a>
+    <li class="toctree-l2"><a class="reference internal" href="#2-reference-dictionaries">2. Reference dictionaries</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#21-roles">2.1 roles</a>
+    <li class="toctree-l3"><a class="reference internal" href="#21-anatomical-areas">2.1 Anatomical areas</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#22-users">2.2 users</a>
+    <li class="toctree-l3"><a class="reference internal" href="#22-modalities">2.2 Modalities</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#23-ml-tasks">2.3 ML tasks</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#24-tags">2.4 Tags</a>
     </li>
         </ul>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#3-reference-dictionaries">3. Reference dictionaries</a>
+    <li class="toctree-l2"><a class="reference internal" href="#3-dataset-catalog">3. Dataset catalog</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#31-anatomical_areas">3.1 anatomical_areas</a>
+    <li class="toctree-l3"><a class="reference internal" href="#31-datasets">3.1 Datasets</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#32-modalities">3.2 modalities</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#33-ml_tasks">3.3 ml_tasks</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#34-tags">3.4 tags</a>
+    <li class="toctree-l3"><a class="reference internal" href="#32-many-to-many-relation-tables">3.2 Many-to-many relation tables</a>
     </li>
         </ul>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#4-dataset-catalog">4. Dataset catalog</a>
+    <li class="toctree-l2"><a class="reference internal" href="#4-notes">4. Notes</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#41-datasets">4.1 datasets</a>
+    <li class="toctree-l3"><a class="reference internal" href="#41-size-units-and-performance">4.1 Size units and performance</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#42-dataset-modality-dataset_modalities">4.2 Dataset ↔ modality (dataset_modalities)</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#43-dataset-ml-task-dataset_ml_tasks">4.3 Dataset ↔ ML task (dataset_ml_tasks)</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#44-dataset-tags-dataset_tags">4.4 Dataset ↔ tags (dataset_tags)</a>
+    <li class="toctree-l3"><a class="reference internal" href="#42-text-encoding">4.2 Text encoding</a>
     </li>
         </ul>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#5-user-activity-searches-and-collections">5. User activity: searches and collections</a>
-        <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#51-user_search_queries">5.1 user_search_queries</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#52-user_dataset_collections">5.2 user_dataset_collections</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#53-collection_datasets">5.3 collection_datasets</a>
-    </li>
-        </ul>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#6-notes-and-deviations-from-the-conceptual-model">6. Notes and deviations from the conceptual model</a>
     </li>
     </ul>
                   </li>
@@ -169,172 +153,108 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="database-schema-mvp">Database Schema (MVP)</h1>
-<p>This document describes the <strong>actual SQL schema</strong> provided by the DBAs
-for the MVP of <em>Medical Imaging Dataset Aggregator</em>.</p>
-<p>The database is PostgreSQL. The ER diagram corresponding to this schema
-is stored as:</p>
-<ul>
-<li><code>docs/diagrams/er-medagg-core.png</code></li>
-</ul>
-<p>The model works at the <strong>dataset / collection level</strong>: individual images
-are not stored as separate rows in the DB; instead, the system tracks
-datasets and user-formed collections of datasets.</p>
+                <h1 id="database-schema-integration-snapshot">Database Schema (integration snapshot)</h1>
+<p>This document describes the <strong>database schema observed during integration tests</strong> of the MVP backend (Django ORM + migrations) on <strong>PostgreSQL</strong>.</p>
+<blockquote>
+<p>A separate DBA-managed SQL schema (e.g., <code>init-db.sql</code> and ER diagrams) may exist for production planning. Before production deployment, the ORM migrations and the DBA SQL scripts must be aligned.</p>
+</blockquote>
 <hr />
-<h2 id="1-overview-of-main-areas">1. Overview of main areas</h2>
-<p>Conceptually the schema covers four areas:</p>
-<ol>
-<li><strong>Users and roles</strong></li>
-<li><strong>Reference dictionaries (anatomical areas, modalities, ML task types, tags)</strong></li>
-<li><strong>Dataset catalog</strong> (source datasets and their attributes)</li>
-<li><strong>User activity</strong> (search queries and collected datasets)</li>
-</ol>
-<hr />
-<h2 id="2-users-and-roles">2. Users and roles</h2>
-<h3 id="21-roles">2.1 <code>roles</code></h3>
-<p>Simple role dictionary.</p>
-<p>Main columns:</p>
+<h2 id="1-scope">1. Scope</h2>
+<p>Implemented in the integration snapshot:</p>
 <ul>
-<li><code>id SERIAL PRIMARY KEY</code></li>
-<li><code>name VARCHAR(20) UNIQUE NOT NULL</code> – role name (e.g. <code>admin</code>, <code>user</code>).</li>
+<li>Reference dictionaries: anatomical areas, modalities, ML task types, and tags.</li>
+<li>Dataset catalog: datasets plus their many-to-many links.</li>
 </ul>
-<h3 id="22-users">2.2 <code>users</code></h3>
-<p>Application users.</p>
-<p>Main columns:</p>
+<p>Planned / not implemented in the tested MVP snapshot (keep as goals for the next iteration):</p>
 <ul>
-<li><code>id SERIAL PRIMARY KEY</code></li>
-<li><code>login VARCHAR(50) UNIQUE NOT NULL</code></li>
-<li><code>password_hash VARCHAR(255) NOT NULL</code></li>
-<li><code>role_id INTEGER NOT NULL REFERENCES roles(id)</code></li>
-<li><code>created_at TIMESTAMPTZ DEFAULT NOW()</code> – registration time.</li>
+<li>User accounts and roles.</li>
+<li>Search history / analytics.</li>
+<li>User collections and dataset export/archives.</li>
 </ul>
 <hr />
-<h2 id="3-reference-dictionaries">3. Reference dictionaries</h2>
-<h3 id="31-anatomical_areas">3.1 <code>anatomical_areas</code></h3>
-<p>Dictionary of anatomical areas (e.g. chest).</p>
+<h2 id="2-reference-dictionaries">2. Reference dictionaries</h2>
+<p>Logical tables (actual table names depend on Django app labels; typical names are shown):</p>
+<h3 id="21-anatomical-areas">2.1 Anatomical areas</h3>
 <ul>
-<li><code>id SERIAL PRIMARY KEY</code></li>
-<li><code>name VARCHAR(100) UNIQUE NOT NULL</code></li>
+<li>Table: <code>datasets_anatomicalarea</code></li>
+<li>Columns:</li>
+<li><code>id</code> (auto PK)</li>
+<li><code>name</code> <code>varchar(100)</code> unique</li>
 </ul>
-<h3 id="32-modalities">3.2 <code>modalities</code></h3>
-<p>Dictionary of imaging modalities (X-ray, CT, etc.).</p>
+<h3 id="22-modalities">2.2 Modalities</h3>
 <ul>
-<li><code>id SERIAL PRIMARY KEY</code></li>
-<li><code>name VARCHAR(50) UNIQUE NOT NULL</code></li>
+<li>Table: <code>datasets_modality</code></li>
+<li>Columns:</li>
+<li><code>id</code> (auto PK)</li>
+<li><code>name</code> <code>varchar(50)</code> unique</li>
 </ul>
-<h3 id="33-ml_tasks">3.3 <code>ml_tasks</code></h3>
-<p>Dictionary of ML task types (classification, segmentation, etc.).</p>
+<h3 id="23-ml-tasks">2.3 ML tasks</h3>
 <ul>
-<li><code>id SERIAL PRIMARY KEY</code></li>
-<li><code>name VARCHAR(50) UNIQUE NOT NULL</code></li>
+<li>Table: <code>datasets_mltask</code></li>
+<li>Columns:</li>
+<li><code>id</code> (auto PK)</li>
+<li><code>name</code> <code>varchar(50)</code> unique</li>
 </ul>
-<h3 id="34-tags">3.4 <code>tags</code></h3>
-<p>Free-form tags describing datasets (pathologies, keywords, etc.).</p>
+<h3 id="24-tags">2.4 Tags</h3>
 <ul>
-<li><code>id SERIAL PRIMARY KEY</code></li>
-<li><code>name VARCHAR(50) UNIQUE NOT NULL</code></li>
-</ul>
-<hr />
-<h2 id="4-dataset-catalog">4. Dataset catalog</h2>
-<h3 id="41-datasets">4.1 <code>datasets</code></h3>
-<p>Represents a <strong>source dataset</strong> (e.g. open chest X‑ray dataset).</p>
-<p>Main columns:</p>
-<ul>
-<li><code>id SERIAL PRIMARY KEY</code></li>
-<li><code>title VARCHAR(500) NOT NULL</code></li>
-<li><code>description TEXT</code></li>
-<li><code>external_link VARCHAR(1000)</code> – URL to the original resource</li>
-<li><code>local_storage_path VARCHAR(500)</code> – path to a local copy, if present</li>
-<li><code>record_count INTEGER</code> – number of records / images (approximate)</li>
-<li><code>dataset_size_mb INTEGER</code> – approximate size in MB</li>
-<li><code>anatomical_area_id INTEGER REFERENCES anatomical_areas(id)</code></li>
-<li><code>created_at TIMESTAMPTZ DEFAULT NOW()</code></li>
-<li><code>updated_at TIMESTAMPTZ DEFAULT NOW()</code></li>
-</ul>
-<h3 id="42-dataset-modality-dataset_modalities">4.2 Dataset ↔ modality (<code>dataset_modalities</code>)</h3>
-<p>Many-to-many relation between datasets and modalities.</p>
-<ul>
-<li><code>dataset_id INTEGER NOT NULL REFERENCES datasets(id) ON DELETE CASCADE</code></li>
-<li><code>modality_id INTEGER NOT NULL REFERENCES modalities(id)</code></li>
-<li><code>PRIMARY KEY (dataset_id, modality_id)</code></li>
-</ul>
-<h3 id="43-dataset-ml-task-dataset_ml_tasks">4.3 Dataset ↔ ML task (<code>dataset_ml_tasks</code>)</h3>
-<p>Many-to-many relation between datasets and ML task types.</p>
-<ul>
-<li><code>dataset_id INTEGER NOT NULL REFERENCES datasets(id) ON DELETE CASCADE</code></li>
-<li><code>ml_task_id INTEGER NOT NULL REFERENCES ml_tasks(id)</code></li>
-<li><code>PRIMARY KEY (dataset_id, ml_task_id)</code></li>
-</ul>
-<h3 id="44-dataset-tags-dataset_tags">4.4 Dataset ↔ tags (<code>dataset_tags</code>)</h3>
-<p>Many-to-many relation between datasets and tags.</p>
-<ul>
-<li><code>dataset_id INTEGER NOT NULL REFERENCES datasets(id) ON DELETE CASCADE</code></li>
-<li><code>tag_id INTEGER NOT NULL REFERENCES tags(id)</code></li>
-<li><code>PRIMARY KEY (dataset_id, tag_id)</code></li>
+<li>Table: <code>datasets_tag</code></li>
+<li>Columns:</li>
+<li><code>id</code> (auto PK)</li>
+<li><code>name</code> <code>varchar(50)</code> unique</li>
 </ul>
 <hr />
-<h2 id="5-user-activity-searches-and-collections">5. User activity: searches and collections</h2>
-<h3 id="51-user_search_queries">5.1 <code>user_search_queries</code></h3>
-<p>Stores user search queries and filter snapshots.</p>
+<h2 id="3-dataset-catalog">3. Dataset catalog</h2>
+<h3 id="31-datasets">3.1 Datasets</h3>
 <ul>
-<li><code>id SERIAL PRIMARY KEY</code></li>
-<li><code>user_id INTEGER REFERENCES users(id)</code> – may be <code>NULL</code> for anonymous searches</li>
-<li><code>query_text TEXT NOT NULL</code></li>
-<li><code>filters JSONB</code> – serialized filters (area, modalities, tasks, tags, etc.)</li>
-<li><code>performed_at TIMESTAMPTZ DEFAULT NOW()</code></li>
+<li>Table: <code>datasets_dataset</code></li>
+<li>Columns:</li>
+<li><code>id</code> (auto PK)</li>
+<li><code>title</code> <code>varchar(500)</code> (required)</li>
+<li><code>description</code> <code>text</code> (nullable)</li>
+<li><code>external_path</code> <code>varchar(1000)</code> (nullable)</li>
+<li><code>local_path</code> <code>varchar(500)</code> (nullable)</li>
+<li><code>record_count</code> <code>integer</code> (nullable)</li>
+<li><code>size</code> (nullable)<ul>
+<li>Stored as <strong>bytes</strong>.</li>
+<li><strong>Important:</strong> Kaggle <code>total_bytes</code> can exceed 2^31-1. For PostgreSQL, use <code>BIGINT</code> (Django: <code>BigIntegerField</code>) or cap the value before persisting.</li>
 </ul>
-<h3 id="52-user_dataset_collections">5.2 <code>user_dataset_collections</code></h3>
-<p>Represents a <strong>collection of datasets</strong> built for a user – this is the
-“collected dataset” concept from the ER diagram.</p>
-<ul>
-<li><code>id SERIAL PRIMARY KEY</code></li>
-<li><code>user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE</code></li>
-<li><code>storage_path_hdfs VARCHAR(500) NOT NULL</code> – path to the resulting archive</li>
-<li><code>archive_size_mb INTEGER</code> – size of the archive</li>
-<li><code>created_at TIMESTAMPTZ DEFAULT NOW()</code></li>
-<li><code>expires_at TIMESTAMPTZ</code> – when the archive should expire</li>
+</li>
+<li><code>license</code> <code>varchar(500)</code> (blank allowed; used by the frontend contract in the tested snapshot)</li>
+<li><code>anatomical_area_id</code> FK → <code>datasets_anatomicalarea(id)</code> (nullable)</li>
+<li><code>created_at</code> timestamp</li>
+<li><code>updated_at</code> timestamp</li>
+<li><code>readme_content</code> <code>text</code> (nullable, <strong>experimental</strong> README generator feature)</li>
 </ul>
-<p>A trigger automatically sets <code>expires_at</code> to 1 day after <code>created_at</code>:</p>
-<pre><code class="language-sql">CREATE OR REPLACE FUNCTION set_expires_at()
-RETURNS TRIGGER AS $$
-BEGIN
-    NEW.expires_at = NEW.created_at + INTERVAL '1 day';
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER set_expiration_date
-    BEFORE INSERT ON user_dataset_collections
-    FOR EACH ROW
-    EXECUTE FUNCTION set_expires_at();
-</code></pre>
-<h3 id="53-collection_datasets">5.3 <code>collection_datasets</code></h3>
-<p>Links a user collection with the datasets that were included in it.</p>
+<h3 id="32-many-to-many-relation-tables">3.2 Many-to-many relation tables</h3>
+<p>These are implemented via explicit “through” models in Django:</p>
 <ul>
-<li><code>collection_id INTEGER NOT NULL REFERENCES user_dataset_collections(id) ON DELETE CASCADE</code></li>
-<li><code>dataset_id INTEGER NOT NULL REFERENCES datasets(id)</code></li>
-<li><code>relevance_score DECIMAL(5,4)</code> – relevance score from the search model (optional)</li>
-<li><code>query_id INTEGER NOT NULL REFERENCES user_search_queries(id) ON DELETE CASCADE</code></li>
-<li><code>PRIMARY KEY (collection_id, dataset_id)</code></li>
-</ul>
-<p>This table allows us to:</p>
-<ul>
-<li>reconstruct which datasets were included in a given collection;</li>
-<li>see how a particular dataset was used across user collections and queries.</li>
+<li>Modalities:</li>
+<li>Table: <code>datasets_datasetmodality</code></li>
+<li>Columns: <code>dataset_id</code> FK, <code>modality_id</code> FK</li>
+<li>
+<p>Uniqueness: (<code>dataset_id</code>, <code>modality_id</code>)</p>
+</li>
+<li>
+<p>ML tasks:</p>
+</li>
+<li>Table: <code>datasets_datasetmltask</code></li>
+<li>Columns: <code>dataset_id</code> FK, <code>ml_task_id</code> FK</li>
+<li>
+<p>Uniqueness: (<code>dataset_id</code>, <code>ml_task_id</code>)</p>
+</li>
+<li>
+<p>Tags:</p>
+</li>
+<li>Table: <code>datasets_datasettag</code></li>
+<li>Columns: <code>dataset_id</code> FK, <code>tag_id</code> FK</li>
+<li>Uniqueness: (<code>dataset_id</code>, <code>tag_id</code>)</li>
 </ul>
 <hr />
-<h2 id="6-notes-and-deviations-from-the-conceptual-model">6. Notes and deviations from the conceptual model</h2>
-<ul>
-<li>The MVP schema <strong>does not model individual images</strong> as separate rows;
-  instead, it tracks datasets and collections of datasets. Image-level
-  details stay in the external sources or local file structure.</li>
-<li>The field name <code>storage_path_hdfs</code> suggests potential use of HDFS, but
-  in practice it can point to any storage (local filesystem, mounted volume,
-  object storage gateway, etc.).</li>
-<li>Automatic expiration of collections is handled via a trigger that sets
-  <code>expires_at = created_at + 1 day</code>; the application can periodically
-  clean up expired archives.</li>
-</ul>
+<h2 id="4-notes">4. Notes</h2>
+<h3 id="41-size-units-and-performance">4.1 Size units and performance</h3>
+<p>The backend stores <strong>metadata only</strong> (titles, descriptions, tags, etc.). It does <strong>not</strong> download dataset payloads during search; it only stores fields like <code>external_path</code> and <code>size</code>.</p>
+<h3 id="42-text-encoding">4.2 Text encoding</h3>
+<p>All text fields should be stored as Unicode (UTF-8) end-to-end. If a README generator outputs non-ASCII text (e.g., Russian), ensure no extra <code>.encode()</code>/<code>.decode()</code> steps are applied before writing to the DB. If characters look garbled in a Windows terminal, verify the terminal code page; the DB itself should still store valid Unicode.</p>
               
             </div>
           </div><footer>

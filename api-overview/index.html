@@ -56,13 +56,9 @@
                   </li>
                   <li class="toctree-l1 current"><a class="reference internal current" href="#">API Overview</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#1-authentication">1. Authentication</a>
-        <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#post-authlogin">POST /auth/login/</a>
+    <li class="toctree-l2"><a class="reference internal" href="#base-url">Base URL</a>
     </li>
-        </ul>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#2-dataset-catalog">2. Dataset catalog</a>
+    <li class="toctree-l2"><a class="reference internal" href="#1-datasets">1. Datasets</a>
         <ul>
     <li class="toctree-l3"><a class="reference internal" href="#get-datasets">GET /datasets/</a>
     </li>
@@ -70,27 +66,15 @@
     </li>
         </ul>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#3-search">3. Search</a>
+    <li class="toctree-l2"><a class="reference internal" href="#2-search">2. Search</a>
         <ul>
     <li class="toctree-l3"><a class="reference internal" href="#post-searchdatasets">POST /search/datasets/</a>
     </li>
-        </ul>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#4-user-collections">4. User collections</a>
-        <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#post-collections">POST /collections/</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#get-collections">GET /collections/</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#get-collectionsid">GET /collections/{id}/</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#get-collectionsiddownload">GET /collections/{id}/download/</a>
+    <li class="toctree-l3"><a class="reference internal" href="#21-search-filters-query-params">2.1 Search filters (query params)</a>
     </li>
         </ul>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#5-admin-endpoints-examples">5. Admin endpoints (examples)</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#6-schema-and-interactive-docs">6. Schema and interactive docs</a>
+    <li class="toctree-l2"><a class="reference internal" href="#3-notes">3. Notes</a>
     </li>
     </ul>
                   </li>
@@ -161,142 +145,88 @@
               
                 <h1 id="api-overview-mvp">API Overview (MVP)</h1>
 <blockquote>
-<p>This is a <strong>high‑level</strong> description. The source of truth is the schema
-and code in <code>medagg-backend</code> (Django + DRF).</p>
+<p>This is a <strong>high-level</strong> description. The source of truth is the code in
+<code>medagg-backend</code> (Django + DRF).</p>
 </blockquote>
-<p>Base backend URL: <code>http://&lt;server-host&gt;/api/v1</code></p>
+<h2 id="base-url">Base URL</h2>
+<p>For the reference backend snapshot, the API is versioned:</p>
+<ul>
+<li>Base: <code>http://&lt;server-host&gt;:8000/api/v1/</code></li>
+</ul>
+<p>The frontend uses <code>VITE_API_URL</code> and then appends paths like <code>/datasets</code> and
+<code>/search/datasets</code>.</p>
+<p>Integration-tested contract:</p>
+<ul>
+<li>Use <code>VITE_API_URL</code> <strong>without a trailing slash</strong>, e.g. <code>http://127.0.0.1:8000/api/v1</code>.</li>
+<li>Use <strong>trailing slashes</strong> on Django endpoints (examples below): <code>/datasets/</code>, <code>/search/datasets/</code>.</li>
+</ul>
 <hr />
-<h2 id="1-authentication">1. Authentication</h2>
-<h3 id="post-authlogin">POST <code>/auth/login/</code></h3>
-<p>Authenticates a user and returns an access token (e.g. JWT) or sets
-a session cookie.</p>
-<p>Request example:</p>
-<pre><code class="language-json">{
-  &quot;username&quot;: &quot;user@example.com&quot;,
-  &quot;password&quot;: &quot;string&quot;
-}
-</code></pre>
-<p>Response example (JWT‑style):</p>
-<pre><code class="language-json">{
-  &quot;access_token&quot;: &quot;jwt-token-here&quot;,
-  &quot;token_type&quot;: &quot;bearer&quot;
-}
-</code></pre>
-<p>The token is then passed in the header:</p>
-<pre><code class="language-http">Authorization: Bearer &lt;token&gt;
-</code></pre>
-<hr />
-<h2 id="2-dataset-catalog">2. Dataset catalog</h2>
+<h2 id="1-datasets">1. Datasets</h2>
 <h3 id="get-datasets">GET <code>/datasets/</code></h3>
-<p>Returns a list of datasets with filtering options.</p>
-<p>Typical query parameters:</p>
-<ul>
-<li><code>q</code> – free‑text search string;</li>
-<li><code>modality</code> – modality code / ID;</li>
-<li><code>area</code> – anatomical area code / ID;</li>
-<li><code>task_type</code> – ML task type code / ID;</li>
-<li><code>tags</code> – list of tag IDs or names (comma‑separated).</li>
-</ul>
-<p>Response example (simplified):</p>
-<pre><code class="language-json">[
-  {
-    &quot;id&quot;: 1,
-    &quot;title&quot;: &quot;Chest X-ray Pneumonia Dataset&quot;,
-    &quot;source_url&quot;: &quot;https://example.com/datasets/pneumonia&quot;,
-    &quot;modality&quot;: [&quot;XR&quot;],
-    &quot;area&quot;: &quot;chest&quot;,
-    &quot;task_types&quot;: [&quot;classification&quot;],
-    &quot;num_images&quot;: 5863,
-    &quot;size_mb&quot;: 1200,
-    &quot;tags&quot;: [&quot;pneumonia&quot;, &quot;thorax&quot;]
-  }
-]
-</code></pre>
+<p>Returns a list of datasets with detailed metadata.</p>
+<p><strong>Response (200)</strong>
+A JSON array of dataset objects.</p>
 <h3 id="get-datasetsid">GET <code>/datasets/{id}/</code></h3>
-<p>Returns detailed information about a single dataset.</p>
+<p>Returns a single dataset object.</p>
+<p><strong>Response (200)</strong>
+A dataset object.</p>
 <hr />
-<h2 id="3-search">3. Search</h2>
-<p>Search can be implemented:</p>
-<ul>
-<li>via extra parameters to <code>GET /datasets/</code>; or</li>
-<li>via a dedicated endpoint.</li>
-</ul>
-<p>Example dedicated endpoint:</p>
+<h2 id="2-search">2. Search</h2>
 <h3 id="post-searchdatasets">POST <code>/search/datasets/</code></h3>
-<p>Performs search using free text and structured filters.</p>
-<p>Request example:</p>
+<p>Searches for datasets by query and optional filter parameters.</p>
+<ul>
+<li>Request body (JSON): <code>{ "query": "&lt;string&gt;" }</code></li>
+<li>Optional filters are passed as query params (see below).</li>
+</ul>
+<p><strong>Response (200)</strong></p>
 <pre><code class="language-json">{
-  &quot;query_text&quot;: &quot;пневмония грудная клетка КТ&quot;,
-  &quot;filters&quot;: {
-    &quot;area&quot;: &quot;chest&quot;,
-    &quot;modality&quot;: [&quot;CT&quot;],
-    &quot;task_type&quot;: [&quot;classification&quot;]
-  }
-}
-</code></pre>
-<p>Response example (simplified):</p>
-<pre><code class="language-json">[
-  {
-    &quot;dataset&quot;: {
+  &quot;count&quot;: 1,
+  &quot;results&quot;: [
+    {
       &quot;id&quot;: 1,
-      &quot;title&quot;: &quot;Chest CT Pneumonia&quot;,
-      &quot;modality&quot;: [&quot;CT&quot;],
-      &quot;area&quot;: &quot;chest&quot;
-    },
-    &quot;relevance_score&quot;: 0.93
-  }
-]
-</code></pre>
-<hr />
-<h2 id="4-user-collections">4. User collections</h2>
-<h3 id="post-collections">POST <code>/collections/</code></h3>
-<p>Creates a new <strong>collection</strong> – a request to build a custom dataset.</p>
-<p>Request example:</p>
-<pre><code class="language-json">{
-  &quot;query_text&quot;: &quot;pneumonia chest xray&quot;,
-  &quot;dataset_ids&quot;: [1, 3],
-  &quot;limit_per_dataset&quot;: 1000
+      &quot;title&quot;: &quot;Test Brain MRI Dataset&quot;,
+      &quot;description&quot;: &quot;Test dataset&quot;,
+      &quot;external_path&quot;: &quot;https://example.org/datasets/brain-mri&quot;,
+      &quot;local_path&quot;: &quot;/data/brain-mri&quot;,
+      &quot;record_count&quot;: 100,
+      &quot;size&quot;: 500,
+      &quot;license&quot;: &quot;CC BY 4.0&quot;,
+      &quot;anatomical_area&quot;: 1,
+      &quot;anatomical_area_name&quot;: &quot;Brain&quot;,
+      &quot;modalities&quot;: [{&quot;id&quot;: 1, &quot;name&quot;: &quot;MRI&quot;}],
+      &quot;ml_tasks&quot;: [{&quot;id&quot;: 1, &quot;name&quot;: &quot;Segmentation&quot;}],
+      &quot;tags&quot;: [{&quot;id&quot;: 1, &quot;name&quot;: &quot;medical&quot;}],
+      &quot;created_at&quot;: &quot;2026-01-01T12:00:00Z&quot;,
+      &quot;updated_at&quot;: &quot;2026-01-01T12:00:00Z&quot;
+    }
+  ]
 }
 </code></pre>
-<p>Response example:</p>
-<pre><code class="language-json">{
-  &quot;id&quot;: 42,
-  &quot;status&quot;: &quot;pending&quot;,
-  &quot;created_at&quot;: &quot;2025-01-01T12:00:00Z&quot;
-}
-</code></pre>
-<h3 id="get-collections">GET <code>/collections/</code></h3>
-<p>Returns the list of collections for the current user.</p>
-<h3 id="get-collectionsid">GET <code>/collections/{id}/</code></h3>
-<p>Returns collection details:</p>
+<h3 id="21-search-filters-query-params">2.1 Search filters (query params)</h3>
+<p>The search endpoint accepts the following optional query params:</p>
 <ul>
-<li>identifier;</li>
-<li>query text / short description;</li>
-<li>creation time;</li>
-<li>status (<code>pending</code>, <code>ready</code>, <code>failed</code>, <code>expired</code>);</li>
-<li>archive size (if available);</li>
-<li>download link (if applicable).</li>
+<li><code>anatomical_area_name</code> – string</li>
+<li><code>record_count_min</code> / <code>record_count_max</code> – integers</li>
+<li><code>size_min</code> / <code>size_max</code> – integers (treat as bytes; values may exceed 32-bit if the backend stores Kaggle <code>total_bytes</code>)</li>
+<li><code>modalities_list</code> – comma-separated list (e.g. <code>MRI,CT</code>)</li>
+<li><code>ml_tasks_list</code> – comma-separated list</li>
+<li><code>tags_list</code> – comma-separated list</li>
+<li><code>ordering</code> – list with up to 2 items: <code>[ "&lt;column&gt;", "asc|desc" ]</code><br />
+  Default: <code>["created_at", "desc"]</code></li>
 </ul>
-<h3 id="get-collectionsiddownload">GET <code>/collections/{id}/download/</code></h3>
-<p>Downloads the ZIP archive if the collection is ready and not expired.</p>
 <hr />
-<h2 id="5-admin-endpoints-examples">5. Admin endpoints (examples)</h2>
-<p>Available only to admin users. Possible examples:</p>
+<h2 id="3-notes">3. Notes</h2>
 <ul>
-<li><code>POST /admin/datasets/</code> – create dataset entry;</li>
-<li><code>PUT /admin/datasets/{id}/</code> – update dataset;</li>
-<li><code>GET /admin/requests/</code> – view user requests and collections.</li>
+<li>Authentication for the MVP is currently handled via the Django admin and/or DRF session auth
+  (<code>/api-auth/</code>). Token-based auth (JWT) can be added later if required.</li>
+<li>In the tested backend snapshot, <code>modalities</code>, <code>ml_tasks</code>, and <code>tags</code> are arrays of <strong>objects</strong>
+  (e.g., <code>[{"id": 1, "name": "MRI"}]</code>), not plain strings.</li>
+<li>Depending on the backend branch/configuration, the search endpoint may optionally augment results
+  from external sources (e.g., Kaggle) and persist them; this is considered an implementation detail
+  and should be guarded by configuration in production.</li>
+<li>Exact field semantics (e.g., what is stored in <code>external_path</code> vs <code>local_path</code>) should follow the
+  backend serializers and models.</li>
 </ul>
-<p>The exact list depends on the actual implementation in <code>medagg-backend</code>.</p>
-<hr />
-<h2 id="6-schema-and-interactive-docs">6. Schema and interactive docs</h2>
-<p>Django REST Framework may provide:</p>
-<ul>
-<li>browsable API pages;</li>
-<li>OpenAPI schema (JSON/YAML) via <code>drf-spectacular</code>, <code>drf-yasg</code>, etc.</li>
-</ul>
-<p>For precise request / response formats, use the published backend schema
-or inspect viewsets and serializers in the source code.</p>
               
             </div>
           </div><footer>
