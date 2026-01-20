@@ -79,9 +79,12 @@ In the result list, each dataset shows:
 - relevance score (if the search module is used);
 - controls to select datasets for collection building.
 
-### 4.3 Building a collection
+> Integration note: during the tested MVP integration, **catalog + search + dataset detail** were verified end-to-end.
+> Collection building, accounts and admin UX remain roadmap items (next iteration).
 
-Based on search results, the user can request a **custom collection**:
+### 4.3 Building a collection (planned)
+
+Based on search results, the user will be able to request a **custom collection**:
 
 1. The system selects studies / images that match the query and filters.
 2. For supported sources, the system:
@@ -92,18 +95,18 @@ Based on search results, the user can request a **custom collection**:
      - a **CSV file** with metadata (ID, labels, modality, source dataset, etc.).
 3. The system logs the **user query** and links it to the created collection.
 
-### 4.4 Account and history
+### 4.4 Account and history (planned)
 
-After authentication, the user has access to a personal area where they can:
+After authentication, the user will have access to a personal area where they can:
 
 - view **history of their collections**;
 - see collection status (in progress / ready / expired);
 - download ready archives;
 - re‑build expired collections if implemented.
 
-### 4.5 Admin functions (minimal set)
+### 4.5 Admin functions (minimal set, planned)
 
-An administrator can:
+An administrator will be able to:
 
 - create / edit / deactivate dataset entries;
 - manage vocabularies (modalities, anatomical areas, task types, tags);
@@ -116,7 +119,7 @@ An administrator can:
 MVP architecture consists of:
 
 - **Backend** – Django + Django REST Framework  
-  REST API for authentication, catalog, search, collections and admin operations,
+  REST API for catalog and search (collections and authentication are planned),
   with PostgreSQL as the main database.
 
 - **Search module** – separate Python module `medagg-search`  
@@ -138,6 +141,9 @@ The MVP is designed to run on **a single Linux host** using Docker:
 - local file storage for ZIP archives.
 
 The host may be:
+
+> Local non-Docker runs (e.g., Windows without Docker) are possible for development and integration testing,
+> but Docker remains the recommended/standardized deployment method.
 
 - a developer’s laptop;
 - a simple server or VPS;

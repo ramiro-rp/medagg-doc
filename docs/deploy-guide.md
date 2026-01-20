@@ -19,12 +19,20 @@ using Docker / docker-compose.
 
 ---
 
+
+
+> Note on search module: the backend expects the `medagg-search` package under `src/libs/medsearch/`.
+> If you cloned the backend repo, initialize it via git submodules (or copy the package into that path) before running the API.
 ## 2. Requirements
 
 - Linux server or workstation (WSL2 / macOS can be used for development);
 - Docker and docker-compose (or Docker + compose plugin);
 - Git;
 - optional for demo: Raspberry Pi 4 or similar + SSD.
+
+> Note (local integration tests without Docker): the official MVP deployment path is Docker-based for reproducibility.
+> If Docker is not available in your environment (e.g., Windows without WSL2/Docker), you can still run the backend and
+> frontend locally by following each repository README. This document focuses on the standardized Docker single-node setup.
 
 ---
 
@@ -33,6 +41,7 @@ using Docker / docker-compose.
 Typical workflow:
 
 ```bash
+# Reference backend repo (use your team fork if different)
 git clone https://github.com/b-barsky/medagg-backend.git
 cd medagg-backend
 
@@ -64,6 +73,10 @@ docker compose exec backend python manage.py migrate
 ### Development mode
 
 ```bash
+<<<<<<< Updated upstream
+=======
+# Frontend repo
+>>>>>>> Stashed changes
 git clone https://github.com/Nikitmen/frontend-DataHive.git
 cd frontend-DataHive
 
@@ -104,7 +117,11 @@ Key parameters (usually via `.env`):
 - **PostgreSQL**
   - volume / directory for DB data.
 - **Frontend**
+<<<<<<< Updated upstream
   - API base URL (e.g. `VITE_API_URL`).
+=======
+  - API base URL (frontend expects `VITE_API_URL`).
+>>>>>>> Stashed changes
 
 See the READMEs in each repo for exact variable names.
 
@@ -126,7 +143,7 @@ Restore example:
 psql -U <db_user> <db_name> < backup.sql
 ```
 
-In Docker environments, these commands are run via `docker compose exec db ...`
+In Docker environments, these commands are run via `docker-compose exec db psql -U <db_user> <db_name>`
 as described in the backend README.
 
 ### 6.2 Built archives

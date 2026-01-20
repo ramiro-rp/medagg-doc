@@ -3,14 +3,17 @@
 This document explains how an end user (clinician, researcher,
 student) interacts with **Medical Imaging Dataset Aggregator**.
 
+> Tested MVP scope (integration snapshot): **Catalog**, **Dataset detail**, and **Search**.
+> Authentication, personal collections, and “My datasets” are **planned** for the next iteration.
+
 ---
 
-## 1. Signing in
+## 1. Accessing the application
 
 1. Open the application in your browser.  
    Example: `http://<server-host>/`
-2. If you already have an account, click **“Log in”**.
-3. If you do not, click **“Sign up / Register”** and fill in the form.
+2. If authentication is enabled in your deployment, click **“Log in”**.
+3. If authentication is not enabled yet, you can continue as a guest (public catalog/search).
 
 <screenshot: auth-page>
 
@@ -21,7 +24,7 @@ Replace placeholders with real screenshots when the UI is stable.
 
 ## 2. Main screen (Search)
 
-After signing in, you land on the **Search** page. Typically it contains:
+You land on the **Search** page. Typically it contains:
 
 - a **free‑text search** input;
 - **filters** for:
@@ -34,7 +37,7 @@ After signing in, you land on the **Search** page. Typically it contains:
 In the navigation bar you usually see:
 
 - **Search**;
-- **My datasets**;
+- **My datasets** (planned);
 - (for admins) **Admin**.
 
 <screenshot: main-search-page>

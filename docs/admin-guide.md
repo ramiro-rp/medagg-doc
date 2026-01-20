@@ -3,6 +3,9 @@
 This guide is for users with the **Admin** role in
 Medical Imaging Dataset Aggregator.
 
+> Integration note: in the tested MVP snapshot, an admin can manage data using **Django Admin**
+> (usually available at `/admin/`). A dedicated Admin page in the frontend is planned for later.
+
 ---
 
 ## 1. Admin responsibilities
