@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Обзор API - MedAgg Docs</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "\u041e\u0431\u0437\u043e\u0440 API";
+        var mkdocs_page_input_path = "api-overview.ru.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> MedAgg Docs
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Overview</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../product-overview/">Product Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../modules/">System Modules</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../db-schema/">Database Schema</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Guides (EN)</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../api-overview/">API Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../deploy-guide/">Deploy Guide</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Guides (RU)</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../product-overview.ru/">Общее описание продукта</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Обзор API</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#url">Базовый URL</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#1">1. Датасеты</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#get-datasets">GET /datasets/</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#get-datasetsid">GET /datasets/{id}/</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#2">2. Поиск</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#post-searchdatasets">POST /search/datasets/</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#21-query-params">2.1 Фильтры поиска (query params)</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#3">3. Примечания</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../deploy-guide.ru/">Руководство по развёртыванию</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../db-schema.ru/">Схема базы данных</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Architecture</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >ADRs</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0000-adr-template/">ADR Template</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0001-initial-fastapi-choice/">Initial FastAPI Choice</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0002-switch-to-django-drf/">Switch to Django + DRF</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0003-database-schema-and-relations/">DB Schema & Relations (MVP)</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0004-search-engine-integration/">Search Integration</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0005-single-node-docker-deployment/">Single-node Docker Deploy (MVP)</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../adr/0006-database-choice-postgresql/">DB Engine Choice</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../diagrams/">Diagrams</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">MedAgg Docs</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Guides (RU)</li>
+      <li class="breadcrumb-item active">Обзор API</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="api-mvp">Обзор API (MVP)</h1>
+<blockquote>
+<p>Это <strong>высокоуровневое</strong> описание. Источник истины — код в репозитории
+<code>medagg-backend</code> (Django + DRF).</p>
+</blockquote>
+<h2 id="url">Базовый URL</h2>
+<p>Для референсного снапшота backend API версионирован:</p>
+<ul>
+<li>Base: <code>http://&lt;server-host&gt;:8000/api/v1/</code></li>
+</ul>
+<p>Frontend использует <code>VITE_API_URL</code> и затем добавляет пути вроде <code>/datasets</code> и
+<code>/search/datasets</code>.</p>
+<p>Контракт, проверенный в интеграционном тесте:</p>
+<ul>
+<li><code>VITE_API_URL</code> задаётся <strong>без завершающего слэша</strong>, например: <code>http://127.0.0.1:8000/api/v1</code></li>
+<li>Эндпойнты в бэкенде принимают пути <strong>со слэшем на конце</strong>: <code>/datasets/</code>, <code>/datasets/{id}/</code>, <code>/search/datasets/</code></li>
+<li>Если в Django включён <code>APPEND_SLASH=True</code>, то <code>POST /search/datasets</code> (без слэша) может приводить к 500. Варианты: (1) всегда вызывать эндпойнт со слэшем (как делает фронтенд), или (2) выставить <code>APPEND_SLASH=False</code> на бэкенде.</li>
+</ul>
+<hr />
+<h2 id="1">1. Датасеты</h2>
+<h3 id="get-datasets">GET <code>/datasets/</code></h3>
+<p>Возвращает список датасетов с детальными метаданными.</p>
+<p><strong>Ответ (200)</strong><br />
+JSON-массив объектов датасетов.</p>
+<h3 id="get-datasetsid">GET <code>/datasets/{id}/</code></h3>
+<p>Возвращает один датасет по <code>id</code>.</p>
+<p><strong>Ответ (200)</strong><br />
+Объект датасета.</p>
+<hr />
+<h2 id="2">2. Поиск</h2>
+<h3 id="post-searchdatasets">POST <code>/search/datasets/</code></h3>
+<p>Поиск датасетов по строке запроса и (опционально) фильтрам.</p>
+<ul>
+<li>Тело запроса (JSON): <code>{ "query": "&lt;string&gt;" }</code></li>
+<li>Фильтры передаются через query params (см. ниже).</li>
+</ul>
+<p><strong>Ответ (200)</strong></p>
+<pre><code class="language-json">{
+  &quot;count&quot;: 1,
+  &quot;results&quot;: [
+    {
+      &quot;id&quot;: 1,
+      &quot;title&quot;: &quot;Test Brain MRI Dataset&quot;,
+      &quot;description&quot;: &quot;Test dataset&quot;,
+      &quot;external_path&quot;: &quot;https://example.org/datasets/brain-mri&quot;,
+      &quot;local_path&quot;: &quot;/data/brain-mri&quot;,
+      &quot;record_count&quot;: 100,
+      &quot;size&quot;: 500,
+      &quot;license&quot;: &quot;CC BY 4.0&quot;,
+      &quot;anatomical_area&quot;: 1,
+      &quot;anatomical_area_name&quot;: &quot;Brain&quot;,
+      &quot;modalities&quot;: [{&quot;id&quot;: 1, &quot;name&quot;: &quot;MRI&quot;}],
+      &quot;ml_tasks&quot;: [{&quot;id&quot;: 1, &quot;name&quot;: &quot;Segmentation&quot;}],
+      &quot;tags&quot;: [{&quot;id&quot;: 1, &quot;name&quot;: &quot;medical&quot;}],
+      &quot;created_at&quot;: &quot;2026-01-01T12:00:00Z&quot;,
+      &quot;updated_at&quot;: &quot;2026-01-01T12:00:00Z&quot;
+    }
+  ]
+}
+</code></pre>
+<h3 id="21-query-params">2.1 Фильтры поиска (query params)</h3>
+<p>Поддерживаются следующие параметры:</p>
+<ul>
+<li><code>anatomical_area_name</code> – строка</li>
+<li><code>record_count_min</code> / <code>record_count_max</code> – числа</li>
+<li><code>size_min</code> / <code>size_max</code> – числа</li>
+<li><code>modalities_list</code> – список через запятую (например <code>MRI,CT</code>)</li>
+<li><code>ml_tasks_list</code> – список через запятую</li>
+<li><code>tags_list</code> – список через запятую</li>
+<li><code>ordering</code> – список максимум из 2 элементов: <code>[ "&lt;column&gt;", "asc|desc" ]</code><br />
+  По умолчанию: <code>["created_at", "desc"]</code></li>
+</ul>
+<hr />
+<h2 id="3">3. Примечания</h2>
+<ul>
+<li>В интеграционном снапшоте <code>modalities</code>, <code>ml_tasks</code> и <code>tags</code> возвращаются как <strong>массив объектов</strong> <code>{id, name}</code>.
+  Если фронтенду нужны только строки, он может отображать <code>tag.name</code>, но контракт API остаётся объектным.</li>
+<li>Поле <code>size</code> хранит <strong>байты</strong>. Для внешних источников (например, Kaggle) значение <code>total_bytes</code> может превышать 2^31-1,
+  поэтому на стороне БД/ORM нужен <code>BIGINT</code> (Django: <code>BigIntegerField</code>) или ограничение значения перед сохранением.</li>
+<li>Аутентификация для MVP может быть доступна через Django admin и/или DRF session auth (<code>/api-auth/</code>).
+  Полноценные аккаунты пользователей, «Мои наборы» и коллекции — <strong>цели следующей итерации</strong>.</li>
+<li>Поиск в MVP может работать только по локальному каталогу. Интеграция с внешними источниками (например, Kaggle)
+  зависит от наличия настроенных ключей/секретов и режима запуска.</li>
+</ul>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../product-overview.ru/" class="btn btn-neutral float-left" title="Общее описание продукта"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../deploy-guide.ru/" class="btn btn-neutral float-right" title="Руководство по развёртыванию">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../product-overview.ru/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../deploy-guide.ru/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

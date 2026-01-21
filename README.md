@@ -10,23 +10,23 @@ and the **API/DB contracts** needed by the team.
 
 ## Repositories (reference)
 
-- **Backend API (Django + DRF)** – `medagg-backend`
-- **Frontend (Vite + React + Ant Design)** – `medagg-frontend`
+- **Backend API (Django + DRF)** – `medagg-backend`  
+  GitHub (reference): <https://github.com/b-barsky/medagg-backend>
+- **Frontend (Vite + React + Ant Design)** – `frontend-DataHive`  
+  GitHub: <https://github.com/Nikitmen/frontend-DataHive>
 - **Search engine module** – `medagg-search`  
   (in the current MVP backend snapshot, the search code is also vendored under
   `src/libs/medsearch/`)
 
-<<<<<<< Updated upstream
-- **Frontend** – `frontend-DataHive`  
-  GitHub: <https://github.com/Nikitmen/frontend-DataHive>
-=======
+
 > If your team uses forks/branches (e.g. `feature/readme` / `feature/search`),
 > treat those as the **MVP reference** when validating docs.
->>>>>>> Stashed changes
+
 
 ## Documentation structure
 
-- `docs/admin-guide.md` / `.ru.md` – admin guide
+> Note: **User/Admin guides** are planned for the next iteration and are not published in the current doc set.
+
 - `docs/api-overview.md` / `.ru.md` – API overview (MVP contract)
 - `docs/deploy-guide.md` / `.ru.md` – deployment guide (single-node MVP)
 - `docs/db-schema.md` / `.ru.md` – MVP database entities/relations
@@ -36,9 +36,6 @@ and the **API/DB contracts** needed by the team.
 - `docs/screenshots/` – screenshots referenced from the guides
 - `docs/review-checklist.md` – who should review what
 
-<<<<<<< Updated upstream
-See `docs/review-checklist.md` for which team role is expected to
-validate each document.
-=======
-See `docs/review-checklist.md` for which team role is expected to validate each document.
->>>>>>> Stashed changes
+
+> If your team uses forks/branches (e.g. `feature/readme` / `feature/search`),
+> treat those as the **MVP reference** when validating docs.

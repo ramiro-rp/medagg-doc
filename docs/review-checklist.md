@@ -13,6 +13,8 @@ Roles in this project:
 
 ---
 
+> Note: User/Admin guides are planned for the next iteration and are not part of the current published doc set.
+
 ## 1. Core product docs
 
 - `docs/product-overview.md` / `.ru.md`
@@ -44,14 +46,12 @@ Roles in this project:
 
 ## 2. Guides
 
-- `docs/user-guide.md` / `.ru.md`
   - **Must review:**
     - Frontend Dev (UI flow matches reality)
     - Documentation Owner
   - **Nice to review:**
     - Team Lead / DevOps
 
-- `docs/admin-guide.md` / `.ru.md`
   - **Must review:**
     - Backend Dev (admin API and data model assumptions)
     - Team Lead / DevOps

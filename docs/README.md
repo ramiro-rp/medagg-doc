@@ -9,12 +9,12 @@ in **Russian** (suffix `.ru.md`).
 Key entry points:
 
 - `product-overview.md` – what the product is and why it exists
-- `user-guide.md` – how end users work with the system
-- `admin-guide.md` – how admins maintain datasets and vocabularies
 - `api-overview.md` – high-level API structure
 - `deploy-guide.md` – how to deploy the system (MVP scope)
 - `db-schema.md` – main entities and relations
 - `modules.md` – system modules overview
 - `adr/` – Architecture Decision Records (timeline of key decisions)
+
+> Note: User/Admin guides are planned for the next iteration and are intentionally not included in this published set.
 
 For who should review what, see `review-checklist.md`.
